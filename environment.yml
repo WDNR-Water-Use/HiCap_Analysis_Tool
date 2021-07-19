@@ -1,0 +1,28 @@
+name: hca
+channels:
+- conda-forge
+- defaults
+dependencies:
+- python=3.9
+- ipython
+- jupyter
+- notebook
+- ipykernel
+- matplotlib=3.4.2
+- pyyaml
+- geopandas
+- numpy
+- scipy
+- pandas
+- gdal
+- fiona
+- rasterio>=1.0
+- rasterstats
+- shapely
+- rtree
+- pyproj>=2.0
+- pyshp
+- xlrd
+- openpyxl
+- requests
+- pytest
