@@ -35,5 +35,5 @@ def test_theis(theis_results):
     time = float(theis_results['params'].loc['Theis Time of Pumping (days)'])
     
     dd = [wo._theis(T, S, time, dist, currQ) for currQ in Q]
-    assert np.allclose(dd[0],theis_results['theis_res'].well1_dd )
-    assert np.allclose(dd[1],theis_results['theis_res'].well2_dd )
+    assert np.allclose(dd[0],theis_results['theis_res'].well1_dd, atol=0.5)
+    assert np.allclose(dd[1],theis_results['theis_res'].well2_dd, atol=0.5)
