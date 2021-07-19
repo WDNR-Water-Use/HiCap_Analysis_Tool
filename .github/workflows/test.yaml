@@ -53,11 +53,7 @@ jobs:
       shell: bash -l {0}
       run: conda info
 
-    - name: Install hicap_analysis and ipykernel
-      shell: bash -l {0}
-      run: |
-        pip install -e .
-        python -m ipykernel install --user --name highcap_ci --display-name "highcap_ci"
+
     - name: Conda list
       shell: bash -l {0}
       run: conda list
