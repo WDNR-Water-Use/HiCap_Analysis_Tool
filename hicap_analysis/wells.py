@@ -1,20 +1,35 @@
 import numpy as np
+from numpy.lib.arraysetops import isin
 import pandas as pd
-
-ALL_DD_METHODS = {'theis': _theis}
-
-ALL_DEPL_METHODS = {'glover': _glover}
-
+import scipy.special as sps
 
 # define drawdown methods here
 def _theis(T,S,time,dist,Q):
-    #maths
-    return None
+    """
+    T (float): transmissivity [ft**2/d]
+    S (float): storage [unitless]
+    time (float, optionally np.array or list): time at which to calculate results [d]
+    dist (float, optionall np.array or list): distance at which to calculate results in [ft]
+    Q (float): pumping rate (+ is extraction) [ft**3/d]
+    """
+    if isinstance(time, list):
+        time = np.array(time)
+    if isinstance(dist, list):
+        dist = np.array(dist)
+    # contruct the well function argument
+    u = dist**2. * S / (4. * T * time)
+    # calculate and return
+    return (Q / (4. * np.pi * T)) * sps.exp1(u)
+    
 # define stream depletion methods here
 def _glover(T,S,time,dist,Q):
     #maths
     return None
 
+ALL_DD_METHODS = {'theis': _theis}
+
+ALL_DEPL_METHODS = {'glover': _glover}
+GPM2CFD = 192.5
 
 class WellResponse():
     '''
@@ -63,7 +78,7 @@ class Well():
     object to contain a proposed or existing well with all responses for that one well
     defined and to preprocess
     '''
-    def __init__(self, well_loc, stream_locs={},  stream_apportionment={}, assessed_well_locs=[], T, S, Q, time, ) -> None:
+    def __init__(self, well_loc, T, S, Q, time, stream_locs={},  stream_apportionment={}, assessed_well_locs=[]) -> None:
         '''
         stream_locs (dict): keys are names, values are list-like locations
         assessed_well_locs (dict): keys are names, values are list-like locations
