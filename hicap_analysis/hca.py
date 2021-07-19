@@ -1,4 +1,4 @@
-from well_objects import Well, WellResponse
+from wells import Well, WellResponse
 import numpy as np
 import pandas as pd
 
