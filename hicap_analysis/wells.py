@@ -62,9 +62,33 @@ def _sdf(T,S,dist,**kwargs):
         dist = np.array(dist)
     return dist**2*S/T
 
+def _walton(T,S,dist,time, Q):
+    """Calcualte depletion using Watkins (1987) PT-8 BASIC program logic 
+
+    Args:
+    T (float): transmissivity [gpd/ft]
+    S (float): storage [unitless]
+    time (float, optionally np.array or list): time at which to calculate results [d]
+    dist (float): distance at which to calculate results in [ft]
+    Q (float): pumping rate (+ is extraction) [ft**3/d]
+
+
+    Returns:
+        float (array): depletion values at at input parameter
+                        times/distances [CFS]
+    """
+    if dist > 0:
+        G = dist / np.sqrt((0.535 * time * T/S))
+    else:
+        G = 0
+    I = 1 + .0705230784*G + .0422820123*(G**2) + 9.2705272e-03*(G**3)
+    J = (I + 1.52014E-04*(G**4) + 2.76567E-04*(G**5)+4.30638E-05*(G**6)) ** 16
+    return Q * (1/J) / 3600 / 24
+
 ALL_DD_METHODS = {'theis': _theis}
 
-ALL_DEPL_METHODS = {'glover': _glover}
+ALL_DEPL_METHODS = {'glover': _glover,
+                    'walton': _walton}
 GPM2CFD = 192.5
 
 class WellResponse():
