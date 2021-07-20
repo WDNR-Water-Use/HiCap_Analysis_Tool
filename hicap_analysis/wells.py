@@ -47,6 +47,21 @@ def _glover(T,S,time,dist,Q):
     z = np.sqrt((dist**2*S)/(4 * T * time))
     return Q * sps.erfc(z)
 
+def _sdf(T,S,dist,**kwargs):
+    """[summary]
+
+    Args:
+        T (float): transmissivity [ft**2/d]
+        S (float): storage [unitless]
+        dist (float, optionall np.array or list): distance at which to calculate results in [ft]
+        **kwargs: just included to all for extra values in call
+    Returns:
+        SDF: Stream depletion factor [d]
+    """
+    if isinstance(dist, list):
+        dist = np.array(dist)
+    return dist**2*S/T
+
 ALL_DD_METHODS = {'theis': _theis}
 
 ALL_DEPL_METHODS = {'glover': _glover}

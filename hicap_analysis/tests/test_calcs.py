@@ -34,7 +34,7 @@ def test_theis(theis_results):
         in the example spreadsheet
 
     Args:
-        theis_results ([@fixture, dict]): parameters and results from example spreadsheet
+        theis_results (@fixture, dict): parameters and results from example spreadsheet
     """
 
 
@@ -51,11 +51,23 @@ def test_glover(theis_results):
     """Athens test for the glover calculations
 
     Args:
-        theis_results ([@fixture, dict]): parameters and results from example spreadsheet
+        theis_results (@fixture, dict): parameters and results from example spreadsheet
     """
+    from hicap_analysis import wells as wo
     pars = theis_results['params']
     dist = theis_results['theis_res'].well1_r
-    from hicap_analysis import wells as wo
     Qs = wo._glover(pars['T'], pars['S'], pars['time'], dist, pars['Q'][0])
     assert all(np.isnan(Qs)== False)
-    j=2
+   
+def test_sdf():
+    """Test for streamflow depletion factor
+        using values from original Jenkins (1968) paper
+        https://doi.org/10.1111/j.1745-6584.1968.tb01641.x
+        note Jenkins rounded to nearest 10 (page 42)
+    """
+    from hicap_analysis import wells as wo
+    dist = 5280./2.
+    T = 5.0e4/7.48
+    S = 0.5
+    sdf = wo._sdf(T,S,dist)
+    assert np.allclose(sdf, 520, atol=1.5)
