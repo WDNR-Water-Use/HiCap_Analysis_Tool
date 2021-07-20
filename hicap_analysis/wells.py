@@ -5,12 +5,19 @@ import scipy.special as sps
 
 # define drawdown methods here
 def _theis(T,S,time,dist,Q):
-    """
+    """Calculate Theis drawdown at single location
+
+    Args:
+    
     T (float): transmissivity [ft**2/d]
     S (float): storage [unitless]
     time (float, optionally np.array or list): time at which to calculate results [d]
     dist (float, optionall np.array or list): distance at which to calculate results in [ft]
     Q (float): pumping rate (+ is extraction) [ft**3/d]
+    
+    Returns:
+        float (array): drawdown values at input parameter
+                        times/distances 
     """
     if isinstance(time, list):
         time = np.array(time)
@@ -23,6 +30,20 @@ def _theis(T,S,time,dist,Q):
     
 # define stream depletion methods here
 def _glover(T,S,time,dist,Q):
+    """Calcualte Glover 
+
+    Args:
+    T (float): transmissivity [ft**2/d]
+    S (float): storage [unitless]
+    time (float, optionally np.array or list): time at which to calculate results [d]
+    dist (float, optionall np.array or list): distance at which to calculate results in [ft]
+    Q (float): pumping rate (+ is extraction) [ft**3/d]
+
+
+    Returns:
+        float (array): depletion values at at input parameter
+                        times/distances
+    """
     #maths
     return None
 
@@ -32,9 +53,8 @@ ALL_DEPL_METHODS = {'glover': _glover}
 GPM2CFD = 192.5
 
 class WellResponse():
-    '''
-    Single well to calculate single response
-    '''
+    """[summary]
+    """
     def __init__(self, name, T, S, dist, time, Q, stream_apportionment, dd_method='Theis', depl_method= 'Glover') -> None:
         self.name = name # name of response (stream, lake, or assessed well) evaluated
         self.T = T
@@ -74,17 +94,25 @@ class WellResponse():
 
 
 class Well():
+    """[summary]
+    """
     '''
     object to contain a proposed or existing well with all responses for that one well
     defined and to preprocess
     '''
     def __init__(self, well_loc, T, S, Q, time, stream_locs={},  stream_apportionment={}, assessed_well_locs=[]) -> None:
-        '''
-        stream_locs (dict): keys are names, values are list-like locations
-        assessed_well_locs (dict): keys are names, values are list-like locations
-        
-        most of this gets passed on to calculations for wells
-        '''
+        """[summary]
+
+        Args:
+            well_loc ([type]): [description]
+            T ([type]): [description]
+            S ([type]): [description]
+            Q ([type]): [description]
+            time ([type]): [description]
+            stream_locs (dict, optional): [description]. Defaults to {}.
+            stream_apportionment (dict, optional): [description]. Defaults to {}.
+            assessed_well_locs (list, optional): [description]. Defaults to [].
+        """
         self.well_loc=well_loc
         self.stream_locs=stream_locs
         self.assessed_well_locs=assessed_well_locs # wells at which defining impacts (drawdown)
@@ -95,16 +123,18 @@ class Well():
         self.stream_apportionment=stream_apportionment
     
     def preprocess(self):
-        '''
+        """        
         -convert locations to distances
         -instantiate a WellResponse object for each response (each stream and each assessed well)
-        '''
+        """
+
         pass
 
     def calc_responses(self):
-        '''
-        populate the depletion and drawdown proprties (calc if needed)
-        '''
+        """populate the depletion and drawdown proprties (calc if needed)
+        """
+        
+        
         self.depletion = {} # keys are response names, values are arrays of depletion
         self.drawdown = {} # keys are response names, values are arrays of drawdown
         
