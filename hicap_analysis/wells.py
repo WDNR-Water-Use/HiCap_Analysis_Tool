@@ -44,8 +44,8 @@ def _glover(T,S,time,dist,Q):
         float (array): depletion values at at input parameter
                         times/distances
     """
-    #maths
-    return None
+    z = np.sqrt((dist**2*S)/(4 * T * time))
+    return Q * sps.erfc(z)
 
 ALL_DD_METHODS = {'theis': _theis}
 
