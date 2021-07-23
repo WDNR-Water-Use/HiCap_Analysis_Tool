@@ -91,13 +91,13 @@ ALL_DD_METHODS = {'theis': _theis}
 ALL_DEPL_METHODS = {'glover': _glover,
                     'walton': _walton}
 
-GPM2CFD = 192.5 # factor to convert from GPM to CFD
+GPM2CFD = 60*24/7.48 # factor to convert from GPM to CFD
 
 class WellResponse():
     """[summary]
     """
-    def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, dd_method='Theis', depl_method= 'Glover', theis_time = -9999,
-                    depl_pump_time = -99999, depletion_years=4) -> None:
+    def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, dd_method='Theis', depl_method= 'Walton', theis_time = -9999,
+                    depl_pump_time = -99999, depletion_years=5) -> None:
         """[summary]
 
         Args:
@@ -107,18 +107,19 @@ class WellResponse():
             S ([type]): [description]
             dist ([type]): [description]
             Q ([type]): [description]
-            stream_apportionment ([type]): [description]
+            stream_apportionment ([type], optional): [description]. Defaults to None.
             dd_method (str, optional): [description]. Defaults to 'Theis'.
-            depl_method (str, optional): [description]. Defaults to 'Glover'.
+            depl_method (str, optional): [description]. Defaults to 'Walton'.
             theis_time (int, optional): [description]. Defaults to -9999.
             depl_pump_time (int, optional): [description]. Defaults to -99999.
-            depletion_years (int, optional): [description]. Defaults to 4.
+            depletion_years (int, optional): [description]. Defaults to 5.
         """
         self._drawdown=None
         self._depletion=None
         self.name = name # name of response (stream, lake, or assessed well) evaluated
         self.response_type = response_type # might use this later to sort out which response to return
         self.T = T
+        self.T_gpd_ft = T*7.48
         self.S = S
         self.dist = dist
         self.dd_method=dd_method
@@ -162,8 +163,8 @@ class WellResponse():
         depl = np.zeros_like(self.baseyears[0], dtype=float)
         rech = np.zeros_like(self.baseyears[0], dtype=float)
         for cby,ciy in zip(self.baseyears, self.imageyears):
-            depl += depl_f(self.T,self.S,self.dist,cby, self.Q)
-            rech += depl_f(self.T,self.S,self.dist,ciy, self.Q)
+            depl += depl_f(self.T_gpd_ft,self.S,self.dist,cby, self.Q*self.stream_apportionment)
+            rech += depl_f(self.T_gpd_ft,self.S,self.dist,ciy, self.Q*self.stream_apportionment)
 
         # NB! --> converting rech to negative values here    
         return depl - rech
@@ -262,7 +263,7 @@ class Well():
             self._depletion = {}
             for cs, cwob in self.stream_responses.items():
                 self._depletion[cs] = cwob.depletion
-                self._depletion[cs] #*= self.stream_apportionment[cs]        
+                self._depletion[cs]
         return self._depletion
 
 
