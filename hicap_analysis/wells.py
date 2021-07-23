@@ -158,14 +158,13 @@ class WellResponse():
             ciy[poffset:] = self.baseyears[0][0:len(ciy)- poffset]
             self.baseyears.append(cby)
             self.imageyears.append(ciy)
-
-        #TODO: run selected depletion function for each basetime and image time then add all up
+            
         depl = np.zeros_like(self.baseyears[0], dtype=float)
         rech = np.zeros_like(self.baseyears[0], dtype=float)
         for cby,ciy in zip(self.baseyears, self.imageyears):
             depl += depl_f(self.T_gpd_ft,self.S,self.dist,cby, self.Q*self.stream_apportionment)
             rech += depl_f(self.T_gpd_ft,self.S,self.dist,ciy, self.Q*self.stream_apportionment)
-
+        
         # NB! --> converting rech to negative values here    
         return depl - rech
 
