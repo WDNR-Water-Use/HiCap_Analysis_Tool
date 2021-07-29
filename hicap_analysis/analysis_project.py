@@ -1,7 +1,10 @@
 from wells import Well, WellResponse
 import numpy as np
 import pandas as pd
-
+def loc_to_dist(loc0, loc1):
+    TODO: maths
+    dist = loc0-loc1
+    return dist
 class Project():
     def __init__(self) -> None:
         """made up of multiple Well objects
@@ -21,30 +24,18 @@ class Project():
 
     def populate_from_yaml(self, ymlfile):
         pass
+        # a bunch of Well objects
 
-    def populate(self, T = -9999, S = -9999, existing_wells = {}, )
-    def existing_wells(self):
-        """dictionary of existing Well objects for cumulative impacts
-        """
-
+    def populate(self, T = -9999, S = -9999, existing_wells = {}, ):
         pass
-
-    def proposed_wells(self):
-        """dictionary of proposed Well object(s)
-        """
-        pass
-
-    def existing_impacts(self):
-        """possibly precalculated so a load or calculation option
-        """
+        # a bunch of Well objects
         
+    def aggregate_responses(self):
+        # identify which responses and which wells eg. all of a certain status, or all,
+        # or a single well
         pass
 
-    def proposed_impacts(self):
-        """
-        calculate and store all the new impacts
-        """
-        pass
+
 
     def calculate_significance(self):
         """[summary]
