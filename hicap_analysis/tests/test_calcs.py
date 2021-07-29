@@ -65,7 +65,7 @@ def walton_results():
     return {'params':params, 'walton_res':walton_res}
 
 @pytest.fixture
-def hca_spreadsheet_results():
+def project_spreadsheet_results():
     from hicap_analysis import wells as wo
     excel_file = datapath / 'HighCap_Analysis_Worksheet_Example.xlsm'  
     # read in common parameters
@@ -103,11 +103,11 @@ def hca_spreadsheet_results():
                     }            
     return params
 
-def test_hca_spreadsheet(hca_spreadsheet_results):
+def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
     
-    pars = hca_spreadsheet_results
-    # set up the HCA with multiple wells and multiple streams and make calculations
+    pars = project_spreadsheet_results
+    # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
                 theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w1s1_dist'], pars['stream_name_2']:pars['w1s2_dist']},
