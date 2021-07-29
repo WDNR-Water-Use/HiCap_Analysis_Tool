@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 
 class Hca():
-    def __init__(self, T, S, time=[], Q=[],stream_locs={},  stream_apportionment={}, assessed_well_locs=[]) -> None:
+    def __init__(self, T, S, time=[], Q=[],stream_locs={},  stream_apportionment={}, drawdown_locs=[]) -> None:
         """made up of multiple Well objects
         instantiate Well objects for existing and proposed
         have all names, properties, locations, etc.
@@ -15,7 +15,7 @@ class Hca():
             Q (list, optional): [description]. Defaults to [].
             stream_locs (dict, optional): [description]. Defaults to {}.
             stream_apportionment (dict, optional): [description]. Defaults to {}.
-            assessed_well_locs (list, optional): [description]. Defaults to [].
+            drawdown_locs (list, optional): [description]. Defaults to [].
         """
         pass
 
