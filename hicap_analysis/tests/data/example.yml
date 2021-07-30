@@ -1,0 +1,67 @@
+project_properties:
+    name: newcafo
+    T: 10.
+    S: 1.e-2
+    default_dd_time: 30
+    default_depletion_time: 5
+    default_pump_duration: 30
+
+well1:
+  name: new1
+  status: pending
+  loc:
+    x: 500
+    y: 20
+  Q: 150
+  dd_time: 30
+  stream_apportionment:
+    name: stream1
+    apportionment: 0.8
+    name: stream2
+    apportionment: 0.2
+  dd_response:
+    ['ex1','ex2']
+  stream_response:
+    ['Upp Creek', 'no paddle']
+
+well2:
+  name: new2
+  status: pending
+  loc:
+    x: 509
+    y: 201
+  Q: 120
+  dd_time: 30
+  stream_apportionment:
+    name: stream1
+    apportionment: 0.6
+    name: stream2
+    apportionment: 0.4
+  dd_response:
+    ['ex1']
+  stream_response:
+    ['Upp Creek', 'no paddle']
+
+dd_response1:
+  name: ex1
+  loc:
+    x: 520
+    y: 100
+dd_response2:
+  name: ex2
+  loc:
+    x: 2402
+    y: 190
+
+stream_response1:
+  name: 'Upp Creek'
+  loc:
+    x: 200
+    y: 29
+stream_response222222:
+  name: 'no paddle'
+  loc:
+    x: 343
+    y: 99
+
+

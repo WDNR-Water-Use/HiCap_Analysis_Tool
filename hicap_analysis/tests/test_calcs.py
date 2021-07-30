@@ -65,16 +65,16 @@ def walton_results():
     return {'params':params, 'walton_res':walton_res}
 
 @pytest.fixture
-def hca_spreadsheet_results():
+def project_spreadsheet_results():
     from hicap_analysis import wells as wo
     excel_file = datapath / 'HighCap_Analysis_Worksheet_Example.xlsm'  
     # read in common parameters
     p = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
                 skiprows= 7, nrows=12, usecols=('C:D'), index_col=0)
     p1 = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
-                skiprows= 20, nrows=12, usecols=('C:D'), index_col=0)
+                skiprows= 19, nrows=12, usecols=('C:D'), index_col=0)
     p2 = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
-                skiprows= 32, nrows=12, usecols=('C:D'), index_col=0)
+                skiprows= 31, nrows=12, usecols=('C:D'), index_col=0)
     p3 = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
                 skiprows= 57, nrows=50, usecols=('C:D'), index_col=0)
     params= {'T': p.loc['Transmissivity (ft2/day)'].values[0],
@@ -87,6 +87,8 @@ def hca_spreadsheet_results():
                     'well1_5ftdd_loc': p3.loc[' Well #1 5-ft Drawdown (feet)'].values[0],
                     'well1_1ftdd_loc': p3.loc[' Well #1 1-ft Drawdown (feet)'].values[0],
                     'theis_p_time': p.loc['Theis Time of Pumping (days)'].values[0],
+                    'stream_name_1': p1.loc['Stream Name'].values[0],
+                    'stream_name_2': p2.loc['Stream Name'].values[0],
                     'depl_pump_time':p1.loc['Stream Depletion Duration Period (Days)'].values[0],
                     'w1s1_dist': p1.loc['Well #1 - Distance to Stream (feet)'].values[0],     
                     'w1s1_appor': p1.loc['Well #1 - Fraction Intercepting Stream (.1-1)'].values[0],
@@ -101,30 +103,30 @@ def hca_spreadsheet_results():
                     }            
     return params
 
-def test_hca_spreadsheet(hca_spreadsheet_results):
+def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
     
-    pars = hca_spreadsheet_results
-    # set up the HCA with multiple wells and multiple streams and make calculations
-    well1 = Well([0,1],pars['T'], pars['S'], pars['Q1_gpm']*GPM2CFD, depletion_years=4,
+    pars = project_spreadsheet_results
+    # set up the Project with multiple wells and multiple streams and make calculations
+    well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
                 theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
-                stream_dist = [pars['w1s1_dist'], pars['w1s2_dist']],
-                assessed_well_dist=[pars['w1muni_dist']],
-                stream_apportionment=[pars['w1s1_appor'],pars['w1s2_appor']])
-    well2 = Well([0,1],pars['T'], pars['S'], pars['Q2_gpm']*GPM2CFD, depletion_years=4,
+                stream_dist = {pars['stream_name_1']:pars['w1s1_dist'], pars['stream_name_2']:pars['w1s2_dist']},
+                drawdown_dist={'muni':pars['w1muni_dist']},
+                stream_apportionment={pars['stream_name_1']:pars['w1s1_appor'],pars['stream_name_2']:pars['w1s2_appor']})
+    well2 = Well(T=pars['T'], S=pars['S'], Q=pars['Q2_gpm']*GPM2CFD, depletion_years=5,
                 theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
-                stream_dist = [pars['w2s1_dist'], pars['w2s2_dist']],
-                assessed_well_dist=[pars['w2muni_dist']],
-                stream_apportionment=[pars['w2s1_appor'],pars['w2s2_appor']])
-    dd1 = well1.drawdown
-    dd2 = well2.drawdown
+                stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
+                drawdown_dist={'muni':pars['w2muni_dist']},
+                stream_apportionment={pars['stream_name_1']:pars['w2s1_appor'],pars['stream_name_2']:pars['w2s2_appor']})
+    dd1 = well1.drawdown['muni']
+    dd2 = well2.drawdown['muni']
     assert np.allclose(dd1+dd2, pars['muni_dd'], atol=0.1)
 
     # TODO: add test for depletion and make sure multiple wells calculated correctly
     depl1 = well1.depletion
     depl2 = well2.depletion
-    stream1_max_depl = np.max(depl1[1]) + np.max(depl2[1])
-    stream2_max_depl = np.max(depl1[2]) + np.max(depl2[2])
+    stream1_max_depl = np.max(depl1[pars['stream_name_1']]) + np.max(depl2[pars['stream_name_1']])
+    stream2_max_depl = np.max(depl1[pars['stream_name_2']]) + np.max(depl2[pars['stream_name_2']])
     assert np.allclose(stream1_max_depl, pars['s1_4yr_depl_cfs'], atol=1e-2)
     assert np.allclose(stream2_max_depl, pars['s2_4yr_depl_cfs'], atol=1e-2)
     

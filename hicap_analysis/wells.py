@@ -116,7 +116,7 @@ class WellResponse():
         """
         self._drawdown=None
         self._depletion=None
-        self.name = name # name of response (stream, lake, or assessed well) evaluated
+        self.name = name # name of response (stream, or drawdown response (e.g. assessed well, lake, spring)) evaluated
         self.response_type = response_type # might use this later to sort out which response to return
         self.T = T
         self.T_gpd_ft = T*7.48
@@ -183,12 +183,12 @@ class WellResponse():
 
 
 class Well():
-    """Object to evaluate a proposed (or existing) well with all relevant impacts.
+    """Object to evaluate a pending (or existing, or a couple other possibilities) well with all relevant impacts.
         Preproceessing makes unit conversions and calculates distances as needed
     """
 
-    def __init__(self, well_loc, T, S, Q, depletion_years=4, theis_dd_time=-9999, depl_pump_time=-9999,
-         stream_dist=None, assessed_well_dist=None, stream_locs=None,  assessed_well_locs=None, 
+    def __init__(self, well_loc=None, well_status='pending', T=-9999, S=-99999, Q=-99999, depletion_years=5, theis_dd_time=-9999, depl_pump_time=-9999,
+         stream_dist=None, drawdown_dist=None, stream_locs=None,  drawdown_locs=None, 
          stream_apportionment=None) -> None:
         """[summary]
 
@@ -201,18 +201,18 @@ class Well():
             theis_dd_time (int, optional): [description]. Defaults to -9999.
             depl_pump_time (int, optional): [description]. Defaults to -9999.
             stream_dist ([type], optional): [description]. Defaults to None.
-            assessed_well_dist ([type], optional): [description]. Defaults to None.
+            drawdown_dist ([type], optional): [description]. Defaults to None.
             stream_locs ([type], optional): [description]. Defaults to None.
             stream_apportionment ([type], optional): [description]. Defaults to None.
-            assessed_well_locs ([type], optional): [description]. Defaults to None.
+            drawdown_locs ([type], optional): [description]. Defaults to None.
         """
         self._depletion = None
         self._drawdown = None
         self.well_loc=well_loc
         self.stream_locs=stream_locs
-        self.assessed_well_locs=assessed_well_locs # wells at which defining impacts (drawdown)
+        self.drawdown_locs=drawdown_locs # wells at which defining impacts (drawdown)
         self.stream_dist = stream_dist
-        self.assessed_well_dist = assessed_well_dist
+        self.drawdown_dist = drawdown_dist
         self.T = T
         self.S = S
         self.depletion_years = depletion_years
@@ -221,39 +221,41 @@ class Well():
         self.Q = Q
         self.stream_apportionment=stream_apportionment
         self.stream_responses = {} # dict of WellResponse objects for this well with streams
-        self.assessed_well_responses = {} # dict of WellResponse objects for this well with assessed wells
+        self.drawdown_responses = {} # dict of WellResponse objects for this well with drawdown responses
+        self.well_status = well_status # this is for the well object - later used for aggregation and must be
+                # {'existing', 'active', 'pending', 'new_approved', 'inactive' }
+        # make sure stream names consistent between dist and apportionment
+        assert len(set(self.stream_dist.keys())-set(self.stream_apportionment.keys())) == 0
+        self.stream_response_names = list(self.stream_responses.keys())
+        self.drawdown_response_names = list(self.drawdown_dist.keys())
         
         # first set all responses up as distances (convert from locations if necessary)
         # TODO: convert locs to distances --> result is a list of distances same lentgh as locs
-        if self.stream_dist is None:
+        # TODO: check dictionary coherence for locations
+        if self.stream_dist is None and self.stream_locs:
             raise('converting from locations to distances not implemented yet')
-        if self.assessed_well_dist is None:
+        if self.drawdown_dist is None and self.well_loc:
             raise('converting from locations to distances not implemented yet')
-        
+
 
         # now make all the WellResponse objects
         # first for streams
-        # TODO: consider passing names through from the outset
-        for cs, cdist in enumerate(self.stream_dist):
-            self.stream_responses[cs+1] = WellResponse(f'stream#{cs+1}', 'stream', T=self.T, S=self.S, dist=cdist, depl_pump_time =self.depl_pump_time, 
-                                Q=self.Q, stream_apportionment=self.stream_apportionment[cs], depl_method='walton')
+        for cs, (cname, cdist) in enumerate(self.stream_dist.items()):
+            self.stream_responses[cs+1] = WellResponse(cname, 'stream', T=self.T, S=self.S, dist=cdist, depl_pump_time =self.depl_pump_time, 
+                                Q=self.Q, stream_apportionment=self.stream_apportionment[cname], depl_method='walton')
 
-        # next for assessed wells
+        # next for drawdown responses
         # TODO: sort out the idea that can only have a single muni well per pumping well with this formulation. should make more flexible
-        for cw, cdist in enumerate(self.assessed_well_dist):
-            self.assessed_well_responses[cw+1] = WellResponse(f'well#{cw+1}', 'well', T=self.T, S=self.S, dist=cdist, theis_time=self.theis_dd_time, 
-                                Q=self.Q, dd_method='theis')        
+        for cw, (cname,cdist) in enumerate(self.drawdown_dist.items()):
+            self.drawdown_responses[cw+1] = WellResponse(cname, 'well', T=self.T, S=self.S, dist=cdist, theis_time=self.theis_dd_time, 
+                                Q=self.Q, dd_method='theis', depletion_years=self.depletion_years)        
         
-
-
     @property
     def drawdown(self):
         if self._drawdown is None:
-            for i, (cw, cwob) in enumerate(self.assessed_well_responses.items()):
-                if i == 0:
-                    self._drawdown = cwob.drawdown
-                else:
-                    self._drawdown += cwob.drawdown           
+            self._drawdown = {}
+            for cw, cwob in self.drawdown_responses.items():
+                self._drawdown[cwob.name] = cwob.drawdown
         return self._drawdown
 
     @property
@@ -261,21 +263,5 @@ class Well():
         if self._depletion is None:
             self._depletion = {}
             for cs, cwob in self.stream_responses.items():
-                self._depletion[cs] = cwob.depletion
-                self._depletion[cs]
+                self._depletion[cwob.name] = cwob.depletion
         return self._depletion
-
-
-    def calc_responses(self):
-        """populate the depletion and drawdown proprties (calc if needed)
-        """
-        
-        
-        self.depletion = {} # keys are response names, values are arrays of depletion
-        self.drawdown = {} # keys are response names, values are arrays of drawdown
-        
-if __name__=="__main__":
-    w = WellResponse( 'w', 'stream', T=10, S=1, dist=1, time=1, Q=1, stream_apportionment=1, dd_method='Theis', depl_method= 'walton', theis_time = -9999,
-                    depl_pump_time = 60, depletion_years=4)
-    print(w.depletion)
-    j=2
