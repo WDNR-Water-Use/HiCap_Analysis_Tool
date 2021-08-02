@@ -46,8 +46,8 @@ well3:
   name: Existing_Irrig
   status: existing
   loc:
-    x: 99999
-    y: 99999
+    x: -800
+    y: -500
   Q: 500 # Adjusted pumping rate. Original rate is 1000.
   dd_time: 30
   stream_apportionment:
@@ -65,8 +65,8 @@ well4:
   name: Existing_CAFO
   status: existing
   loc:
-    x: 99999
-    y: 99999
+    x: 1200
+    y: 400
   Q: 52 # Adjusted pumping rate. Original rate 200.
   dd_time: 365
   stream_apportionment:
