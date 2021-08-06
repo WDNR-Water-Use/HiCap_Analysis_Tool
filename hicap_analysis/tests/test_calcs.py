@@ -215,7 +215,7 @@ def test_yaml_parsing():
     ap.populate_from_yaml(datapath / 'example.yml')
     #TODO: verify that the created well objects are populated with the same values as in the YML file
     #        (this is a manual thing)
-
+    j=2
     #TODO: write up the aggregation / reporting functions
 
     #TODO: test all of this against the spreadsheet with the spreadsheet YAML file

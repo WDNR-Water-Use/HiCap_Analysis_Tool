@@ -220,8 +220,10 @@ class Well():
         # make sure stream names consistent between dist and apportionment
         if stream_dist is not None and stream_apportionment is not None:
             assert len(set(self.stream_dist.keys())-set(self.stream_apportionment.keys())) == 0
-        self.stream_response_names = list(self.stream_responses.keys())
-        self.drawdown_response_names = list(self.drawdown_dist.keys())
+        if self.stream_dist is not None:
+            self.stream_response_names = list(self.stream_dist.keys())
+        if self.drawdown_dist is not None:
+            self.drawdown_response_names = list(self.drawdown_dist.keys())
         
         # now make all the WellResponse objects
         # first for streams

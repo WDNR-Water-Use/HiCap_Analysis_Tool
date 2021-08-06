@@ -145,6 +145,7 @@ class Project():
                     cw[currdef] = self.default_parameters[f'default_{currdef}']
             # calculate all necessary distances
             # first streams
+            stream_dist = None
             if 'stream_response' in cw.keys():   
                 stream_dist = {}
                 for c_resp in cw['stream_response']:
@@ -152,6 +153,7 @@ class Project():
                     streamy = self._Project__stream_responses[c_resp]['y'] 
                     stream_dist[c_resp] = _loc_to_dist([cw['loc']['x'],cw['loc']['y']], [streamx, streamy])
             # next, drawdowns
+            dd_dist = None
             if 'dd_response' in cw.keys():   
                 dd_dist = {}
                 for c_resp in cw['dd_response']:
