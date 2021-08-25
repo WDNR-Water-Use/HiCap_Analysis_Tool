@@ -20,12 +20,14 @@ well1:
   stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.2
+  pump_duration: 365
   dd_response:
     ['Muni1','Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
-well2:
+# this is a comment
+wellsadfasdfasdf: # i like comments EVERYWHERE
   name: new2
   status: pending
   loc:
@@ -39,6 +41,10 @@ well2:
   stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.4
+  stream_apportionment2:
+    apportionment: 0.6
+    name: 'Upp Creek'
+  depletion_time: 4.9
   dd_response:
     ['Muni1', 'Sprng1']
   stream_response:
@@ -94,7 +100,7 @@ dd_response2:
     y: 250
 
 stream_response1:
-  name: 'Upp Creek'
+  name: Upp Creek
   loc:
     x: 200
     y: 29

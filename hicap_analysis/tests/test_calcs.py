@@ -148,6 +148,10 @@ def test_theis(theis_results):
     assert np.allclose(dd[0],theis_results['theis_res'].well1_dd, atol=0.5)
     assert np.allclose(dd[1],theis_results['theis_res'].well2_dd, atol=0.7)
 
+def test_distance():
+    from hicap_analysis import analysis_project as ap
+    assert np.isclose(ap._loc_to_dist([2,3],[9,32.9]), 30.70846788753877)
+
 def test_glover(theis_results):
     """Athens test for the glover calculations
     TODO: find reference calcs to test against
@@ -205,3 +209,8 @@ def test_walton(walton_results):
     assert np.allclose(rch[0], -res.rch1)
     assert np.allclose(rch[1], -res.rch2)
     assert np.allclose(dep_tot, res.total_dep)
+def test_yaml_parsing():
+    from hicap_analysis.analysis_project import Project 
+    ap = Project()
+    ap.populate_from_yaml(datapath / 'example.yml')
+    
