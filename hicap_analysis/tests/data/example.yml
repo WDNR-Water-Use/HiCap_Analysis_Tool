@@ -1,7 +1,7 @@
 project_properties:
     name: newcafo
-    T: 10.
-    S: 1.e-2
+    T: 35.
+    S: 1.e-1
     default_dd_time: 30
     default_depletion_time: 5
     default_pump_duration: 30
@@ -14,13 +14,14 @@ well1:
     y: 20
   Q: 800
   dd_time: 30
-  stream_apportionment:
-    name: stream1
+  stream_apportionment1:
+    name: 'Upp Creek'
     apportionment: 0.8
-    name: stream2
+  stream_apportionment2:
+    name: 'no paddle'
     apportionment: 0.2
   dd_response:
-    ['ex1','ex2']
+    ['Muni1','Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -32,13 +33,14 @@ well2:
     y: -200
   Q: 1000
   dd_time: 30
-  stream_apportionment:
-    name: stream1
+  stream_apportionment1:
+    name: 'Upp Creek'
     apportionment: 0.6
-    name: stream2
+  stream_apportionment2:
+    name: 'no paddle'
     apportionment: 0.4
   dd_response:
-    ['ex1']
+    ['Muni1', 'Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -50,14 +52,14 @@ well3:
     y: -500
   Q: 500 # Adjusted pumping rate. Original rate is 1000.
   dd_time: 30
-  stream_apportionment:
-    name: stream1
+  stream_apportionment1:
+    name: 'Upp Creek'
     apportionment: 0.7
-    #NB: the spreadsheet can only do cumulative impacts on one stream
-    name: stream2
+  stream_apportionment2:
+    name: 'no paddle'
     apportionment: 0.1
   dd_response:
-    ['ex1']
+    ['Muni1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -69,23 +71,24 @@ well4:
     y: 400
   Q: 52 # Adjusted pumping rate. Original rate 200.
   dd_time: 365
-  stream_apportionment:
-    name: stream1
+  stream_apportionment1:
+    name: 'Upp Creek'
     apportionment: 0.6
-    name: stream2
+  stream_apportionment2:
+    name: 'no paddle'
     apportionment: 0.1
   dd_response:
-    ['ex1']
+    ['Muni1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
 dd_response1:
-  name: Muni1
+  name: 'Muni1'
   loc:
     x: 520
     y: 100
 dd_response2:
-  name: Sprng1
+  name: 'Sprng1'
   loc:
     x: -700
     y: 250
