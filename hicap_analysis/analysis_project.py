@@ -204,16 +204,13 @@ class Project():
             else:
                 _print_to_screen_and_file('No Drawdown Responses in the yml file',ofp)
 
-            
-
-            
-            
-
-
 
     def aggregate_responses(self):
         # identify which responses and which wells eg. all of a certain status, or all,
         # or a single well
+        # TODO: consider creating an aggregation container while parsing the YML (e.g. use the unique set of response
+        # keys to instantiate off the couch) 
+        # other option is to add key if not already in palce as looping through the wells....
         pass
 
 

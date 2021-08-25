@@ -105,7 +105,7 @@ def project_spreadsheet_results():
 
 def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
-    
+    #TODO: reconcile with the updated spreadsheet - something broke
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
@@ -122,7 +122,6 @@ def test_project_spreadsheet(project_spreadsheet_results):
     dd2 = well2.drawdown['muni']
     assert np.allclose(dd1+dd2, pars['muni_dd'], atol=0.1)
 
-    # TODO: add test for depletion and make sure multiple wells calculated correctly
     depl1 = well1.depletion
     depl2 = well2.depletion
     stream1_max_depl = np.max(depl1[pars['stream_name_1']]) + np.max(depl2[pars['stream_name_1']])
@@ -209,12 +208,15 @@ def test_walton(walton_results):
     assert np.allclose(rch[0], -res.rch1)
     assert np.allclose(rch[1], -res.rch2)
     assert np.allclose(dep_tot, res.total_dep)
+
 def test_yaml_parsing():
     from hicap_analysis.analysis_project import Project 
     ap = Project()
     ap.populate_from_yaml(datapath / 'example.yml')
-    #TODO: verify that the created well objects are populated with the same values as in the YML file
-    #        (this is a manual thing)
+    #verify that the created well objects are populated with the same values as in the YML file
+    assert set(ap.wells.keys()).difference(set(['new1','oldskool','new2','Existing_CAFO','Existing_Irrig'])) == set()
+
+    ap.aggregate_responses()
     j=2
     #TODO: write up the aggregation / reporting functions
 

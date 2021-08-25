@@ -20,25 +20,12 @@ well1:
   stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.2
-  pumping_days: 365
   dd_response:
     ['Muni1','Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
-well0:
-  name: oldskool
-  status: existing
-  loc:
-    x: 50
-    y: 200
-  Q: 15000000
-  dd_tim: 45
-  pumping_days: 365
-  dd_response:
-    ['ex1']
-    
-# this is a comment
-wellsadfasdfasdf: # i like comments EVERYWHERE
+
+well2:
   name: new2
   status: pending
   loc:
@@ -52,10 +39,6 @@ wellsadfasdfasdf: # i like comments EVERYWHERE
   stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.4
-  stream_apportionment2:
-    apportionment: 0.6
-    name: 'Upp Creek'
-  depletion_years: 4.9
   dd_response:
     ['Muni1', 'Sprng1']
   stream_response:
@@ -99,43 +82,6 @@ well4:
   stream_response:
     ['Upp Creek', 'no paddle']
 
-well3:
-  name: Existing_Irrig
-  status: existing
-  loc:
-    x: -800
-    y: -500
-  Q: 500 # Adjusted pumping rate. Original rate is 1000.
-  dd_time: 30
-  stream_apportionment:
-    name: stream1
-    apportionment: 0.7
-    #NB: the spreadsheet can only do cumulative impacts on one stream
-    name: stream2
-    apportionment: 0.1
-  dd_response:
-    ['ex1']
-  stream_response:
-    ['Upp Creek', 'no paddle']
-
-well4:
-  name: Existing_CAFO
-  status: existing
-  loc:
-    x: 1200
-    y: 400
-  Q: 52 # Adjusted pumping rate. Original rate 200.
-  dd_time: 365
-  stream_apportionment:
-    name: stream1
-    apportionment: 0.6
-    name: stream2
-    apportionment: 0.1
-  dd_response:
-    ['ex1']
-  stream_response:
-    ['Upp Creek', 'no paddle']
-
 dd_response1:
   name: 'Muni1'
   loc:
@@ -148,7 +94,7 @@ dd_response2:
     y: 250
 
 stream_response1:
-  name: Upp Creek
+  name: 'Upp Creek'
   loc:
     x: 200
     y: 29

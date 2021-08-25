@@ -204,6 +204,7 @@ class Well():
         """
         self._depletion = None
         self._drawdown = None
+        self._max_depletion = None
         self.stream_dist = stream_dist
         self.drawdown_dist = drawdown_dist
         self.T = T
@@ -251,6 +252,14 @@ class Well():
     def depletion(self):
         if self._depletion is None:
             self._depletion = {}
-            for cs, cwob in self.stream_responses.items():
+            for _ , cwob in self.stream_responses.items():
                 self._depletion[cwob.name] = cwob.depletion
+           
         return self._depletion
+
+    @property
+    def max_depletion(self):
+        if self._max_depletion is None:
+             self._max_depletion = {cwob.name:np.max(cwob.depletion) 
+                    for _,cwob in self.stream_responses.items()}
+        return self._max_depletion
