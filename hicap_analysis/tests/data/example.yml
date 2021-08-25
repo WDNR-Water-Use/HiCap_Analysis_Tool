@@ -20,12 +20,23 @@ well1:
   stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.2
-  pump_duration: 365
+  pumping_days: 365
   dd_response:
     ['Muni1','Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
-
+well0:
+  name: oldskool
+  status: existing
+  loc:
+    x: 50
+    y: 200
+  Q: 15000000
+  dd_tim: 45
+  pumping_days: 365
+  dd_response:
+    ['ex1']
+    
 # this is a comment
 wellsadfasdfasdf: # i like comments EVERYWHERE
   name: new2
@@ -44,7 +55,7 @@ wellsadfasdfasdf: # i like comments EVERYWHERE
   stream_apportionment2:
     apportionment: 0.6
     name: 'Upp Creek'
-  depletion_time: 4.9
+  depletion_years: 4.9
   dd_response:
     ['Muni1', 'Sprng1']
   stream_response:

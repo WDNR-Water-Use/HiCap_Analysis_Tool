@@ -109,12 +109,12 @@ def test_project_spreadsheet(project_spreadsheet_results):
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
-                theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
+                theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w1s1_dist'], pars['stream_name_2']:pars['w1s2_dist']},
                 drawdown_dist={'muni':pars['w1muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w1s1_appor'],pars['stream_name_2']:pars['w1s2_appor']})
     well2 = Well(T=pars['T'], S=pars['S'], Q=pars['Q2_gpm']*GPM2CFD, depletion_years=5,
-                theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
+                theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
                 drawdown_dist={'muni':pars['w2muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w2s1_appor'],pars['stream_name_2']:pars['w2s2_appor']})
@@ -213,4 +213,9 @@ def test_yaml_parsing():
     from hicap_analysis.analysis_project import Project 
     ap = Project()
     ap.populate_from_yaml(datapath / 'example.yml')
-    
+    #TODO: verify that the created well objects are populated with the same values as in the YML file
+    #        (this is a manual thing)
+
+    #TODO: write up the aggregation / reporting functions
+
+    #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
