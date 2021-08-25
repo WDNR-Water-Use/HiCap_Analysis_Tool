@@ -1,7 +1,7 @@
 project_properties:
     name: newcafo
-    T: 10.
-    S: 1.e-2
+    T: 35.
+    S: 1.e-1
     default_dd_time: 30
     default_depletion_time: 5
     default_pump_duration: 30
@@ -16,7 +16,8 @@ well1:
   dd_time: 30
   stream_apportionment1:
     name: 'Upp Creek'
-  stream_apportionment2: 0.8
+    apportionment: 0.8
+  stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.2
   dd_response:
@@ -34,11 +35,12 @@ well2:
   dd_time: 30
   stream_apportionment1:
     name: 'Upp Creek'
-  stream_apportionment2: 0.6
+    apportionment: 0.6
+  stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.4
   dd_response:
-    ['Muni1']
+    ['Muni1', 'Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -52,8 +54,8 @@ well3:
   dd_time: 30
   stream_apportionment1:
     name: 'Upp Creek'
-  stream_apportionment2: 0.7
-    #NB: the spreadsheet can only do cumulative impacts on one stream
+    apportionment: 0.7
+  stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.1
   dd_response:
@@ -71,7 +73,8 @@ well4:
   dd_time: 365
   stream_apportionment1:
     name: 'Upp Creek'
-  stream_apportionment2: 0.6
+    apportionment: 0.6
+  stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.1
   dd_response:
@@ -80,12 +83,12 @@ well4:
     ['Upp Creek', 'no paddle']
 
 dd_response1:
-  name: Muni1
+  name: 'Muni1'
   loc:
     x: 520
     y: 100
 dd_response2:
-  name: Sprng1
+  name: 'Sprng1'
   loc:
     x: -700
     y: 250
