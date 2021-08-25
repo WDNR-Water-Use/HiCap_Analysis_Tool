@@ -14,13 +14,13 @@ well1:
     y: 20
   Q: 800
   dd_time: 30
-  stream_apportionment:
-    name: stream1
-    apportionment: 0.8
-    name: stream2
+  stream_apportionment1:
+    name: 'Upp Creek'
+  stream_apportionment2: 0.8
+    name: 'no paddle'
     apportionment: 0.2
   dd_response:
-    ['ex1','ex2']
+    ['Muni1','Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -32,13 +32,13 @@ well2:
     y: -200
   Q: 1000
   dd_time: 30
-  stream_apportionment:
-    name: stream1
-    apportionment: 0.6
-    name: stream2
+  stream_apportionment1:
+    name: 'Upp Creek'
+  stream_apportionment2: 0.6
+    name: 'no paddle'
     apportionment: 0.4
   dd_response:
-    ['ex1']
+    ['Muni1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -50,14 +50,14 @@ well3:
     y: -500
   Q: 500 # Adjusted pumping rate. Original rate is 1000.
   dd_time: 30
-  stream_apportionment:
-    name: stream1
-    apportionment: 0.7
+  stream_apportionment1:
+    name: 'Upp Creek'
+  stream_apportionment2: 0.7
     #NB: the spreadsheet can only do cumulative impacts on one stream
-    name: stream2
+    name: 'no paddle'
     apportionment: 0.1
   dd_response:
-    ['ex1']
+    ['Muni1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -69,13 +69,13 @@ well4:
     y: 400
   Q: 52 # Adjusted pumping rate. Original rate 200.
   dd_time: 365
-  stream_apportionment:
-    name: stream1
-    apportionment: 0.6
-    name: stream2
+  stream_apportionment1:
+    name: 'Upp Creek'
+  stream_apportionment2: 0.6
+    name: 'no paddle'
     apportionment: 0.1
   dd_response:
-    ['ex1']
+    ['Muni1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
