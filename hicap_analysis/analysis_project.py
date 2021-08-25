@@ -67,7 +67,7 @@ class Project():
         else:
             raise('No wells were defined in the input file. Goodbye')
 
-        #TODO: verify that stream approptionment and stream response are same keys for a well
+        #TODO: verify that stream apportionment and stream response are same keys for a well
         #TODO: verify that all responses called out in wells exist in yaml file
 
         # create well objects
@@ -75,9 +75,6 @@ class Project():
 
         # report out on yaml input to screen and logfile
         self._report_yaml_input()
-
-
-        j = 2
 
     def _parse_project_properties(self, pp):
         """Method to parse all the project properties from the YAML file block

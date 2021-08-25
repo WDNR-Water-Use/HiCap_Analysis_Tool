@@ -1,3 +1,4 @@
+from hicap_analysis.wells import GPM2CFD
 from os import pardir
 import numpy as np
 import pandas as pd
@@ -211,10 +212,19 @@ def test_walton(walton_results):
 
 def test_yaml_parsing():
     from hicap_analysis.analysis_project import Project 
+    from hicap_analysis import wells as wo
     ap = Project()
     ap.populate_from_yaml(datapath / 'example.yml')
     #verify that the created well objects are populated with the same values as in the YML file
-    assert set(ap.wells.keys()).difference(set(['new1','oldskool','new2','Existing_CAFO','Existing_Irrig'])) == set()
+    assert set(ap.wells.keys()).difference(set(['new1','new2','Existing_CAFO','Existing_Irrig'])) == set()
+    assert set(ap._Project__stream_responses.keys()).difference(set(['Upp Creek', 'no paddle'])) == set()
+    assert set(ap._Project__dd_responses.keys()).difference(set(['Muni1', 'Sprng1'])) == set()
+    
+    # spot check some numbers
+    assert ap.wells['new1'].T == 35
+    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q)
+    assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.6
+
 
     ap.aggregate_responses()
     j=2

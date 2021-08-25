@@ -2,9 +2,9 @@ project_properties:
     name: newcafo
     T: 35.
     S: 1.e-1
-    default_dd_time: 30
-    default_depletion_time: 5
-    default_pump_duration: 30
+    default_dd_days: 30
+    default_depletion_years: 5
+    default_pumping_days: 30
 
 well1:
   name: new1
