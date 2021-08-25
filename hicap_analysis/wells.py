@@ -204,7 +204,10 @@ class Well():
         """
         self._depletion = None
         self._drawdown = None
+<<<<<<< HEAD
         self._max_depletion = None
+=======
+>>>>>>> 906c29c (fixed example.yml conflicts -- this time I mean it)
         self.stream_dist = stream_dist
         self.drawdown_dist = drawdown_dist
         self.T = T
@@ -221,10 +224,15 @@ class Well():
         # make sure stream names consistent between dist and apportionment
         if stream_dist is not None and stream_apportionment is not None:
             assert len(set(self.stream_dist.keys())-set(self.stream_apportionment.keys())) == 0
+<<<<<<< HEAD
         if self.stream_dist is not None:
             self.stream_response_names = list(self.stream_dist.keys())
         if self.drawdown_dist is not None:
             self.drawdown_response_names = list(self.drawdown_dist.keys())
+=======
+        self.stream_response_names = list(self.stream_responses.keys())
+        self.drawdown_response_names = list(self.drawdown_dist.keys())
+>>>>>>> 906c29c (fixed example.yml conflicts -- this time I mean it)
         
         # now make all the WellResponse objects
         # first for streams

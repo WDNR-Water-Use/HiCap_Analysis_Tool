@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 from hicap_analysis.wells import GPM2CFD, Well, WellResponse
 =======
 from hicap_analysis.wells import Well, WellResponse
 >>>>>>> 6aa23e2 (fixed example.yml conflicts)
+=======
+from hicap_analysis.wells import GPM2CFD, Well, WellResponse
+>>>>>>> 906c29c (fixed example.yml conflicts -- this time I mean it)
 import numpy as np
 import pandas as pd
 import yaml
@@ -211,8 +215,11 @@ class Project():
 
 =======
         """
-        self.status_categories = ['existing', 'active', 'pending', 'new_approved', 'inactive' ]
-        pass
+        self.status_categories = ['existing', 'active', 'pending', 'new_approved', 'inactive']
+        self.wells = {} # dictionary to hold well objects
+        self.defaults = ['dd_days','depletion_years','pumping_days'] # allowable project default parameters
+        self.stream_apportionment_dict = {}
+        
 
     def populate_from_yaml(self, ymlfile):
         """[summary]
@@ -231,35 +238,38 @@ class Project():
             raise('Configuration YAML file must have a "project_properties" block')
 
         # get the keys for all the remaining blocks
-        wellkeys = [i for i in d.keys() if i.lower().startswith('well')]
-        ddkeys = [i for i in d.keys() if i.lower().startswith('dd_resp')]
-        streamkeys = [i for i in d.keys() if i.lower().startswith('stream')]
+        self.wellkeys = [i for i in d.keys() if i.lower().startswith('well')]
+        self.ddkeys = [i for i in d.keys() if i.lower().startswith('dd_resp')]
+        self.streamkeys = [i for i in d.keys() if i.lower().startswith('stream')]
 
         # parse stream responses blocks
-        if len(streamkeys)>0:
-            self._parse_responses(streamkeys, d)
+        if len(self.streamkeys)>0:
+            self._parse_responses(self.streamkeys, d)
         else:
             print('no stream responses supplied for evaluation ')
 
         # parse drawdown responses blocks
-        if len(streamkeys)>0:
-            self._parse_responses(ddkeys, d)
+        if len(self.ddkeys)>0:
+            self._parse_responses(self.ddkeys, d)
         else:
             print('no drawdown responses supplied for evaluation ')
 
         # parse well blocks
-        if len(wellkeys)>0:
-            self._parse_wells(wellkeys, d)
+        if len(self.wellkeys)>0:
+            self._parse_wells(d)
         else:
             raise('No wells were defined in the input file. Goodbye')
 
-        '''well2 = Well(T=pars['T'], S=pars['S'], Q=pars['Q2_gpm']*GPM2CFD, depletion_years=5,
-                theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
-                stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
-                drawdown_dist={'muni':pars['w2muni_dist']},
-                stream_apportionment={pars['stream_name_1']:pars['w2s1_appor'],pars['stream_name_2']:pars['w2s2_appor']})'''
+        #TODO: verify that stream approptionment and stream response are same keys for a well
+        #TODO: verify that all responses called out in wells exist in yaml file
+
+        # create well objects
+        self._create_well_objects()
+
         # report out on yaml input to screen and logfile
         self._report_yaml_input()
+
+
         j = 2
 
     def _parse_project_properties(self, pp):
@@ -272,9 +282,10 @@ class Project():
             self.name = pp['name']
             self.T = pp['T']
             self.S = pp['S']
-            self.default_dd_time = pp['default_dd_time']
-            self.default_depletion_time = pp['default_depletion_time']
-            self.default_pump_duration = pp['default_pump_duration']
+            self.default_parameters = {}
+            self.default_parameters['default_dd_days'] = pp['default_dd_days']
+            self.default_parameters['default_depletion_years'] = pp['default_depletion_years']
+            self.default_parameters['default_pumping_days'] = pp['default_pumping_days']
         except:
             raise('Formatting problem with "project_properties" block')
 
@@ -296,7 +307,7 @@ class Project():
         for ck in keys:
            cr[d[ck]['name']] = d[ck]['loc']
 
-    def _parse_wells(self, keys, d):
+    def _parse_wells(self, d):
         """[summary]
 
         Args:
@@ -304,9 +315,53 @@ class Project():
             d ([type]): [description]
         """
         self.__well_data = {}
-        for ck in keys:
+        for ck in self.wellkeys:
             # populate dictionary using well name as key with all well data
             self.__well_data[d[ck]['name']] = d[ck]
+
+            # also, parse out stream apportionment
+            streamappkeys = [i for i in d[ck].keys() if 'apportion' in i]
+            if len(streamappkeys) > 0:
+                self.stream_apportionment_dict[d[ck]['name']] = {}
+                for cak in streamappkeys:
+                    self.stream_apportionment_dict[d[ck]['name']][d[ck][cak]['name']] = d[ck][cak]['apportionment']
+
+    def _create_well_objects(self):
+        """[summary]
+        """
+
+        for ck, cw in self._Project__well_data.items():
+
+            # update defaults as appopriate
+            for currdef in self.defaults:
+                if currdef not in cw.keys():
+                    cw[currdef] = self.default_parameters[f'default_{currdef}']
+            # calculate all necessary distances
+            # first streams
+            if 'stream_response' in cw.keys():   
+                stream_dist = {}
+                for c_resp in cw['stream_response']:
+                    streamx = self._Project__stream_responses[c_resp]['x']
+                    streamy = self._Project__stream_responses[c_resp]['y'] 
+                    stream_dist[c_resp] = _loc_to_dist([cw['loc']['x'],cw['loc']['y']], [streamx, streamy])
+            # next, drawdowns
+            if 'dd_response' in cw.keys():   
+                dd_dist = {}
+                for c_resp in cw['dd_response']:
+                    ddx = self._Project__dd_responses[c_resp]['x']
+                    ddy = self._Project__dd_responses[c_resp]['y'] 
+                    dd_dist[c_resp] = _loc_to_dist([cw['loc']['x'],cw['loc']['y']], [ddx, ddy])
+            
+            if ck in self.stream_apportionment_dict.keys():
+                stream_app_d =self.stream_apportionment_dict[ck]
+            else:
+                stream_app_d = None
+
+            self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
+            theis_dd_days=cw['dd_days'],depl_pump_time=cw['pumping_days'],stream_dist=stream_dist,drawdown_dist=dd_dist,
+            stream_apportionment=stream_app_d
+            )
+
 
     def _report_yaml_input(self):
         """summarize broad details of the YAML file read in

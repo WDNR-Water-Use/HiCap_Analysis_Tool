@@ -20,6 +20,7 @@ well1:
   stream_apportionment2:
     name: 'no paddle'
     apportionment: 0.2
+  pumping_days: 365
   dd_response:
     ['Muni1','Sprng1']
   stream_response:

@@ -217,6 +217,7 @@ def test_yaml_parsing():
     ap = Project()
     ap.populate_from_yaml(datapath / 'example.yml')
 <<<<<<< HEAD
+<<<<<<< HEAD
     #verify that the created well objects are populated with the same values as in the YML file
     assert set(ap.wells.keys()).difference(set(['new1','oldskool','new2','Existing_CAFO','Existing_Irrig'])) == set()
 
@@ -228,3 +229,11 @@ def test_yaml_parsing():
 =======
     
 >>>>>>> 6aa23e2 (fixed example.yml conflicts)
+=======
+    #TODO: verify that the created well objects are populated with the same values as in the YML file
+    #        (this is a manual thing)
+
+    #TODO: write up the aggregation / reporting functions
+
+    #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
+>>>>>>> 906c29c (fixed example.yml conflicts -- this time I mean it)
