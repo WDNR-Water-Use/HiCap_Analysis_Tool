@@ -209,20 +209,28 @@ def test_walton(walton_results):
     assert np.allclose(rch[1], -res.rch2)
     assert np.allclose(dep_tot, res.total_dep)
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> 6aa23e2 (fixed example.yml conflicts)
+=======
+
+>>>>>>> 4365b55 (fixed example.yml conflicts -- this time I mean it for reals)
 def test_yaml_parsing():
     from hicap_analysis.analysis_project import Project 
     ap = Project()
     ap.populate_from_yaml(datapath / 'example.yml')
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4365b55 (fixed example.yml conflicts -- this time I mean it for reals)
     #verify that the created well objects are populated with the same values as in the YML file
     assert set(ap.wells.keys()).difference(set(['new1','oldskool','new2','Existing_CAFO','Existing_Irrig'])) == set()
 
     ap.aggregate_responses()
     j=2
+<<<<<<< HEAD
     #TODO: write up the aggregation / reporting functions
 
     #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
@@ -233,6 +241,8 @@ def test_yaml_parsing():
     #TODO: verify that the created well objects are populated with the same values as in the YML file
     #        (this is a manual thing)
 
+=======
+>>>>>>> 4365b55 (fixed example.yml conflicts -- this time I mean it for reals)
     #TODO: write up the aggregation / reporting functions
 
     #TODO: test all of this against the spreadsheet with the spreadsheet YAML file

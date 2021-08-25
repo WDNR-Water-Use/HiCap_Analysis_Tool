@@ -205,9 +205,13 @@ class Well():
         self._depletion = None
         self._drawdown = None
 <<<<<<< HEAD
+<<<<<<< HEAD
         self._max_depletion = None
 =======
 >>>>>>> 906c29c (fixed example.yml conflicts -- this time I mean it)
+=======
+        self._max_depletion = None
+>>>>>>> 4365b55 (fixed example.yml conflicts -- this time I mean it for reals)
         self.stream_dist = stream_dist
         self.drawdown_dist = drawdown_dist
         self.T = T

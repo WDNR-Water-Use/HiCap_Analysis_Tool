@@ -213,6 +213,7 @@ class Project():
             else:
                 _print_to_screen_and_file('No Drawdown Responses in the yml file',ofp)
 
+<<<<<<< HEAD
 =======
         """
         self.status_categories = ['existing', 'active', 'pending', 'new_approved', 'inactive']
@@ -402,6 +403,8 @@ class Project():
 
 
 >>>>>>> 6aa23e2 (fixed example.yml conflicts)
+=======
+>>>>>>> 4365b55 (fixed example.yml conflicts -- this time I mean it for reals)
 
     def aggregate_responses(self):
         # identify which responses and which wells eg. all of a certain status, or all,
