@@ -1,3 +1,4 @@
+from hicap_analysis.wells import GPM2CFD
 from os import pardir
 import numpy as np
 import pandas as pd
@@ -83,7 +84,7 @@ def project_spreadsheet_results():
                     'Q2_gpm': p.loc['Pumping Rate Well #2 (gpm)'].values[0],
                     'w1muni_dist': p3.loc['Distance from Well #1 to Municpal Well'].values[0],
                     'w2muni_dist': p3.loc['Distance from Well #2 to Municpal Well'].values[0],
-                    'muni_dd': 60, # NB! --> hard coded because hard to read from Excel file
+                    'muni_dd': 17.5, # NB! --> hard coded because hard to read from Excel file
                     'well1_5ftdd_loc': p3.loc[' Well #1 5-ft Drawdown (feet)'].values[0],
                     'well1_1ftdd_loc': p3.loc[' Well #1 1-ft Drawdown (feet)'].values[0],
                     'theis_p_time': p.loc['Theis Time of Pumping (days)'].values[0],
@@ -105,16 +106,16 @@ def project_spreadsheet_results():
 
 def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
-    
+    #TODO: reconcile with the updated spreadsheet - something broke
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
-                theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
+                theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w1s1_dist'], pars['stream_name_2']:pars['w1s2_dist']},
                 drawdown_dist={'muni':pars['w1muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w1s1_appor'],pars['stream_name_2']:pars['w1s2_appor']})
     well2 = Well(T=pars['T'], S=pars['S'], Q=pars['Q2_gpm']*GPM2CFD, depletion_years=5,
-                theis_dd_time=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
+                theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
                 drawdown_dist={'muni':pars['w2muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w2s1_appor'],pars['stream_name_2']:pars['w2s2_appor']})
@@ -122,7 +123,6 @@ def test_project_spreadsheet(project_spreadsheet_results):
     dd2 = well2.drawdown['muni']
     assert np.allclose(dd1+dd2, pars['muni_dd'], atol=0.1)
 
-    # TODO: add test for depletion and make sure multiple wells calculated correctly
     depl1 = well1.depletion
     depl2 = well2.depletion
     stream1_max_depl = np.max(depl1[pars['stream_name_1']]) + np.max(depl2[pars['stream_name_1']])
@@ -147,6 +147,10 @@ def test_theis(theis_results):
     dd = [wo._theis(pars['T'], pars['S'], time, dist, currQ) for currQ in pars['Q']]
     assert np.allclose(dd[0],theis_results['theis_res'].well1_dd, atol=0.5)
     assert np.allclose(dd[1],theis_results['theis_res'].well2_dd, atol=0.7)
+
+def test_distance():
+    from hicap_analysis import analysis_project as ap
+    assert np.isclose(ap._loc_to_dist([2,3],[9,32.9]), 30.70846788753877)
 
 def test_glover(theis_results):
     """Athens test for the glover calculations
@@ -205,3 +209,25 @@ def test_walton(walton_results):
     assert np.allclose(rch[0], -res.rch1)
     assert np.allclose(rch[1], -res.rch2)
     assert np.allclose(dep_tot, res.total_dep)
+
+def test_yaml_parsing():
+    from hicap_analysis.analysis_project import Project 
+    from hicap_analysis import wells as wo
+    ap = Project()
+    ap.populate_from_yaml(datapath / 'example.yml')
+    #verify that the created well objects are populated with the same values as in the YML file
+    assert set(ap.wells.keys()).difference(set(['new1','new2','Existing_CAFO','Existing_Irrig'])) == set()
+    assert set(ap._Project__stream_responses.keys()).difference(set(['Upp Creek', 'no paddle'])) == set()
+    assert set(ap._Project__dd_responses.keys()).difference(set(['Muni1', 'Sprng1'])) == set()
+    
+    # spot check some numbers
+    assert ap.wells['new1'].T == 35
+    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q)
+    assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.6
+
+
+    ap.aggregate_responses()
+    j=2
+    #TODO: write up the aggregation / reporting functions
+
+    #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
