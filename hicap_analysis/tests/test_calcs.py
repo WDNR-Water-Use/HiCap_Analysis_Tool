@@ -226,8 +226,10 @@ def test_yaml_parsing():
     assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.6
 
 
-    ap.aggregate_responses()
+    ap.report_responses()
     j=2
     #TODO: write up the aggregation / reporting functions
 
     #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
+
+    ap.write_responses_csv()
