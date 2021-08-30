@@ -202,10 +202,12 @@ class Well():
             drawdown_dist ([type], optional): [description]. Defaults to None.
             stream_apportionment ([type], optional): [description]. Defaults to None.
         """
+
+        # placeholders for values returned with @property decorators
         self._depletion = None
         self._drawdown = None
-
         self._max_depletion = None
+        
         self.stream_dist = stream_dist
         self.drawdown_dist = drawdown_dist
         self.T = T
@@ -236,7 +238,6 @@ class Well():
                                     Q=self.Q, stream_apportionment=self.stream_apportionment[cname], depl_method='walton')
 
         # next for drawdown responses
-        # TODO: sort out the idea that can only have a single muni well per pumping well with this formulation. should make more flexible
         if self.drawdown_dist is not None:
             for cw, (cname,cdist) in enumerate(self.drawdown_dist.items()):
                 self.drawdown_responses[cw+1] = WellResponse(cname, 'well', T=self.T, S=self.S, dist=cdist, theis_time=self.theis_dd_days, 
@@ -265,3 +266,5 @@ class Well():
              self._max_depletion = {cwob.name:np.max(cwob.depletion) 
                     for _,cwob in self.stream_responses.items()}
         return self._max_depletion
+
+

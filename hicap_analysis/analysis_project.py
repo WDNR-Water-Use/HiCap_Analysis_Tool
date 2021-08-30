@@ -1,7 +1,8 @@
 from hicap_analysis.wells import GPM2CFD, Well, WellResponse
 import numpy as np
 import pandas as pd
-import yaml
+import yaml, os, shutil
+
 def _loc_to_dist(loc0, loc1):
     '''
     Euclidean distance between two 2-d points assuming expressed in consistent units
@@ -18,6 +19,24 @@ def _print_to_screen_and_file(s, ofp):
     """
     ofp.write(f'{s}\n')
     print(s)
+
+# some helper functions for printing out results
+def _print_dd_depl(ofp, cw_dd, cw_max_depl):
+    ofp.write(f'             **Drawdown**\n{"Response":30s}{"Drawdown(ft)":30s}\n')
+    for ck,v in cw_dd.items():
+        ofp.write(f'{ck:30s}{v:<30.4f}\n')
+    ofp.write(f'          **Maximum Depletion**\n{"Response":30s}{"Depletion(cfs)":30s}\n')
+    for ck,v in cw_max_depl.items():
+        ofp.write(f'{ck:30s}{v:<30.4f}\n')
+
+def _print_single_well_header(ofp, wname, wstatus):
+    ofp.write('#'*50 + '\n')
+    ofp.write(f'Well Name: {wname}\n')
+    ofp.write(f'Well status: {wstatus}\n')
+def _print_combined_well_results(ofp, cw_dat):
+    ofp.write('#'*50 + '\n')
+    total_dd = np.sum([v for _,v in cw_dat.drawdown.items()])
+    ofp.write('Total Drawdown (ft):   {total_dd:<16.4f}')
 class Project():
     def __init__(self) -> None:
         """[summary]
@@ -26,7 +45,10 @@ class Project():
         self.wells = {} # dictionary to hold well objects
         self.defaults = ['dd_days','depletion_years','pumping_days'] # allowable project default parameters
         self.stream_apportionment_dict = {}
-        
+        self.proposed_well_categories =['pending']
+        self.existing_well_categories = ['existing', 'active',  'new_approved']
+        self.existing_wells = []
+        self.proposed_wells = []
 
     def populate_from_yaml(self, ymlfile):
         """[summary]
@@ -122,7 +144,11 @@ class Project():
         for ck in self.wellkeys:
             # populate dictionary using well name as key with all well data
             self.__well_data[d[ck]['name']] = d[ck]
-
+            # populate categories of wells
+            if d[ck]['status'] in self.proposed_well_categories:
+                self.proposed_wells.append(d[ck]['name'])
+            elif d[ck]['status'] in self.existing_well_categories:
+                self.existing_wells.append(d[ck]['name'])
             # also, parse out stream apportionment
             streamappkeys = [i for i in d[ck].keys() if 'apportion' in i]
             if len(streamappkeys) > 0:
@@ -162,7 +188,7 @@ class Project():
                 stream_app_d =self.stream_apportionment_dict[ck]
             else:
                 stream_app_d = None
-
+            
             self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
             theis_dd_days=cw['dd_days'],depl_pump_time=cw['pumping_days'],stream_dist=stream_dist,drawdown_dist=dd_dist,
             stream_apportionment=stream_app_d
@@ -202,19 +228,166 @@ class Project():
                 _print_to_screen_and_file('No Drawdown Responses in the yml file',ofp)
 
 
-    def aggregate_responses(self):
-        # identify which responses and which wells eg. all of a certain status, or all,
-        # or a single well
-        # TODO: consider creating an aggregation container while parsing the YML (e.g. use the unique set of response
-        # keys to instantiate off the couch) 
-        # other option is to add key if not already in palce as looping through the wells....
-        pass
+    def report_responses(self):
+        # make a report file - named from the YML name
+        ymlbase = self.ymlfile.name
+        outfile = ymlbase.replace('.yml','.report.txt')
+        # make a home for the report file
+        outpath = self.ymlfile.parent / 'output'
+        if not os.path.exists(outpath):
+            os.mkdir(outpath)
+        self.report_filename = outpath  / outfile
+        with open(self.report_filename, 'w') as ofp:
+            ofp.write(f'HiCap well analysis report, configured from: {ymlbase}\n')
+
+            # Report on each well
+            ofp.write('\nINDIVIDUAL PROPOSED WELL REPORTS\n')
+            if len(self.proposed_wells) == 0:
+                ofp.write('  there were no proposed wells in the configuration file!\n')
+            else:
+                for cex in self.proposed_wells:
+                    _print_single_well_header(ofp, cex, self._Project__well_data[cex]["status"])
+                    cw_dat = self.wells[cex]
+                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion)
+                ofp.write('\n')
+
+            ofp.write('\n\nINDIVIDUAL EXISTING WELL REPORTS\n')
+            if len(self.existing_wells) == 0:
+                ofp.write('  there were no existing wells in the configuration file!\n')
+            else:
+                for cex in self.existing_wells:
+                    _print_single_well_header(ofp, cex, self._Project__well_data[cex]["status"])
+                    cw_dat = self.wells[cex]
+                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion)
+                ofp.write('\n')
+
+            self.aggregate_results()
+
+            ofp.write('\n\nCOMBINED PROPOSED WELL REPORTS\n' + '#'*50 + '\n')
+            if len(self.proposed_wells) == 0:
+                ofp.write('  there were no proposed wells in the configuration file!\n')
+            else:
+                 _print_dd_depl(ofp, self.proposed_aggregated_drawdown, self.proposed_aggregated_max_depletion)
+                    
+            ofp.write('\n\nCOMBINED EXISTING WELL REPORTS\n' + '#'*50 + '\n')
+            if len(self.existing_wells) == 0:
+                ofp.write('  there were no existing wells in the configuration file!\n')
+            else:
+                 _print_dd_depl(ofp, self.existing_aggregated_drawdown, self.existing_aggregated_max_depletion)
+                    
+            ofp.write('\n\nTOTAL COMBINED WELL REPORTS\n' + '#'*50 + '\n')
+            _print_dd_depl(ofp, self.total_aggregated_drawdown, self.total_aggregated_max_depletion)
+            
 
 
+        j=2
 
-    def calculate_significance(self):
-        """[summary]
-        """
-        pass
+    def aggregate_results(self):
+        # make dictionaries to contain the drawdown results
+        self.existing_aggregated_drawdown = {}
+        self.proposed_aggregated_drawdown = {}
+        self.total_aggregated_drawdown = {}
+        
+        # make dictionaries to contain the max_depletion results
+        self.existing_aggregated_max_depletion = {}
+        self.proposed_aggregated_max_depletion = {}
+        self.total_aggregated_max_depletion = {}
+        
+        # first existing wells
+        for cwell in self.existing_wells:
+            cw_dd = self.wells[cwell].drawdown
+            for ck, v in cw_dd.items():
+                if ck not in self.existing_aggregated_drawdown.keys():
+                    self.existing_aggregated_drawdown[ck] = v
+                else:
+                    self.existing_aggregated_drawdown[ck] += v
+            cw_max_dep = self.wells[cwell].max_depletion
+            for ck, v in cw_max_dep.items():
+                if ck not in self.existing_aggregated_max_depletion.keys():
+                    self.existing_aggregated_max_depletion[ck] = v
+                else:
+                    self.existing_aggregated_max_depletion[ck] += v
+
+        # next proposed wells
+        for cwell in self.proposed_wells:
+            cw_dd = self.wells[cwell].drawdown
+            for ck, v in cw_dd.items():
+                if ck not in self.proposed_aggregated_drawdown.keys():
+                    self.proposed_aggregated_drawdown[ck] = v
+                else:
+                    self.proposed_aggregated_drawdown[ck] += v
+            cw_max_dep = self.wells[cwell].max_depletion
+            for ck, v in cw_max_dep.items():
+                if ck not in self.proposed_aggregated_max_depletion.keys():
+                    self.proposed_aggregated_max_depletion[ck] = v
+                else:
+                    self.proposed_aggregated_max_depletion[ck] += v
+
+        # finally calculate the totals
+        for cwell in self.existing_wells+self.proposed_wells:
+            cw_dd = self.wells[cwell].drawdown
+            for ck, v in cw_dd.items():
+                if ck not in self.total_aggregated_drawdown.keys():
+                    self.total_aggregated_drawdown[ck] = v
+                else:
+                    self.total_aggregated_drawdown[ck] += v
+            cw_max_dep = self.wells[cwell].max_depletion
+            for ck, v in cw_max_dep.items():
+                if ck not in self.total_aggregated_max_depletion.keys():
+                    self.total_aggregated_max_depletion[ck] = v
+                else:
+                    self.total_aggregated_max_depletion[ck] += v
+
+    def write_responses_csv(self):
+        # create a dataframe to hold the aggregated results
+        cols = [f'{i}:dd (ft)' for i in self.total_aggregated_drawdown.keys()] + \
+                        [f'{i}:depl (cfs)' for i in self.total_aggregated_max_depletion.keys()]
+        col_base = [i.replace(':dd (ft)','').replace(':depl (cfs)','') for i in cols]
+ 
+        rows = [f'{i}: proposed' for i in self.proposed_wells] + \
+                [f'{i}: existing' for i in self.existing_wells] + \
+                ['total_proposed', 'total_existing','total_combined']
+        row_base = [i.replace(': existing','').replace(': proposed','') for i in rows]
+        agg_df = pd.DataFrame(index=row_base, columns=col_base)
+
+        # fill in the dataframe
+        # individual wells
+        for cn, cw in self.wells.items():
+            for cresp, cdd in cw.drawdown.items():
+                agg_df.loc[cn,cresp] = cdd
+            for cresp, cdepl in cw.max_depletion.items():
+                agg_df.loc[cn,cresp] = cdepl
+            
+        # totals
+        #proposed
+        for cresp, cdd in self.proposed_aggregated_drawdown.items():
+            agg_df.loc['total_proposed', cresp] = cdd
+        for cresp, cdepl in self.proposed_aggregated_max_depletion.items():
+            agg_df.loc['total_proposed', cresp] = cdepl
+        #existing
+        for cresp, cdd in self.existing_aggregated_drawdown.items():
+            agg_df.loc['total_existing', cresp] = cdd
+        for cresp, cdepl in self.existing_aggregated_max_depletion.items():
+            agg_df.loc['total_existing', cresp] = cdepl
+        #proposed
+        for cresp, cdd in self.total_aggregated_drawdown.items():
+            agg_df.loc['total_combined', cresp] = cdd
+        for cresp, cdepl in self.total_aggregated_max_depletion.items():
+            agg_df.loc['total_combined', cresp] = cdepl
 
 
+        agg_df.columns = cols
+        agg_df.index = rows
+        
+        # make a report file - named from the YML name
+        ymlbase = self.ymlfile.name
+        outfile = ymlbase.replace('.yml','.table_report.csv')
+        # make a home for the report file
+        outpath = self.ymlfile.parent / 'output'
+        if not os.path.exists(outpath):
+            os.mkdir(outpath)
+
+        self.csv_output_filename = outpath / outfile
+        agg_df.to_csv(self.csv_output_filename)
+        # slap the csv dataframe into self
+        self.agg_df = agg_df

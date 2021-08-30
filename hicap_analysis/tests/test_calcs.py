@@ -77,14 +77,22 @@ def project_spreadsheet_results():
     p2 = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
                 skiprows= 31, nrows=12, usecols=('C:D'), index_col=0)
     p3 = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
-                skiprows= 57, nrows=50, usecols=('C:D'), index_col=0)
+                skiprows= 57, nrows=50, usecols=('C:F'), index_col=0)
+    p4 = pd.read_excel(excel_file, sheet_name='Cumulative_Impact_Analysis', 
+                skiprows= 22, nrows=5, usecols=('C:D'), index_col=0)
+    p5 = pd.read_excel(excel_file, sheet_name='Cumulative_Impact_Analysis', 
+                skiprows= 36, nrows=10, usecols=('H:I'), index_col=0)
+                
     params= {'T': p.loc['Transmissivity (ft2/day)'].values[0],
                     'S': p.loc['Storage Coefficient (unitless)'].values[0],
                     'Q1_gpm': p.loc['Pumping Rate Well #1 (gpm)'].values[0],
                     'Q2_gpm': p.loc['Pumping Rate Well #2 (gpm)'].values[0],
                     'w1muni_dist': p3.loc['Distance from Well #1 to Municpal Well'].values[0],
-                    'w2muni_dist': p3.loc['Distance from Well #2 to Municpal Well'].values[0],
-                    'muni_dd': 17.5, # NB! --> hard coded because hard to read from Excel file
+                    'w2muni_dist': p3.loc['Distance from Well #2 to Municpal Well'].values[0], 
+                    'w1sprng1_dist': p3.loc['Distance from Well #1 to Spring'].values[0],
+                    'w2sprng1_dist': p3.loc['Distance from Well #2 to Spring'].values[0],
+                    'muni_dd_combined_proposed': p3.loc['Distance from Well #1 to Municpal Well'].values[-1],
+                    'sprng1_dd_combined_proposed':p3.loc['Distance from Well #1 to Spring'].values[-1],
                     'well1_5ftdd_loc': p3.loc[' Well #1 5-ft Drawdown (feet)'].values[0],
                     'well1_1ftdd_loc': p3.loc[' Well #1 1-ft Drawdown (feet)'].values[0],
                     'theis_p_time': p.loc['Theis Time of Pumping (days)'].values[0],
@@ -101,12 +109,14 @@ def project_spreadsheet_results():
                     'w2s2_appor': p2.loc['Well #2 - Fraction Intercepting Stream (.1-1)'].values[0],
                     's1_4yr_depl_cfs': p3.loc['Stream #1 depletion after year 4 (cfs)'].values[0],
                     's2_4yr_depl_cfs': p3.loc['Stream #2 depletion after year 4  (cfs)'].values[0],
-                    }            
+                    'muni_dd_total_combined': p4.loc['Cumulative Impact Drawdown (ft)'].values[0],
+                    'stream1_depl_existing':p5.iloc[0].values[0],
+                    'stream1_depl_total_combined':p5.iloc[3].values[0]
+                     }            
     return params
 
 def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
-    #TODO: reconcile with the updated spreadsheet - something broke
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
@@ -121,7 +131,9 @@ def test_project_spreadsheet(project_spreadsheet_results):
                 stream_apportionment={pars['stream_name_1']:pars['w2s1_appor'],pars['stream_name_2']:pars['w2s2_appor']})
     dd1 = well1.drawdown['muni']
     dd2 = well2.drawdown['muni']
-    assert np.allclose(dd1+dd2, pars['muni_dd'], atol=0.1)
+ 
+    assert np.allclose(dd1+dd2, pars['muni_dd_combined_proposed'], atol=0.1)
+    
 
     depl1 = well1.depletion
     depl2 = well2.depletion
@@ -210,7 +222,8 @@ def test_walton(walton_results):
     assert np.allclose(rch[1], -res.rch2)
     assert np.allclose(dep_tot, res.total_dep)
 
-def test_yaml_parsing():
+def test_yaml_parsing(project_spreadsheet_results):
+    pars = project_spreadsheet_results
     from hicap_analysis.analysis_project import Project 
     from hicap_analysis import wells as wo
     ap = Project()
@@ -223,11 +236,16 @@ def test_yaml_parsing():
     # spot check some numbers
     assert ap.wells['new1'].T == 35
     assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q)
-    assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.6
+    assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.3
 
 
-    ap.aggregate_responses()
-    j=2
-    #TODO: write up the aggregation / reporting functions
+    ap.report_responses()
+    
+    ap.write_responses_csv()
 
-    #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
+    agg_results = pd.read_csv(ap.csv_output_filename, index_col=0)
+    # read in the CSV file and spot check against the spreadsheet output
+    assert np.isclose(pars['muni_dd_combined_proposed'], agg_results.loc['total_proposed', 'Muni1:dd (ft)'], atol=0.002)
+    assert np.isclose(pars['sprng1_dd_combined_proposed'], agg_results.loc['total_proposed', 'Sprng1:dd (ft)'], atol=0.002)
+    assert np.isclose(pars['stream1_depl_existing'], agg_results.loc['total_existing', 'Upp Creek:depl (cfs)'], atol=0.005)
+    assert np.isclose(pars['stream1_depl_total_combined'], agg_results.loc['total_combined', 'Upp Creek:depl (cfs)'], atol=0.01)

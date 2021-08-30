@@ -4,7 +4,7 @@ project_properties:
     S: 1.e-1
     default_dd_days: 30
     default_depletion_years: 5
-    default_pumping_days: 30
+    default_pumping_days: 60
 
 well1:
   name: new1
@@ -13,7 +13,7 @@ well1:
     x: -250
     y: 20
   Q: 800
-  dd_time: 30
+  dd_days: 30
   stream_apportionment1:
     name: 'Upp Creek'
     apportionment: 0.8
@@ -32,13 +32,13 @@ well2:
     x: 509
     y: -200
   Q: 1000
-  dd_time: 30
+  dd_days: 30
   stream_apportionment1:
     name: 'Upp Creek'
-    apportionment: 0.6
+    apportionment: 0.3
   stream_apportionment2:
     name: 'no paddle'
-    apportionment: 0.4
+    apportionment: 0.7
   dd_response:
     ['Muni1', 'Sprng1']
   stream_response:
@@ -51,7 +51,7 @@ well3:
     x: -800
     y: -500
   Q: 500 # Adjusted pumping rate. Original rate is 1000.
-  dd_time: 30
+  dd_days: 30
   stream_apportionment1:
     name: 'Upp Creek'
     apportionment: 0.7
@@ -59,7 +59,7 @@ well3:
     name: 'no paddle'
     apportionment: 0.1
   dd_response:
-    ['Muni1']
+    ['Muni1', 'Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
@@ -70,7 +70,7 @@ well4:
     x: 1200
     y: 400
   Q: 52 # Adjusted pumping rate. Original rate 200.
-  dd_time: 365
+  dd_days: 365
   stream_apportionment1:
     name: 'Upp Creek'
     apportionment: 0.6
@@ -78,7 +78,7 @@ well4:
     name: 'no paddle'
     apportionment: 0.1
   dd_response:
-    ['Muni1']
+    ['Muni1', 'Sprng1']
   stream_response:
     ['Upp Creek', 'no paddle']
 
