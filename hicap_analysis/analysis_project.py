@@ -236,8 +236,8 @@ class Project():
         outpath = self.ymlfile.parent / 'output'
         if not os.path.exists(outpath):
             os.mkdir(outpath)
-        
-        with open(outpath  / outfile, 'w') as ofp:
+        self.report_filename = outpath  / outfile
+        with open(self.report_filename, 'w') as ofp:
             ofp.write(f'HiCap well analysis report, configured from: {ymlbase}\n')
 
             # Report on each well
@@ -384,4 +384,10 @@ class Project():
         outfile = ymlbase.replace('.yml','.table_report.csv')
         # make a home for the report file
         outpath = self.ymlfile.parent / 'output'
-        agg_df.to_csv(outpath / outfile)
+        if not os.path.exists(outpath):
+            os.mkdir(outpath)
+
+        self.csv_output_filename = outpath / outfile
+        agg_df.to_csv(self.csv_output_filename)
+        # slap the csv dataframe into self
+        self.agg_df = agg_df
