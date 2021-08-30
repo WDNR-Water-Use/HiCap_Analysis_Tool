@@ -21,13 +21,14 @@ def _print_to_screen_and_file(s, ofp):
     print(s)
 
 # some helper functions for printing out results
-def _print_dd_depl(ofp, cw_dat):
+def _print_dd_depl(ofp, cw_dd, cw_max_depl):
     ofp.write(f'             **Drawdown**\n{"Response":30s}{"Drawdown(ft)":30s}\n')
-    for ck,v in cw_dat.drawdown.items():
+    for ck,v in cw_dd.items():
         ofp.write(f'{ck:30s}{v:<30.4f}\n')
     ofp.write(f'          **Maximum Depletion**\n{"Response":30s}{"Depletion(cfs)":30s}\n')
-    for ck,v in cw_dat.max_depletion.items():
+    for ck,v in cw_max_depl.items():
         ofp.write(f'{ck:30s}{v:<30.4f}\n')
+
 def _print_single_well_header(ofp, wname, wstatus):
     ofp.write('#'*50 + '\n')
     ofp.write(f'Well Name: {wname}\n')
@@ -247,7 +248,7 @@ class Project():
                 for cex in self.proposed_wells:
                     _print_single_well_header(ofp, cex, self._Project__well_data[cex]["status"])
                     cw_dat = self.wells[cex]
-                    _print_dd_depl(ofp, cw_dat)
+                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion)
                 ofp.write('\n')
 
             ofp.write('\n\nINDIVIDUAL EXISTING WELL REPORTS\n')
@@ -257,24 +258,26 @@ class Project():
                 for cex in self.existing_wells:
                     _print_single_well_header(ofp, cex, self._Project__well_data[cex]["status"])
                     cw_dat = self.wells[cex]
-                    _print_dd_depl(ofp, cw_dat)
+                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion)
                 ofp.write('\n')
 
-            #TODO: fix aggregation function apparent errors not matching the spreadsheet....
             self.aggregate_results()
 
-            #TODO: report out aggregated results for proposed, existing, and total
-
-            ofp.write('\n\nCOMBINED PROPOSED WELL REPORTS\n')
+            ofp.write('\n\nCOMBINED PROPOSED WELL REPORTS\n' + '#'*50 + '\n')
             if len(self.proposed_wells) == 0:
                 ofp.write('  there were no proposed wells in the configuration file!\n')
             else:
-                for cex in self.proposed_wells:
-
-                    _print_combined_well_results(ofp, cw_dat)
-                    cw_dat = self.wells[cex]
-                    _print_dd_depl(ofp, cw_dat)
-                ofp.write('\n')
+                 _print_dd_depl(ofp, self.proposed_aggregated_drawdown, self.proposed_aggregated_max_depletion)
+                    
+            ofp.write('\n\nCOMBINED EXISTING WELL REPORTS\n' + '#'*50 + '\n')
+            if len(self.existing_wells) == 0:
+                ofp.write('  there were no existing wells in the configuration file!\n')
+            else:
+                 _print_dd_depl(ofp, self.existing_aggregated_drawdown, self.existing_aggregated_max_depletion)
+                    
+            ofp.write('\n\nTOTAL COMBINED WELL REPORTS\n' + '#'*50 + '\n')
+            _print_dd_depl(ofp, self.total_aggregated_drawdown, self.total_aggregated_max_depletion)
+                    
 
 
         j=2
@@ -319,6 +322,7 @@ class Project():
                     self.proposed_aggregated_max_depletion[ck] = v
                 else:
                     self.proposed_aggregated_max_depletion[ck] += v
+
         # finally calculate the totals
         for cwell in self.existing_wells+self.proposed_wells:
             cw_dd = self.wells[cwell].drawdown

@@ -106,7 +106,6 @@ def project_spreadsheet_results():
 
 def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
-    #TODO: reconcile with the updated spreadsheet - something broke
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
@@ -223,13 +222,9 @@ def test_yaml_parsing():
     # spot check some numbers
     assert ap.wells['new1'].T == 35
     assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q)
-    assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.6
+    assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.3
 
 
     ap.report_responses()
-    j=2
-    #TODO: write up the aggregation / reporting functions
-
-    #TODO: test all of this against the spreadsheet with the spreadsheet YAML file
-
+    
     ap.write_responses_csv()
