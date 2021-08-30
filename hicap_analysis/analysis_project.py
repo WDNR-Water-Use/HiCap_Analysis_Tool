@@ -277,7 +277,7 @@ class Project():
                     
             ofp.write('\n\nTOTAL COMBINED WELL REPORTS\n' + '#'*50 + '\n')
             _print_dd_depl(ofp, self.total_aggregated_drawdown, self.total_aggregated_max_depletion)
-                    
+            
 
 
         j=2
@@ -339,8 +339,49 @@ class Project():
                     self.total_aggregated_max_depletion[ck] += v
 
     def write_responses_csv(self):
-        #TODO: write out repsonses in a CSV tabular format
-        pass
+        # create a dataframe to hold the aggregated results
+        cols = [f'{i}:dd (ft)' for i in self.total_aggregated_drawdown.keys()] + \
+                        [f'{i}:depl (cfs)' for i in self.total_aggregated_max_depletion.keys()]
+        col_base = [i.replace(':dd (ft)','').replace(':depl (cfs)','') for i in cols]
+ 
+        rows = [f'{i}: proposed' for i in self.proposed_wells] + \
+                [f'{i}: existing' for i in self.existing_wells] + \
+                ['total_proposed', 'total_existing','total_combined']
+        row_base = [i.replace(': existing','').replace(': proposed','') for i in rows]
+        agg_df = pd.DataFrame(index=row_base, columns=col_base)
+
+        # fill in the dataframe
+        # individual wells
+        for cn, cw in self.wells.items():
+            for cresp, cdd in cw.drawdown.items():
+                agg_df.loc[cn,cresp] = cdd
+            for cresp, cdepl in cw.max_depletion.items():
+                agg_df.loc[cn,cresp] = cdepl
+            
+        # totals
+        #proposed
+        for cresp, cdd in self.proposed_aggregated_drawdown.items():
+            agg_df.loc['total_proposed', cresp] = cdd
+        for cresp, cdepl in self.proposed_aggregated_max_depletion.items():
+            agg_df.loc['total_proposed', cresp] = cdepl
+        #existing
+        for cresp, cdd in self.existing_aggregated_drawdown.items():
+            agg_df.loc['total_existing', cresp] = cdd
+        for cresp, cdepl in self.existing_aggregated_max_depletion.items():
+            agg_df.loc['total_existing', cresp] = cdepl
+        #proposed
+        for cresp, cdd in self.total_aggregated_drawdown.items():
+            agg_df.loc['total_combined', cresp] = cdd
+        for cresp, cdepl in self.total_aggregated_max_depletion.items():
+            agg_df.loc['total_combined', cresp] = cdepl
 
 
-
+        agg_df.columns = cols
+        agg_df.index = rows
+        
+        # make a report file - named from the YML name
+        ymlbase = self.ymlfile.name
+        outfile = ymlbase.replace('.yml','.table_report.csv')
+        # make a home for the report file
+        outpath = self.ymlfile.parent / 'output'
+        agg_df.to_csv(outpath / outfile)

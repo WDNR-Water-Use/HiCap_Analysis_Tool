@@ -228,3 +228,5 @@ def test_yaml_parsing():
     ap.report_responses()
     
     ap.write_responses_csv()
+
+    # read in the CSV file and test against the spreadsheet output
