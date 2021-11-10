@@ -2,13 +2,30 @@ from hicap_analysis.wells import GPM2CFD, Well, WellResponse
 import numpy as np
 import pandas as pd
 import yaml, os, shutil
+from math import radians, cos, sin, asin, sqrt
+
+# def _loc_to_dist(loc0, loc1):
+#     '''
+#     Euclidean distance between two 2-d points assuming expressed in consistent units
+#     '''
+#     dist = np.sqrt((loc0[0]-loc1[0])**2 +(loc0[1]-loc1[1])**2)
+#     return dist
+
 
 def _loc_to_dist(loc0, loc1):
-    '''
-    Euclidean distance between two 2-d points assuming expressed in consistent units
-    '''
-    dist = np.sqrt((loc0[0]-loc1[0])**2 +(loc0[1]-loc1[1])**2)
-    return dist
+     '''
+     Distance between two points in lat/long using Haversine Formula assuming lat/long in decimal degrees, returned in feet
+     '''
+     #convert decimal degrees to radians
+     lon1, lat1, lon2, lat2 = map(radians, [loc0[0], loc0[1], loc1[0],loc1[1]])
+     #haversine
+     dlon = abs(lon2 - lon1)
+     dlat = abs(lat2 - lat1)
+     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+     c = 2 * asin(sqrt(a))
+     r = 3956*5280 # radius of the earth in feet
+     dist = c*r
+     return dist
 
 def _print_to_screen_and_file(s, ofp):
     """[summary]
@@ -38,7 +55,7 @@ def _print_combined_well_results(ofp, cw_dat):
     total_dd = np.sum([v for _,v in cw_dat.drawdown.items()])
     ofp.write('Total Drawdown (ft):   {total_dd:<16.4f}')
 class Project():
-    def __init__(self) -> None:
+    def __init__(self, ymlfile):
         """[summary]
         """
         self.status_categories = ['existing', 'active', 'pending', 'new_approved', 'inactive']
@@ -50,12 +67,12 @@ class Project():
         self.existing_wells = []
         self.proposed_wells = []
 
-    def populate_from_yaml(self, ymlfile):
-        """[summary]
+    # def populate_from_yaml(self, ymlfile):
+    #     """[summary]
 
-        Args:
-            ymlfile ([Path or string]): Configuration file (YAML style) for a project
-        """
+    #     Args:
+    #         ymlfile ([Path or string]): Configuration file (YAML style) for a project
+    #     """
         self.ymlfile = ymlfile
         with open(ymlfile) as ifp:
             d = yaml.safe_load(ifp)
