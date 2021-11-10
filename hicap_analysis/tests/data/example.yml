@@ -10,8 +10,8 @@ well1:
   name: new1
   status: pending
   loc:
-    x: -250
-    y: 20
+    x: 89.3832319
+    y: 43.0747648
   Q: 800
   dd_days: 30
   stream_apportionment1:
@@ -29,8 +29,8 @@ well2:
   name: new2
   status: pending
   loc:
-    x: 509
-    y: -200
+    x: 89.3860801
+    y: 43.0741618
   Q: 1000
   dd_days: 30
   stream_apportionment1:
@@ -48,8 +48,8 @@ well3:
   name: Existing_Irrig
   status: existing
   loc:
-    x: -800
-    y: -500
+    x: 89.3822938
+    y: 43.0725171
   Q: 500 # Adjusted pumping rate. Original rate is 1000.
   dd_days: 30
   stream_apportionment1:
@@ -67,8 +67,8 @@ well4:
   name: Existing_CAFO
   status: existing
   loc:
-    x: 1200
-    y: 400
+    x: 89.3886732
+    y: 43.0758064
   Q: 52 # Adjusted pumping rate. Original rate 200.
   dd_days: 365
   stream_apportionment1:
@@ -85,21 +85,21 @@ well4:
 dd_response1:
   name: 'Muni1'
   loc:
-    x: 520
-    y: 100
+    x: 89.3861214
+    y: 43.0749841
 dd_response2:
   name: 'Sprng1'
   loc:
-    x: -700
-    y: 250
+    x: 89.3815432
+    y: 43.0753953
 
 stream_response1:
   name: 'Upp Creek'
   loc:
-    x: 200
-    y: 29
+    x: 89.3849205
+    y: 43.0747895
 stream_response222222:
   name: 'no paddle'
   loc:
-    x: 343
-    y: 99
+    x: 89.3854571
+    y: 43.0749814
