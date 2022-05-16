@@ -473,5 +473,9 @@ class Project():
 
         self.csv_output_filename = outpath / outfile
         agg_df.to_csv(self.csv_output_filename)
-        # slap the csv dataframe into self
+        # slap the csv dataframes into self
         self.agg_df = agg_df
+        self.csv_output_filename = outpath / outfile.replace('.csv','.base_stream_depletion.csv')
+        agg_base_stream_df.to_csv(self.csv_output_filename)
+
+        self.agg_base_stream_df = agg_base_stream_df
