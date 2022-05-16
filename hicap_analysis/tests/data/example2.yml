@@ -1,0 +1,149 @@
+project_properties:
+  name: ComplexGeometryExample
+  T: 17000.0
+  S: 0.15
+  default_dd_days: 90
+  default_depletion_years: 5
+  default_pumping_days: 90
+
+dd_response1:
+  name: None
+  loc:
+    x: 90.0
+    y: 45.0
+
+well1:
+  name: '93444'
+  status: pending
+  loc:
+    x: 89.11925
+    y: 45.2231
+  Q: 46.0
+  pumping_days: 90
+  stream_apportionment1:
+    name: SpringBrook:93444
+    apportionment: 0.41
+  stream_apportionment2:
+    name: EBranchEauClaire:93444
+    apportionment: 0.59
+  stream_response:
+    ['SpringBrook:93444','EBranchEauClaire:93444']
+
+well2:
+  name: '596'
+  status: existing
+  loc:
+    x: 89.13673
+    y: 45.16846
+  Q: 12.0
+  pumping_days: 365
+  stream_apportionment1:
+    name: SpringBrook:596
+    apportionment: 0.66
+  stream_apportionment2:
+    name: EBranchEauClaire:596
+    apportionment: 0.34
+  stream_response:
+    ['SpringBrook:596','EBranchEauClaire:596']
+
+well3:
+  name: '81476'
+  status: existing
+  loc:
+    x: 89.13592
+    y: 45.16891
+  Q: 12.0
+  pumping_days: 365
+  stream_apportionment1:
+    name: SpringBrook:81476
+    apportionment: 0.67
+  stream_apportionment2:
+    name: EBranchEauClaire:81476
+    apportionment: 0.33
+  stream_response:
+    ['SpringBrook:81476','EBranchEauClaire:81476']
+
+well4:
+  name: '15064'
+  status: existing
+  loc:
+    x: 89.12385
+    y: 45.17368
+  Q: 88.0
+  pumping_days: 90
+  stream_apportionment1:
+    name: SpringBrook:15064
+    apportionment: 0.84
+  stream_apportionment2:
+    name: EBranchEauClaire:15064
+    apportionment: 0.16
+  stream_response:
+    ['SpringBrook:15064','EBranchEauClaire:15064']
+
+well5:
+  name: '15062'
+  status: existing
+  loc:
+    x: 89.12391
+    y: 45.1797
+  Q: 81.0
+  pumping_days: 90
+  stream_apportionment1:
+    name: SpringBrook:15062
+    apportionment: 0.79
+  stream_apportionment2:
+    name: EBranchEauClaire:15062
+    apportionment: 0.21
+  stream_response:
+    ['SpringBrook:15062','EBranchEauClaire:15062']
+
+stream_response1:
+  name: SpringBrook:93444
+  loc:
+    x: 89.08385
+    y: 45.20313
+stream_response2:
+  name: SpringBrook:596
+  loc:
+    x: 89.12834
+    y: 45.16251
+stream_response3:
+  name: SpringBrook:81476
+  loc:
+    x: 89.12786
+    y: 45.16273
+stream_response4:
+  name: SpringBrook:15064
+  loc:
+    x: 89.12006
+    y: 45.17048
+stream_response5:
+  name: SpringBrook:15062
+  loc:
+    x: 89.11677
+    y: 45.17646
+stream_response6:
+  name: EBranchEauClaire:93444
+  loc:
+    x: 89.1432
+    y: 45.23834
+stream_response7:
+  name: EBranchEauClaire:596
+  loc:
+    x: 89.1951
+    y: 45.2154
+stream_response8:
+  name: EBranchEauClaire:81476
+  loc:
+    x: 89.1951
+    y: 45.2154
+stream_response9:
+  name: EBranchEauClaire:15064
+  loc:
+    x: 89.20643
+    y: 45.20688
+stream_response10:
+  name: EBranchEauClaire:15062
+  loc:
+    x: 89.18126
+    y: 45.22085
