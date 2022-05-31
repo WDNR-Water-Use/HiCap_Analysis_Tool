@@ -257,5 +257,32 @@ def test_complex_yml():
     ap = Project(datapath / 'example2.yml')
     ap.report_responses()
     ap.write_responses_csv()
+    
+    df_ts = pd.read_csv(ap.csv_stream_output_ts_filename, index_col=0)
+    df_agg = pd.read_csv(ap.csv_stream_output_filename, index_col=0)
+    
+    df_ts_max = df_ts.max().to_frame()
+    df_ts_max.rename(columns={0:'raw'}, inplace=True)
+    s_cols_exist = [i for i in df_ts.columns if ("Spring" in i)&('93444' not in i)]
+    s_cols_prop = [i for i in df_ts.columns if ("Spring" in i)&('93444' in i)]
 
+    e_cols_exist=[i for i in df_ts.columns if ("EBranch" in i)&('93444' not in i)]
+    e_cols_prop=[i for i in df_ts.columns if ("EBranch" in i)&('93444' in i)]
+
+    s_cols_tot =s_cols_exist + s_cols_prop
+    e_cols_tot =e_cols_exist + e_cols_prop
+    
+    df_ts_max['read'] = [df_agg.loc[i.split(':')[1],i.split(':')[0]] for i in df_ts_max.index ]
+  
+    assert all(np.isclose(df_ts_max.raw, df_ts_max['read']) )
+    
+    keys = ('SpringBrook:proposed','SpringBrook:existing','SpringBrook:combined',
+         'EBranchEauClaire:proposed','EBranchEauClaire:existing','EBranchEauClaire:combined')
+    vals = (s_cols_prop, s_cols_exist, s_cols_tot,
+           e_cols_prop, e_cols_exist, e_cols_tot)
+    for k,v in zip(keys,vals):
+        df_agg_val = df_agg.loc[f'total_{k.split(":")[1]}', k.split(':')[0]]
+        calc_val = np.max(df_ts[v].sum(axis=1))
+        assert np.isclose(df_agg_val, calc_val)
+        
     return('stoked')

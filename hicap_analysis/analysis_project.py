@@ -426,6 +426,8 @@ class Project():
 
         # now make a special case dataframe for aggregated results by base stream name
         agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
+        all_depl_ts =pd.DataFrame(index=
+            self.wells[list(self.wells.keys())[0]].stream_responses[1].baseyears[0])
 
         # fill in the dataframe
         # individual wells
@@ -436,6 +438,8 @@ class Project():
                 agg_df.loc[cn,cresp] = cdepl
                 basekey = cresp.split(':')[0]
                 agg_base_stream_df.loc[cn,basekey] = cdepl
+            for cresp, cdepl in cw.depletion.items():
+                all_depl_ts[cresp] = cdepl
             
         # totals
         #proposed
@@ -445,6 +449,7 @@ class Project():
             agg_df.loc['total_proposed', cresp] = cdepl
         for cresp, cdepl in self.proposed_aggregated_base_stream_sum_depletion.items():
             agg_base_stream_df.loc['total_proposed', cresp] = np.max(cdepl)
+            
         #existing
         for cresp, cdd in self.existing_aggregated_drawdown.items():
             agg_df.loc['total_existing', cresp] = cdd
@@ -452,6 +457,7 @@ class Project():
             agg_df.loc['total_existing', cresp] = cdepl
         for cresp, cdepl in self.existing_aggregated_base_stream_sum_depletion.items():
             agg_base_stream_df.loc['total_existing', cresp] = np.max(cdepl)
+            
         #total
         for cresp, cdd in self.total_aggregated_drawdown.items():
             agg_df.loc['total_combined', cresp] = cdd
@@ -459,6 +465,7 @@ class Project():
             agg_df.loc['total_combined', cresp] = cdepl
         for cresp, cdepl in self.total_aggregated_base_stream_sum_depletion.items():
             agg_base_stream_df.loc['total_combined', cresp] = np.max(cdepl)
+            
 
         agg_df.columns = cols
         agg_df.index = rows
@@ -477,5 +484,7 @@ class Project():
         self.agg_df = agg_df
         self.csv_stream_output_filename = outpath / outfile.replace('.csv','.base_stream_depletion.csv')
         agg_base_stream_df.to_csv(self.csv_stream_output_filename)
+        self.csv_stream_output_ts_filename = outpath / outfile.replace('.csv','.all_ts.csv')
+        all_depl_ts.to_csv(self.csv_stream_output_ts_filename)
 
         self.agg_base_stream_df = agg_base_stream_df        
