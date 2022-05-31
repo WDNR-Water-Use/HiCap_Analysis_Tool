@@ -250,3 +250,14 @@ def test_yaml_parsing(project_spreadsheet_results):
     assert np.isclose(pars['sprng1_dd_combined_proposed'], agg_results.loc['total_proposed', 'Sprng1:dd (ft)'], atol=0.002)
     assert np.isclose(pars['stream1_depl_existing'], agg_results.loc['total_existing', 'Upp Creek:depl (cfs)'], atol=0.005)
     assert np.isclose(pars['stream1_depl_total_combined'], agg_results.loc['total_combined', 'Upp Creek:depl (cfs)'], atol=0.01)
+
+def test_yaml_parsing2():
+    from hicap_analysis.analysis_project import Project
+    from hicap_analysis import wells as wo
+    ap = Project(datapath / 'example2.yml')
+    ap.report_responses()
+    ap.write_responses_csv()
+    assert True 
+    
+def test_it():
+    print('here')# 

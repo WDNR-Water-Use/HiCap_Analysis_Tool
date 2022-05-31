@@ -310,6 +310,16 @@ class Project():
         self.proposed_aggregated_max_depletion = {}
         self.total_aggregated_max_depletion = {}
         
+        # make dictionaries to contain the sum_depletion results
+        self.existing_aggregated_sum_depletion = {}
+        self.proposed_aggregated_sum_depletion = {}
+        self.total_aggregated_sum_depletion = {}
+
+        # make dictionaries to contain the sum of depletion for each base stream name
+        self.existing_aggregated_base_stream_sum_depletion = {}
+        self.proposed_aggregated_base_stream_sum_depletion = {}
+        self.total_aggregated_base_stream_sum_depletion = {}        
+        self.base_streams = []
         # first existing wells
         for cwell in self.existing_wells:
             cw_dd = self.wells[cwell].drawdown
@@ -318,12 +328,30 @@ class Project():
                     self.existing_aggregated_drawdown[ck] = v
                 else:
                     self.existing_aggregated_drawdown[ck] += v
+            # first sum up depletion time series per well to later get max of sum by location
+            cw_dep = self.wells[cwell].depletion
+            for ck, v in cw_dep.items():
+                if ck not in self.existing_aggregated_sum_depletion.keys():
+                    self.existing_aggregated_sum_depletion[ck] = v
+                else:
+                    self.existing_aggregated_sum_depletion[ck] += v
+                # also parse to base stream name
+                base_key = ck.split(':')[0]
+                if base_key not in self.base_streams:
+                    self.base_streams.append(base_key)
+                if base_key not in self.existing_aggregated_base_stream_sum_depletion.keys():
+                    self.existing_aggregated_base_stream_sum_depletion[base_key] = v
+                else:
+                    self.existing_aggregated_base_stream_sum_depletion[base_key] += v
+
+            # then oldskool max per location            
             cw_max_dep = self.wells[cwell].max_depletion
             for ck, v in cw_max_dep.items():
                 if ck not in self.existing_aggregated_max_depletion.keys():
                     self.existing_aggregated_max_depletion[ck] = v
                 else:
                     self.existing_aggregated_max_depletion[ck] += v
+
 
         # next proposed wells
         for cwell in self.proposed_wells:
@@ -333,6 +361,20 @@ class Project():
                     self.proposed_aggregated_drawdown[ck] = v
                 else:
                     self.proposed_aggregated_drawdown[ck] += v
+            # first sum up depletion time series per well to later get max of sum by location
+            cw_dep = self.wells[cwell].depletion
+            for ck, v in cw_dep.items():
+                if ck not in self.proposed_aggregated_sum_depletion.keys():
+                    self.proposed_aggregated_sum_depletion[ck] = v
+                else:
+                    self.proposed_aggregated_sum_depletion[ck] += v
+            # also parse to base stream name
+                base_key = ck.split(':')[0]
+                if base_key not in self.proposed_aggregated_base_stream_sum_depletion.keys():
+                    self.proposed_aggregated_base_stream_sum_depletion[base_key] = v
+                else:
+                    self.proposed_aggregated_base_stream_sum_depletion[base_key] += v
+            # then oldskool max per location            
             cw_max_dep = self.wells[cwell].max_depletion
             for ck, v in cw_max_dep.items():
                 if ck not in self.proposed_aggregated_max_depletion.keys():
@@ -348,6 +390,20 @@ class Project():
                     self.total_aggregated_drawdown[ck] = v
                 else:
                     self.total_aggregated_drawdown[ck] += v
+            # first sum up depletion time series per well to later get max of sum by location
+            cw_dep = self.wells[cwell].depletion
+            for ck, v in cw_dep.items():
+                if ck not in self.total_aggregated_sum_depletion.keys():
+                    self.total_aggregated_sum_depletion[ck] = v
+                else:
+                    self.total_aggregated_sum_depletion[ck] += v
+                # also parse to base stream name
+                base_key = ck.split(':')[0]
+                if base_key not in self.total_aggregated_base_stream_sum_depletion.keys():
+                    self.total_aggregated_base_stream_sum_depletion[base_key] = v
+                else:
+                    self.total_aggregated_base_stream_sum_depletion[base_key] += v                    
+            # then oldskool max per location   
             cw_max_dep = self.wells[cwell].max_depletion
             for ck, v in cw_max_dep.items():
                 if ck not in self.total_aggregated_max_depletion.keys():
@@ -367,6 +423,9 @@ class Project():
         row_base = [i.replace(': existing','').replace(': proposed','') for i in rows]
         agg_df = pd.DataFrame(index=row_base, columns=col_base)
 
+        # now make a special case dataframe for aggregated results by base stream name
+        agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
+
         # fill in the dataframe
         # individual wells
         for cn, cw in self.wells.items():
@@ -374,24 +433,32 @@ class Project():
                 agg_df.loc[cn,cresp] = cdd
             for cresp, cdepl in cw.max_depletion.items():
                 agg_df.loc[cn,cresp] = cdepl
-            
+                basekey = cresp.split(':')[0]
+                agg_base_stream_df.loc[cn,basekey] = cdepl
+                            
         # totals
         #proposed
         for cresp, cdd in self.proposed_aggregated_drawdown.items():
             agg_df.loc['total_proposed', cresp] = cdd
         for cresp, cdepl in self.proposed_aggregated_max_depletion.items():
             agg_df.loc['total_proposed', cresp] = cdepl
+        for cresp, cdepl in self.proposed_aggregated_base_stream_sum_depletion.items():
+                agg_base_stream_df.loc['total_proposed', cresp] = np.max(cdepl)
         #existing
         for cresp, cdd in self.existing_aggregated_drawdown.items():
             agg_df.loc['total_existing', cresp] = cdd
         for cresp, cdepl in self.existing_aggregated_max_depletion.items():
             agg_df.loc['total_existing', cresp] = cdepl
-        #proposed
+        for cresp, cdepl in self.existing_aggregated_base_stream_sum_depletion.items():
+            agg_base_stream_df.loc['total_existing', cresp] = np.max(cdepl)
+        #total
         for cresp, cdd in self.total_aggregated_drawdown.items():
             agg_df.loc['total_combined', cresp] = cdd
         for cresp, cdepl in self.total_aggregated_max_depletion.items():
             agg_df.loc['total_combined', cresp] = cdepl
-
+        for cresp, cdepl in self.total_aggregated_base_stream_sum_depletion.items():
+            agg_base_stream_df.loc['total_combined', cresp] = np.max(cdepl)
+            
 
         agg_df.columns = cols
         agg_df.index = rows
@@ -406,5 +473,9 @@ class Project():
 
         self.csv_output_filename = outpath / outfile
         agg_df.to_csv(self.csv_output_filename)
-        # slap the csv dataframe into self
+        # slap the csv dataframes into self
         self.agg_df = agg_df
+        self.csv_stream_output_filename = outpath / outfile.replace('.csv','.base_stream_depletion.csv')
+        agg_base_stream_df.to_csv(self.csv_stream_output_filename)
+
+        self.agg_base_stream_df = agg_base_stream_df        

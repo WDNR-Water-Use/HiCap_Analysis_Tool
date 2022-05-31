@@ -171,16 +171,11 @@ class WellResponse():
     
     @property
     def drawdown(self):
-        if self._drawdown is None:
-            self._drawdown = self._calc_drawdown()
-        return self._drawdown
+        return self._calc_drawdown()
 
     @property
     def depletion(self):
-        if self._depletion is None:
-            self._depletion = self._calc_depletion()
-        return self._depletion
-
+        return self._calc_depletion()     
 
 class Well():
     """Object to evaluate a pending (or existing, or a couple other possibilities) well with all relevant impacts.
@@ -253,18 +248,16 @@ class Well():
 
     @property
     def depletion(self):
-        if self._depletion is None:
-            self._depletion = {}
-            for _ , cwob in self.stream_responses.items():
-                self._depletion[cwob.name] = cwob.depletion
+        self._depletion = {}
+        for _ , cwob in self.stream_responses.items():
+            self._depletion[cwob.name] = cwob.depletion
            
         return self._depletion
 
     @property
     def max_depletion(self):
-        if self._max_depletion is None:
-             self._max_depletion = {cwob.name:np.max(cwob.depletion) 
-                    for _,cwob in self.stream_responses.items()}
-        return self._max_depletion
+        return {cwob.name:np.max(cwob.depletion) 
+                for _,cwob in self.stream_responses.items()}
+        
 
 
