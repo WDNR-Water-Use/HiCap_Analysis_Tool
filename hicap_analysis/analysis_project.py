@@ -343,7 +343,7 @@ class Project():
                     self.existing_aggregated_base_stream_sum_depletion[base_key] = v
                 else:
                     self.existing_aggregated_base_stream_sum_depletion[base_key] += v
-
+            
             # then oldskool max per location            
             cw_max_dep = self.wells[cwell].max_depletion
             for ck, v in cw_max_dep.items():
@@ -351,6 +351,7 @@ class Project():
                     self.existing_aggregated_max_depletion[ck] = v
                 else:
                     self.existing_aggregated_max_depletion[ck] += v
+                
 
 
         # next proposed wells
@@ -403,7 +404,7 @@ class Project():
                     self.total_aggregated_base_stream_sum_depletion[base_key] = v
                 else:
                     self.total_aggregated_base_stream_sum_depletion[base_key] += v                    
-            # then oldskool max per location   
+            # then oldskool max per location            
             cw_max_dep = self.wells[cwell].max_depletion
             for ck, v in cw_max_dep.items():
                 if ck not in self.total_aggregated_max_depletion.keys():
@@ -435,7 +436,7 @@ class Project():
                 agg_df.loc[cn,cresp] = cdepl
                 basekey = cresp.split(':')[0]
                 agg_base_stream_df.loc[cn,basekey] = cdepl
-                            
+            
         # totals
         #proposed
         for cresp, cdd in self.proposed_aggregated_drawdown.items():
@@ -443,7 +444,7 @@ class Project():
         for cresp, cdepl in self.proposed_aggregated_max_depletion.items():
             agg_df.loc['total_proposed', cresp] = cdepl
         for cresp, cdepl in self.proposed_aggregated_base_stream_sum_depletion.items():
-                agg_base_stream_df.loc['total_proposed', cresp] = np.max(cdepl)
+            agg_base_stream_df.loc['total_proposed', cresp] = np.max(cdepl)
         #existing
         for cresp, cdd in self.existing_aggregated_drawdown.items():
             agg_df.loc['total_existing', cresp] = cdd
@@ -458,7 +459,6 @@ class Project():
             agg_df.loc['total_combined', cresp] = cdepl
         for cresp, cdepl in self.total_aggregated_base_stream_sum_depletion.items():
             agg_base_stream_df.loc['total_combined', cresp] = np.max(cdepl)
-            
 
         agg_df.columns = cols
         agg_df.index = rows
