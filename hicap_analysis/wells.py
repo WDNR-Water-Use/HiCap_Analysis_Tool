@@ -13,7 +13,7 @@ def _theis(T,S,time,dist,Q):
     T (float): transmissivity [ft**2/d]
     S (float): storage [unitless]
     time (float, optionally np.array or list): time at which to calculate results [d]
-    dist (float, optionall np.array or list): distance at which to calculate results in [ft]
+    dist (float, optionally np.array or list): distance at which to calculate results in [ft]
     Q (float): pumping rate (+ is extraction) [ft**3/d]
     
     Returns:
@@ -24,20 +24,20 @@ def _theis(T,S,time,dist,Q):
         time = np.array(time)
     if isinstance(dist, list):
         dist = np.array(dist)
-    # contruct the well function argument
+    # construct the well function argument
     u = dist**2. * S / (4. * T * time)
     # calculate and return
     return (Q / (4. * np.pi * T)) * sps.exp1(u)
     
 # define stream depletion methods here
 def _glover(T,S,time,dist,Q):
-    """Calcualte Glover 
+    """Calculate Glover 
 
     Args:
     T (float): transmissivity [ft**2/d]
     S (float): storage [unitless]
     time (float, optionally np.array or list): time at which to calculate results [d]
-    dist (float, optionall np.array or list): distance at which to calculate results in [ft]
+    dist (float, optionaly np.array or list): distance at which to calculate results in [ft]
     Q (float): pumping rate (+ is extraction) [ft**3/d]
 
 
@@ -54,7 +54,7 @@ def _sdf(T,S,dist,**kwargs):
     Args:
         T (float): transmissivity [ft**2/d]
         S (float): storage [unitless]
-        dist (float, optionall np.array or list): distance at which to calculate results in [ft]
+        dist (float, optionally np.array or list): distance at which to calculate results in [ft]
         **kwargs: just included to all for extra values in call
     Returns:
         SDF: Stream depletion factor [d]
@@ -140,7 +140,7 @@ class WellResponse():
     def _calc_depletion(self):
         depl_f = ALL_DEPL_METHODS[self.depl_method.lower()]
         
-        # initialize containers for time series insitalized with year 0
+        # initialize containers for time series initialized with year 0
         self.baseyears = [np.arange(1,365*self.depletion_years + 1)]
         self.imageyears = [np.zeros_like(self.baseyears[0])]
         self.imageyears[0][self.depl_pump_time:] = np.arange(1,len(self.imageyears[0])-self.depl_pump_time+1)
@@ -229,14 +229,18 @@ class Well():
         # first for streams
         if self.stream_dist is not None:
             for cs, (cname, cdist) in enumerate(self.stream_dist.items()):
-                self.stream_responses[cs+1] = WellResponse(cname, 'stream', T=self.T, S=self.S, dist=cdist, depl_pump_time =self.depl_pump_time, 
-                                    Q=self.Q, stream_apportionment=self.stream_apportionment[cname], depl_method='walton')
+                self.stream_responses[cs+1] = WellResponse(cname, 'stream', T=self.T, S=self.S, 
+                                    dist=cdist, depl_pump_time =self.depl_pump_time, 
+                                    Q=self.Q, stream_apportionment=self.stream_apportionment[cname], 
+                                    depl_method='walton')
 
         # next for drawdown responses
         if self.drawdown_dist is not None:
             for cw, (cname,cdist) in enumerate(self.drawdown_dist.items()):
-                self.drawdown_responses[cw+1] = WellResponse(cname, 'well', T=self.T, S=self.S, dist=cdist, theis_time=self.theis_dd_days, 
-                                    Q=self.Q, dd_method='theis', depletion_years=self.depletion_years)        
+                self.drawdown_responses[cw+1] = WellResponse(cname, 'well', T=self.T, S=self.S, 
+                                    dist=cdist, theis_time=self.theis_dd_days, 
+                                    Q=self.Q, dd_method='theis', 
+                                    depletion_years=self.depletion_years)        
         
     @property
     def drawdown(self):

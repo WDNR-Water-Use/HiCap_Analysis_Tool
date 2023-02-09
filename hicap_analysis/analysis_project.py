@@ -207,8 +207,9 @@ class Project():
                 stream_app_d = None
             
             self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
-            theis_dd_days=cw['dd_days'],depl_pump_time=cw['pumping_days'],stream_dist=stream_dist,drawdown_dist=dd_dist,
-            stream_apportionment=stream_app_d
+                    theis_dd_days=cw['dd_days'], depl_pump_time=cw['pumping_days'],
+                    stream_dist=stream_dist, drawdown_dist=dd_dist,
+                    stream_apportionment=stream_app_d
             )
 
 
