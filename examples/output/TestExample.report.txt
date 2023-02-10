@@ -1,0 +1,2076 @@
+HiCap well analysis report, configured from: TestExample.yml
+
+INDIVIDUAL PROPOSED WELL REPORTS
+##################################################
+Well Name: 93832
+Well status: pending
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:93832           0.0730                        
+
+
+
+INDIVIDUAL EXISTING WELL REPORTS
+##################################################
+Well Name: 92743
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+LakeEmily                     0.0000                        
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92743           0.0099                        
+##################################################
+Well Name: 73262
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73262           0.0089                        
+##################################################
+Well Name: 23983
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23983           0.0427                        
+##################################################
+Well Name: 70548
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70548           0.4774                        
+##################################################
+Well Name: 70262
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70262           0.0385                        
+##################################################
+Well Name: 67401
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:67401           0.0490                        
+##################################################
+Well Name: 986
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:986             0.0229                        
+##################################################
+Well Name: 68690
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68690           0.1606                        
+##################################################
+Well Name: 23883
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23883           0.0355                        
+##################################################
+Well Name: 72737
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72737           0.0961                        
+##################################################
+Well Name: 24155
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24155           0.0170                        
+##################################################
+Well Name: 24037
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24037           0.0148                        
+##################################################
+Well Name: 23978
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23978           0.0127                        
+##################################################
+Well Name: 91803
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91803           0.0105                        
+##################################################
+Well Name: 91706
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91706           0.0632                        
+##################################################
+Well Name: 91411
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91411           0.0297                        
+##################################################
+Well Name: 92199
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92199           0.0192                        
+##################################################
+Well Name: 92045
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92045           0.0330                        
+##################################################
+Well Name: 93141
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:93141           0.0832                        
+##################################################
+Well Name: 91562
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91562           0.0049                        
+##################################################
+Well Name: 73744
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73744           0.0495                        
+##################################################
+Well Name: 92299
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92299           0.0268                        
+##################################################
+Well Name: 24285
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24285           0.0059                        
+##################################################
+Well Name: 68785
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68785           0.0364                        
+##################################################
+Well Name: 72422
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72422           0.0199                        
+##################################################
+Well Name: 815
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:815             0.0827                        
+##################################################
+Well Name: 23867
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23867           0.0114                        
+##################################################
+Well Name: 91173
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91173           0.0109                        
+##################################################
+Well Name: 23993
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23993           0.0890                        
+##################################################
+Well Name: 23699
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23699           0.0098                        
+##################################################
+Well Name: 23957
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23957           0.0128                        
+##################################################
+Well Name: 71916
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71916           0.0066                        
+##################################################
+Well Name: 23682
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23682           0.0823                        
+##################################################
+Well Name: 91175
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91175           0.0152                        
+##################################################
+Well Name: 91072
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91072           0.0178                        
+##################################################
+Well Name: 91181
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91181           0.0342                        
+##################################################
+Well Name: 67563
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:67563           0.0502                        
+##################################################
+Well Name: 71998
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71998           0.0390                        
+##################################################
+Well Name: 70248
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70248           0.0589                        
+##################################################
+Well Name: 92136
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92136           0.0076                        
+##################################################
+Well Name: 3719
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:3719            0.0670                        
+##################################################
+Well Name: 91670
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91670           0.0209                        
+##################################################
+Well Name: 91997
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91997           0.0209                        
+##################################################
+Well Name: 23926
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23926           0.0127                        
+##################################################
+Well Name: 68905
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68905           0.0778                        
+##################################################
+Well Name: 23637
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23637           0.0122                        
+##################################################
+Well Name: 23698
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23698           0.0181                        
+##################################################
+Well Name: 23869
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23869           0.0103                        
+##################################################
+Well Name: 70263
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70263           0.0296                        
+##################################################
+Well Name: 23979
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23979           0.0112                        
+##################################################
+Well Name: 23616
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23616           0.0452                        
+##################################################
+Well Name: 23754
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23754           0.0135                        
+##################################################
+Well Name: 67329
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:67329           0.0381                        
+##################################################
+Well Name: 23870
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23870           0.0098                        
+##################################################
+Well Name: 23635
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23635           0.0142                        
+##################################################
+Well Name: 70881
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70881           0.0021                        
+##################################################
+Well Name: 24050
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24050           0.0246                        
+##################################################
+Well Name: 23715
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23715           0.0062                        
+##################################################
+Well Name: 68917
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68917           0.0327                        
+##################################################
+Well Name: 1860
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:1860            0.0064                        
+##################################################
+Well Name: 24161
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24161           0.0268                        
+##################################################
+Well Name: 617
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:617             0.0157                        
+##################################################
+Well Name: 69289
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69289           0.0265                        
+##################################################
+Well Name: 73002
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73002           0.0136                        
+##################################################
+Well Name: 24169
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24169           0.0117                        
+##################################################
+Well Name: 23907
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23907           0.0793                        
+##################################################
+Well Name: 69635
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69635           0.0724                        
+##################################################
+Well Name: 24008
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24008           0.0509                        
+##################################################
+Well Name: 91924
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91924           0.0096                        
+##################################################
+Well Name: 92981
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92981           0.0049                        
+##################################################
+Well Name: 69480
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69480           0.0070                        
+##################################################
+Well Name: 24132
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24132           0.0109                        
+##################################################
+Well Name: 23700
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23700           0.0081                        
+##################################################
+Well Name: 23961
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23961           0.0436                        
+##################################################
+Well Name: 91161
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91161           0.0171                        
+##################################################
+Well Name: 23697
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23697           0.0127                        
+##################################################
+Well Name: 68049
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68049           0.0091                        
+##################################################
+Well Name: 23863
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23863           0.0170                        
+##################################################
+Well Name: 73344
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73344           0.0337                        
+##################################################
+Well Name: 69961
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69961           0.0229                        
+##################################################
+Well Name: 24017
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24017           0.0078                        
+##################################################
+Well Name: 23827
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23827           0.0190                        
+##################################################
+Well Name: 71326
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71326           0.0099                        
+##################################################
+Well Name: 74131
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74131           0.0238                        
+##################################################
+Well Name: 24022
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24022           0.0160                        
+##################################################
+Well Name: 24080
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24080           0.0046                        
+##################################################
+Well Name: 23846
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23846           0.0025                        
+##################################################
+Well Name: 23852
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23852           0.0160                        
+##################################################
+Well Name: 73345
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73345           0.0165                        
+##################################################
+Well Name: 91169
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91169           0.0296                        
+##################################################
+Well Name: 23620
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23620           0.0166                        
+##################################################
+Well Name: 71917
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71917           0.0041                        
+##################################################
+Well Name: 23868
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23868           0.0060                        
+##################################################
+Well Name: 69508
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69508           0.0125                        
+##################################################
+Well Name: 92077
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92077           0.0141                        
+##################################################
+Well Name: 23949
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23949           0.0104                        
+##################################################
+Well Name: 24302
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24302           0.0023                        
+##################################################
+Well Name: 23647
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23647           0.0031                        
+##################################################
+Well Name: 73346
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73346           0.0154                        
+##################################################
+Well Name: 1013
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:1013            0.0219                        
+##################################################
+Well Name: 4174
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:4174            0.0096                        
+##################################################
+Well Name: 24059
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24059           0.0015                        
+##################################################
+Well Name: 24066
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24066           0.0072                        
+##################################################
+Well Name: 23915
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23915           0.0074                        
+##################################################
+Well Name: 23826
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23826           0.0228                        
+##################################################
+Well Name: 23873
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23873           0.0098                        
+##################################################
+Well Name: 72437
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72437           0.0008                        
+##################################################
+Well Name: 24216
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24216           0.0030                        
+##################################################
+Well Name: 3473
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:3473            0.0049                        
+##################################################
+Well Name: 24286
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24286           0.0053                        
+##################################################
+Well Name: 24294
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24294           0.0056                        
+##################################################
+Well Name: 73625
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73625           0.0069                        
+##################################################
+Well Name: 1323
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:1323            0.0005                        
+##################################################
+Well Name: 1302
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:1302            0.0030                        
+##################################################
+Well Name: 70961
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70961           0.0118                        
+##################################################
+Well Name: 24220
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24220           0.0119                        
+##################################################
+Well Name: 73347
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73347           0.0100                        
+##################################################
+Well Name: 70943
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70943           0.0227                        
+##################################################
+Well Name: 23716
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23716           0.0024                        
+##################################################
+Well Name: 69693
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69693           0.0152                        
+##################################################
+Well Name: 69679
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69679           0.0180                        
+##################################################
+Well Name: 73597
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73597           0.0021                        
+##################################################
+Well Name: 71990
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71990           0.0057                        
+##################################################
+Well Name: 92808
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92808           0.0027                        
+##################################################
+Well Name: 24047
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24047           0.0005                        
+##################################################
+Well Name: 69576
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69576           0.0054                        
+##################################################
+Well Name: 23709
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23709           0.0016                        
+##################################################
+Well Name: 73093
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73093           0.0057                        
+##################################################
+Well Name: 91808
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91808           0.0111                        
+##################################################
+Well Name: 92036
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92036           0.0102                        
+##################################################
+Well Name: 23825
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23825           0.0084                        
+##################################################
+Well Name: 71960
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71960           0.0336                        
+##################################################
+Well Name: 84462
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:84462           0.0016                        
+##################################################
+Well Name: 73153
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73153           0.0054                        
+##################################################
+Well Name: 74477
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74477           0.0173                        
+##################################################
+Well Name: 24021
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24021           0.0025                        
+##################################################
+Well Name: 490
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:490             0.0105                        
+##################################################
+Well Name: 84461
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:84461           0.0006                        
+##################################################
+Well Name: 23614
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23614           0.0079                        
+##################################################
+Well Name: 74280
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74280           0.0013                        
+##################################################
+Well Name: 70519
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70519           0.0042                        
+##################################################
+Well Name: 23924
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23924           0.0011                        
+##################################################
+Well Name: 24013
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24013           0.0016                        
+##################################################
+Well Name: 70031
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70031           0.0024                        
+##################################################
+Well Name: 23944
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23944           0.0003                        
+##################################################
+Well Name: 92885
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92885           0.0004                        
+##################################################
+Well Name: 24087
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24087           0.0012                        
+##################################################
+Well Name: 74478
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74478           0.0055                        
+##################################################
+Well Name: 70032
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70032           0.0053                        
+##################################################
+Well Name: 91996
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91996           0.0046                        
+##################################################
+Well Name: 71199
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:71199           0.0035                        
+##################################################
+Well Name: 69636
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69636           0.0131                        
+##################################################
+Well Name: 68294
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68294           0.0018                        
+##################################################
+Well Name: 73372
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73372           0.0050                        
+##################################################
+Well Name: 873
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:873             0.0008                        
+##################################################
+Well Name: 72304
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72304           0.0004                        
+##################################################
+Well Name: 73906
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73906           0.0028                        
+##################################################
+Well Name: 72713
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72713           0.0002                        
+##################################################
+Well Name: 58403
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:58403           0.0003                        
+##################################################
+Well Name: 70520
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70520           0.0006                        
+##################################################
+Well Name: 92696
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92696           0.0007                        
+##################################################
+Well Name: 70974
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70974           0.0034                        
+##################################################
+Well Name: 58414
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:58414           0.0002                        
+##################################################
+Well Name: 74193
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74193           0.0010                        
+##################################################
+Well Name: 72983
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72983           0.0000                        
+##################################################
+Well Name: 23913
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23913           0.0006                        
+##################################################
+Well Name: 68238
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68238           0.0005                        
+##################################################
+Well Name: 90475
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:90475           0.0015                        
+##################################################
+Well Name: 24195
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24195           0.0000                        
+##################################################
+Well Name: 72183
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72183           0.0003                        
+##################################################
+Well Name: 69288
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69288           0.0015                        
+##################################################
+Well Name: 69669
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69669           0.0007                        
+##################################################
+Well Name: 72436
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72436           0.0001                        
+##################################################
+Well Name: 74428
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74428           0.0003                        
+##################################################
+Well Name: 74429
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74429           0.0003                        
+##################################################
+Well Name: 90149
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:90149           0.0010                        
+##################################################
+Well Name: 70191
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70191           0.0002                        
+##################################################
+Well Name: 23648
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:23648           0.0001                        
+##################################################
+Well Name: 72301
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72301           0.0001                        
+##################################################
+Well Name: 24305
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:24305           0.0001                        
+##################################################
+Well Name: 72421
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:72421           0.0004                        
+##################################################
+Well Name: 68689
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68689           0.0002                        
+##################################################
+Well Name: 69064
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69064           0.0001                        
+##################################################
+Well Name: 70975
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:70975           0.0007                        
+##################################################
+Well Name: 73624
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73624           0.0009                        
+##################################################
+Well Name: 73092
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:73092           0.0002                        
+##################################################
+Well Name: 68220
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68220           0.0002                        
+##################################################
+Well Name: 68221
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68221           0.0002                        
+##################################################
+Well Name: 68247
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68247           0.0002                        
+##################################################
+Well Name: 74427
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74427           0.0002                        
+##################################################
+Well Name: 69595
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:69595           0.0000                        
+##################################################
+Well Name: 91895
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:91895           0.0000                        
+##################################################
+Well Name: 58416
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:58416           0.0000                        
+##################################################
+Well Name: 67922
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:67922           0.0000                        
+##################################################
+Well Name: 74481
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:74481           0.0000                        
+TomorrowRiver:67922           0.0000                        
+##################################################
+Well Name: 4661
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:4661            0.0000                        
+##################################################
+Well Name: 92724
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92724           0.0000                        
+##################################################
+Well Name: 602
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:602             0.0000                        
+##################################################
+Well Name: 603
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:603             0.0000                        
+##################################################
+Well Name: 68218
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68218           0.0000                        
+##################################################
+Well Name: 68216
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68216           0.0000                        
+##################################################
+Well Name: 68219
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:68219           0.0000                        
+##################################################
+Well Name: 90159
+Well status: existing
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:90159           0.0000                        
+
+
+
+COMBINED PROPOSED WELL REPORTS
+##################################################
+             **Drawdown**
+Response                      Drawdown(ft)                  
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:93832           0.0730                        
+
+
+COMBINED EXISTING WELL REPORTS
+##################################################
+             **Drawdown**
+Response                      Drawdown(ft)                  
+LakeEmily                     0.0000                        
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92743           0.0099                        
+TomorrowRiver:73262           0.0089                        
+TomorrowRiver:23983           0.0427                        
+TomorrowRiver:70548           0.4774                        
+TomorrowRiver:70262           0.0385                        
+TomorrowRiver:67401           0.0490                        
+TomorrowRiver:986             0.0229                        
+TomorrowRiver:68690           0.1606                        
+TomorrowRiver:23883           0.0355                        
+TomorrowRiver:72737           0.0961                        
+TomorrowRiver:24155           0.0170                        
+TomorrowRiver:24037           0.0148                        
+TomorrowRiver:23978           0.0127                        
+TomorrowRiver:91803           0.0105                        
+TomorrowRiver:91706           0.0632                        
+TomorrowRiver:91411           0.0297                        
+TomorrowRiver:92199           0.0192                        
+TomorrowRiver:92045           0.0330                        
+TomorrowRiver:93141           0.0832                        
+TomorrowRiver:91562           0.0049                        
+TomorrowRiver:73744           0.0495                        
+TomorrowRiver:92299           0.0268                        
+TomorrowRiver:24285           0.0059                        
+TomorrowRiver:68785           0.0364                        
+TomorrowRiver:72422           0.0199                        
+TomorrowRiver:815             0.0827                        
+TomorrowRiver:23867           0.0114                        
+TomorrowRiver:91173           0.0109                        
+TomorrowRiver:23993           0.0890                        
+TomorrowRiver:23699           0.0098                        
+TomorrowRiver:23957           0.0128                        
+TomorrowRiver:71916           0.0066                        
+TomorrowRiver:23682           0.0823                        
+TomorrowRiver:91175           0.0152                        
+TomorrowRiver:91072           0.0178                        
+TomorrowRiver:91181           0.0342                        
+TomorrowRiver:67563           0.0502                        
+TomorrowRiver:71998           0.0390                        
+TomorrowRiver:70248           0.0589                        
+TomorrowRiver:92136           0.0076                        
+TomorrowRiver:3719            0.0670                        
+TomorrowRiver:91670           0.0209                        
+TomorrowRiver:91997           0.0209                        
+TomorrowRiver:23926           0.0127                        
+TomorrowRiver:68905           0.0778                        
+TomorrowRiver:23637           0.0122                        
+TomorrowRiver:23698           0.0181                        
+TomorrowRiver:23869           0.0103                        
+TomorrowRiver:70263           0.0296                        
+TomorrowRiver:23979           0.0112                        
+TomorrowRiver:23616           0.0452                        
+TomorrowRiver:23754           0.0135                        
+TomorrowRiver:67329           0.0381                        
+TomorrowRiver:23870           0.0098                        
+TomorrowRiver:23635           0.0142                        
+TomorrowRiver:70881           0.0021                        
+TomorrowRiver:24050           0.0246                        
+TomorrowRiver:23715           0.0062                        
+TomorrowRiver:68917           0.0327                        
+TomorrowRiver:1860            0.0064                        
+TomorrowRiver:24161           0.0268                        
+TomorrowRiver:617             0.0157                        
+TomorrowRiver:69289           0.0265                        
+TomorrowRiver:73002           0.0136                        
+TomorrowRiver:24169           0.0117                        
+TomorrowRiver:23907           0.0793                        
+TomorrowRiver:69635           0.0724                        
+TomorrowRiver:24008           0.0509                        
+TomorrowRiver:91924           0.0096                        
+TomorrowRiver:92981           0.0049                        
+TomorrowRiver:69480           0.0070                        
+TomorrowRiver:24132           0.0109                        
+TomorrowRiver:23700           0.0081                        
+TomorrowRiver:23961           0.0436                        
+TomorrowRiver:91161           0.0171                        
+TomorrowRiver:23697           0.0127                        
+TomorrowRiver:68049           0.0091                        
+TomorrowRiver:23863           0.0170                        
+TomorrowRiver:73344           0.0337                        
+TomorrowRiver:69961           0.0229                        
+TomorrowRiver:24017           0.0078                        
+TomorrowRiver:23827           0.0190                        
+TomorrowRiver:71326           0.0099                        
+TomorrowRiver:74131           0.0238                        
+TomorrowRiver:24022           0.0160                        
+TomorrowRiver:24080           0.0046                        
+TomorrowRiver:23846           0.0025                        
+TomorrowRiver:23852           0.0160                        
+TomorrowRiver:73345           0.0165                        
+TomorrowRiver:91169           0.0296                        
+TomorrowRiver:23620           0.0166                        
+TomorrowRiver:71917           0.0041                        
+TomorrowRiver:23868           0.0060                        
+TomorrowRiver:69508           0.0125                        
+TomorrowRiver:92077           0.0141                        
+TomorrowRiver:23949           0.0104                        
+TomorrowRiver:24302           0.0023                        
+TomorrowRiver:23647           0.0031                        
+TomorrowRiver:73346           0.0154                        
+TomorrowRiver:1013            0.0219                        
+TomorrowRiver:4174            0.0096                        
+TomorrowRiver:24059           0.0015                        
+TomorrowRiver:24066           0.0072                        
+TomorrowRiver:23915           0.0074                        
+TomorrowRiver:23826           0.0228                        
+TomorrowRiver:23873           0.0098                        
+TomorrowRiver:72437           0.0008                        
+TomorrowRiver:24216           0.0030                        
+TomorrowRiver:3473            0.0049                        
+TomorrowRiver:24286           0.0053                        
+TomorrowRiver:24294           0.0056                        
+TomorrowRiver:73625           0.0069                        
+TomorrowRiver:1323            0.0005                        
+TomorrowRiver:1302            0.0030                        
+TomorrowRiver:70961           0.0118                        
+TomorrowRiver:24220           0.0119                        
+TomorrowRiver:73347           0.0100                        
+TomorrowRiver:70943           0.0227                        
+TomorrowRiver:23716           0.0024                        
+TomorrowRiver:69693           0.0152                        
+TomorrowRiver:69679           0.0180                        
+TomorrowRiver:73597           0.0021                        
+TomorrowRiver:71990           0.0057                        
+TomorrowRiver:92808           0.0027                        
+TomorrowRiver:24047           0.0005                        
+TomorrowRiver:69576           0.0054                        
+TomorrowRiver:23709           0.0016                        
+TomorrowRiver:73093           0.0057                        
+TomorrowRiver:91808           0.0111                        
+TomorrowRiver:92036           0.0102                        
+TomorrowRiver:23825           0.0084                        
+TomorrowRiver:71960           0.0336                        
+TomorrowRiver:84462           0.0016                        
+TomorrowRiver:73153           0.0054                        
+TomorrowRiver:74477           0.0173                        
+TomorrowRiver:24021           0.0025                        
+TomorrowRiver:490             0.0105                        
+TomorrowRiver:84461           0.0006                        
+TomorrowRiver:23614           0.0079                        
+TomorrowRiver:74280           0.0013                        
+TomorrowRiver:70519           0.0042                        
+TomorrowRiver:23924           0.0011                        
+TomorrowRiver:24013           0.0016                        
+TomorrowRiver:70031           0.0024                        
+TomorrowRiver:23944           0.0003                        
+TomorrowRiver:92885           0.0004                        
+TomorrowRiver:24087           0.0012                        
+TomorrowRiver:74478           0.0055                        
+TomorrowRiver:70032           0.0053                        
+TomorrowRiver:91996           0.0046                        
+TomorrowRiver:71199           0.0035                        
+TomorrowRiver:69636           0.0131                        
+TomorrowRiver:68294           0.0018                        
+TomorrowRiver:73372           0.0050                        
+TomorrowRiver:873             0.0008                        
+TomorrowRiver:72304           0.0004                        
+TomorrowRiver:73906           0.0028                        
+TomorrowRiver:72713           0.0002                        
+TomorrowRiver:58403           0.0003                        
+TomorrowRiver:70520           0.0006                        
+TomorrowRiver:92696           0.0007                        
+TomorrowRiver:70974           0.0034                        
+TomorrowRiver:58414           0.0002                        
+TomorrowRiver:74193           0.0010                        
+TomorrowRiver:72983           0.0000                        
+TomorrowRiver:23913           0.0006                        
+TomorrowRiver:68238           0.0005                        
+TomorrowRiver:90475           0.0015                        
+TomorrowRiver:24195           0.0000                        
+TomorrowRiver:72183           0.0003                        
+TomorrowRiver:69288           0.0015                        
+TomorrowRiver:69669           0.0007                        
+TomorrowRiver:72436           0.0001                        
+TomorrowRiver:74428           0.0003                        
+TomorrowRiver:74429           0.0003                        
+TomorrowRiver:90149           0.0010                        
+TomorrowRiver:70191           0.0002                        
+TomorrowRiver:23648           0.0001                        
+TomorrowRiver:72301           0.0001                        
+TomorrowRiver:24305           0.0001                        
+TomorrowRiver:72421           0.0004                        
+TomorrowRiver:68689           0.0002                        
+TomorrowRiver:69064           0.0001                        
+TomorrowRiver:70975           0.0007                        
+TomorrowRiver:73624           0.0009                        
+TomorrowRiver:73092           0.0002                        
+TomorrowRiver:68220           0.0002                        
+TomorrowRiver:68221           0.0002                        
+TomorrowRiver:68247           0.0002                        
+TomorrowRiver:74427           0.0002                        
+TomorrowRiver:69595           0.0000                        
+TomorrowRiver:91895           0.0000                        
+TomorrowRiver:58416           0.0000                        
+TomorrowRiver:67922           0.0000                        
+TomorrowRiver:74481           0.0000                        
+TomorrowRiver:4661            0.0000                        
+TomorrowRiver:92724           0.0000                        
+TomorrowRiver:602             0.0000                        
+TomorrowRiver:603             0.0000                        
+TomorrowRiver:68218           0.0000                        
+TomorrowRiver:68216           0.0000                        
+TomorrowRiver:68219           0.0000                        
+TomorrowRiver:90159           0.0000                        
+
+
+TOTAL COMBINED WELL REPORTS
+##################################################
+             **Drawdown**
+Response                      Drawdown(ft)                  
+LakeEmily                     0.0000                        
+          **Maximum Depletion**
+Response                      Depletion(cfs)                
+TomorrowRiver:92743           0.0099                        
+TomorrowRiver:73262           0.0089                        
+TomorrowRiver:23983           0.0427                        
+TomorrowRiver:70548           0.4774                        
+TomorrowRiver:70262           0.0385                        
+TomorrowRiver:67401           0.0490                        
+TomorrowRiver:986             0.0229                        
+TomorrowRiver:68690           0.1606                        
+TomorrowRiver:23883           0.0355                        
+TomorrowRiver:72737           0.0961                        
+TomorrowRiver:24155           0.0170                        
+TomorrowRiver:24037           0.0148                        
+TomorrowRiver:23978           0.0127                        
+TomorrowRiver:91803           0.0105                        
+TomorrowRiver:91706           0.0632                        
+TomorrowRiver:91411           0.0297                        
+TomorrowRiver:92199           0.0192                        
+TomorrowRiver:92045           0.0330                        
+TomorrowRiver:93141           0.0832                        
+TomorrowRiver:91562           0.0049                        
+TomorrowRiver:73744           0.0495                        
+TomorrowRiver:92299           0.0268                        
+TomorrowRiver:24285           0.0059                        
+TomorrowRiver:68785           0.0364                        
+TomorrowRiver:72422           0.0199                        
+TomorrowRiver:815             0.0827                        
+TomorrowRiver:23867           0.0114                        
+TomorrowRiver:91173           0.0109                        
+TomorrowRiver:23993           0.0890                        
+TomorrowRiver:23699           0.0098                        
+TomorrowRiver:23957           0.0128                        
+TomorrowRiver:71916           0.0066                        
+TomorrowRiver:23682           0.0823                        
+TomorrowRiver:91175           0.0152                        
+TomorrowRiver:91072           0.0178                        
+TomorrowRiver:91181           0.0342                        
+TomorrowRiver:67563           0.0502                        
+TomorrowRiver:71998           0.0390                        
+TomorrowRiver:70248           0.0589                        
+TomorrowRiver:92136           0.0076                        
+TomorrowRiver:3719            0.0670                        
+TomorrowRiver:91670           0.0209                        
+TomorrowRiver:91997           0.0209                        
+TomorrowRiver:23926           0.0127                        
+TomorrowRiver:68905           0.0778                        
+TomorrowRiver:23637           0.0122                        
+TomorrowRiver:23698           0.0181                        
+TomorrowRiver:23869           0.0103                        
+TomorrowRiver:70263           0.0296                        
+TomorrowRiver:23979           0.0112                        
+TomorrowRiver:23616           0.0452                        
+TomorrowRiver:23754           0.0135                        
+TomorrowRiver:67329           0.0381                        
+TomorrowRiver:23870           0.0098                        
+TomorrowRiver:23635           0.0142                        
+TomorrowRiver:70881           0.0021                        
+TomorrowRiver:24050           0.0246                        
+TomorrowRiver:23715           0.0062                        
+TomorrowRiver:68917           0.0327                        
+TomorrowRiver:1860            0.0064                        
+TomorrowRiver:24161           0.0268                        
+TomorrowRiver:617             0.0157                        
+TomorrowRiver:69289           0.0265                        
+TomorrowRiver:73002           0.0136                        
+TomorrowRiver:24169           0.0117                        
+TomorrowRiver:23907           0.0793                        
+TomorrowRiver:69635           0.0724                        
+TomorrowRiver:24008           0.0509                        
+TomorrowRiver:91924           0.0096                        
+TomorrowRiver:92981           0.0049                        
+TomorrowRiver:69480           0.0070                        
+TomorrowRiver:24132           0.0109                        
+TomorrowRiver:23700           0.0081                        
+TomorrowRiver:23961           0.0436                        
+TomorrowRiver:91161           0.0171                        
+TomorrowRiver:23697           0.0127                        
+TomorrowRiver:68049           0.0091                        
+TomorrowRiver:23863           0.0170                        
+TomorrowRiver:73344           0.0337                        
+TomorrowRiver:69961           0.0229                        
+TomorrowRiver:24017           0.0078                        
+TomorrowRiver:23827           0.0190                        
+TomorrowRiver:71326           0.0099                        
+TomorrowRiver:74131           0.0238                        
+TomorrowRiver:24022           0.0160                        
+TomorrowRiver:24080           0.0046                        
+TomorrowRiver:23846           0.0025                        
+TomorrowRiver:23852           0.0160                        
+TomorrowRiver:73345           0.0165                        
+TomorrowRiver:91169           0.0296                        
+TomorrowRiver:23620           0.0166                        
+TomorrowRiver:71917           0.0041                        
+TomorrowRiver:23868           0.0060                        
+TomorrowRiver:69508           0.0125                        
+TomorrowRiver:92077           0.0141                        
+TomorrowRiver:23949           0.0104                        
+TomorrowRiver:24302           0.0023                        
+TomorrowRiver:23647           0.0031                        
+TomorrowRiver:73346           0.0154                        
+TomorrowRiver:1013            0.0219                        
+TomorrowRiver:4174            0.0096                        
+TomorrowRiver:24059           0.0015                        
+TomorrowRiver:24066           0.0072                        
+TomorrowRiver:23915           0.0074                        
+TomorrowRiver:23826           0.0228                        
+TomorrowRiver:23873           0.0098                        
+TomorrowRiver:72437           0.0008                        
+TomorrowRiver:24216           0.0030                        
+TomorrowRiver:3473            0.0049                        
+TomorrowRiver:24286           0.0053                        
+TomorrowRiver:24294           0.0056                        
+TomorrowRiver:73625           0.0069                        
+TomorrowRiver:1323            0.0005                        
+TomorrowRiver:1302            0.0030                        
+TomorrowRiver:70961           0.0118                        
+TomorrowRiver:24220           0.0119                        
+TomorrowRiver:73347           0.0100                        
+TomorrowRiver:70943           0.0227                        
+TomorrowRiver:23716           0.0024                        
+TomorrowRiver:69693           0.0152                        
+TomorrowRiver:69679           0.0180                        
+TomorrowRiver:73597           0.0021                        
+TomorrowRiver:71990           0.0057                        
+TomorrowRiver:92808           0.0027                        
+TomorrowRiver:24047           0.0005                        
+TomorrowRiver:69576           0.0054                        
+TomorrowRiver:23709           0.0016                        
+TomorrowRiver:73093           0.0057                        
+TomorrowRiver:91808           0.0111                        
+TomorrowRiver:92036           0.0102                        
+TomorrowRiver:23825           0.0084                        
+TomorrowRiver:71960           0.0336                        
+TomorrowRiver:84462           0.0016                        
+TomorrowRiver:73153           0.0054                        
+TomorrowRiver:74477           0.0173                        
+TomorrowRiver:24021           0.0025                        
+TomorrowRiver:490             0.0105                        
+TomorrowRiver:84461           0.0006                        
+TomorrowRiver:23614           0.0079                        
+TomorrowRiver:74280           0.0013                        
+TomorrowRiver:70519           0.0042                        
+TomorrowRiver:23924           0.0011                        
+TomorrowRiver:24013           0.0016                        
+TomorrowRiver:70031           0.0024                        
+TomorrowRiver:23944           0.0003                        
+TomorrowRiver:92885           0.0004                        
+TomorrowRiver:24087           0.0012                        
+TomorrowRiver:74478           0.0055                        
+TomorrowRiver:70032           0.0053                        
+TomorrowRiver:91996           0.0046                        
+TomorrowRiver:71199           0.0035                        
+TomorrowRiver:69636           0.0131                        
+TomorrowRiver:68294           0.0018                        
+TomorrowRiver:73372           0.0050                        
+TomorrowRiver:873             0.0008                        
+TomorrowRiver:72304           0.0004                        
+TomorrowRiver:73906           0.0028                        
+TomorrowRiver:72713           0.0002                        
+TomorrowRiver:58403           0.0003                        
+TomorrowRiver:70520           0.0006                        
+TomorrowRiver:92696           0.0007                        
+TomorrowRiver:70974           0.0034                        
+TomorrowRiver:58414           0.0002                        
+TomorrowRiver:74193           0.0010                        
+TomorrowRiver:72983           0.0000                        
+TomorrowRiver:23913           0.0006                        
+TomorrowRiver:68238           0.0005                        
+TomorrowRiver:90475           0.0015                        
+TomorrowRiver:24195           0.0000                        
+TomorrowRiver:72183           0.0003                        
+TomorrowRiver:69288           0.0015                        
+TomorrowRiver:69669           0.0007                        
+TomorrowRiver:72436           0.0001                        
+TomorrowRiver:74428           0.0003                        
+TomorrowRiver:74429           0.0003                        
+TomorrowRiver:90149           0.0010                        
+TomorrowRiver:70191           0.0002                        
+TomorrowRiver:23648           0.0001                        
+TomorrowRiver:72301           0.0001                        
+TomorrowRiver:24305           0.0001                        
+TomorrowRiver:72421           0.0004                        
+TomorrowRiver:68689           0.0002                        
+TomorrowRiver:69064           0.0001                        
+TomorrowRiver:70975           0.0007                        
+TomorrowRiver:73624           0.0009                        
+TomorrowRiver:73092           0.0002                        
+TomorrowRiver:68220           0.0002                        
+TomorrowRiver:68221           0.0002                        
+TomorrowRiver:68247           0.0002                        
+TomorrowRiver:74427           0.0002                        
+TomorrowRiver:69595           0.0000                        
+TomorrowRiver:91895           0.0000                        
+TomorrowRiver:58416           0.0000                        
+TomorrowRiver:67922           0.0000                        
+TomorrowRiver:74481           0.0000                        
+TomorrowRiver:4661            0.0000                        
+TomorrowRiver:92724           0.0000                        
+TomorrowRiver:602             0.0000                        
+TomorrowRiver:603             0.0000                        
+TomorrowRiver:68218           0.0000                        
+TomorrowRiver:68216           0.0000                        
+TomorrowRiver:68219           0.0000                        
+TomorrowRiver:90159           0.0000                        
+TomorrowRiver:93832           0.0730                        

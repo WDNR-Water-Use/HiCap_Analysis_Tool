@@ -64,7 +64,7 @@ def _sdf(T,S,dist,**kwargs):
     return dist**2*S/T
 
 def _walton(T,S,dist,time, Q):
-    """Calcualte depletion using Watkins (1987) PT-8 BASIC program logic 
+    """Calculate depletion using Watkins (1987) PT-8 BASIC program logic 
 
     Args:
     T (float): transmissivity [gpd/ft]
@@ -96,7 +96,8 @@ GPM2CFD = 60*24/7.48 # factor to convert from GPM to CFD
 class WellResponse():
     """[summary]
     """
-    def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, dd_method='Theis', depl_method= 'Walton', theis_time = -9999,
+    def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, 
+                    dd_method='Theis', depl_method= 'Walton', theis_time = -9999,
                     depl_pump_time = -99999, depletion_years=5) -> None:
         """[summary]
 
