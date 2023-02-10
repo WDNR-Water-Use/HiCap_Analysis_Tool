@@ -286,3 +286,13 @@ def test_complex_yml():
         assert np.isclose(df_agg_val, calc_val)
         
     return('stoked')
+
+def test_run_yml_example():
+    import hicap_analysis.wells
+    import hicap_analysis.analysis_project as ap
+    from hicap_analysis.analysis_project import Project
+
+    yml_file = 'example.yml'
+    ap = Project(datapath/yml_file)
+    ap.report_responses()
+    ap.write_responses_csv()

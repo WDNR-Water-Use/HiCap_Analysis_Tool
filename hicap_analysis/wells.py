@@ -79,12 +79,18 @@ def _walton(T,S,dist,time, Q):
                         times/distances [CFS]
     """
     if dist > 0:
-        G = dist / np.sqrt((0.535 * time * T/S))
+        # avoid divide by zero for time==0
+        # time = time.values
+        G = np.zeros_like(time).astype(float)
+        G[time!=0] = dist / np.sqrt((0.535 * time[time!=0] * T/S))
+        # G = dist / np.sqrt((0.535 * time * T/S))
     else:
         G = 0
     I = 1 + .0705230784*G + .0422820123*(G**2) + 9.2705272e-03*(G**3)
     J = (I + 1.52014E-04*(G**4) + 2.76567E-04*(G**5)+4.30638E-05*(G**6)) ** 16
-    return Q * (1/J) / 3600 / 24
+    retvals = Q * (1/J) / 3600 / 24
+    retvals[time==0] = 0.0
+    return retvals
 
 ALL_DD_METHODS = {'theis': _theis}
 
@@ -97,7 +103,7 @@ class WellResponse():
     """[summary]
     """
     def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, 
-                    dd_method='Theis', depl_method= 'Walton', theis_time = -9999,
+                    dd_method='Theis', depl_method= 'Glover', theis_time = -9999,
                     depl_pump_time = -99999, depletion_years=5) -> None:
         """[summary]
 
@@ -110,7 +116,7 @@ class WellResponse():
             Q ([type]): [description]
             stream_apportionment ([type], optional): [description]. Defaults to None.
             dd_method (str, optional): [description]. Defaults to 'Theis'.
-            depl_method (str, optional): [description]. Defaults to 'Walton'.
+            depl_method (str, optional): [description]. Defaults to 'Glover'.
             theis_time (int, optional): [description]. Defaults to -9999.
             depl_pump_time (int, optional): [description]. Defaults to -99999.
             depletion_years (int, optional): [description]. Defaults to 5.
@@ -184,7 +190,7 @@ class Well():
     """
 
     def __init__(self, well_status='pending', T=-9999, S=-99999, Q=-99999, depletion_years=5, theis_dd_days=-9999, depl_pump_time=-9999,
-         stream_dist=None, drawdown_dist=None,  stream_apportionment=None) -> None:
+         stream_dist=None, drawdown_dist=None,  stream_apportionment=None, depl_method='walton') -> None:
         """[summary]
 
         Args:
@@ -197,13 +203,14 @@ class Well():
             stream_dist ([type], optional): [description]. Defaults to None.
             drawdown_dist ([type], optional): [description]. Defaults to None.
             stream_apportionment ([type], optional): [description]. Defaults to None.
+            depl_method ([str], optional): [description]. Defaults to walton
         """
 
         # placeholders for values returned with @property decorators
         self._depletion = None
         self._drawdown = None
         self._max_depletion = None
-        
+        self.depl_method = depl_method
         self.stream_dist = stream_dist
         self.drawdown_dist = drawdown_dist
         self.T = T
@@ -233,7 +240,7 @@ class Well():
                 self.stream_responses[cs+1] = WellResponse(cname, 'stream', T=self.T, S=self.S, 
                                     dist=cdist, depl_pump_time =self.depl_pump_time, 
                                     Q=self.Q, stream_apportionment=self.stream_apportionment[cname], 
-                                    depl_method='walton')
+                                    depl_method=self.depl_method)
 
         # next for drawdown responses
         if self.drawdown_dist is not None:

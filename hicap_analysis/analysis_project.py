@@ -66,7 +66,7 @@ class Project():
         self.existing_well_categories = ['existing', 'active',  'new_approved']
         self.existing_wells = []
         self.proposed_wells = []
-
+        self.depl_method = 'Walton' # default, can specify in the yml file
     # def populate_from_yaml(self, ymlfile):
     #     """[summary]
 
@@ -121,6 +121,8 @@ class Project():
         Args:
             pp ([dict]): project properties block read from YML]
         """
+        if 'depl_method' in pp.keys():
+            self.depl_method = pp['depl_method']
         try:
             self.name = pp['name']
             self.T = pp['T']
@@ -179,7 +181,7 @@ class Project():
 
         for ck, cw in self._Project__well_data.items():
 
-            # update defaults as appopriate
+            # update defaults as appropriate
             for currdef in self.defaults:
                 if currdef not in cw.keys():
                     cw[currdef] = self.default_parameters[f'default_{currdef}']
@@ -209,7 +211,7 @@ class Project():
             self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
                     theis_dd_days=cw['dd_days'], depl_pump_time=cw['pumping_days'],
                     stream_dist=stream_dist, drawdown_dist=dd_dist,
-                    stream_apportionment=stream_app_d
+                    stream_apportionment=stream_app_d, depl_method = self.depl_method
             )
 
 
