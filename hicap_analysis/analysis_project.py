@@ -441,9 +441,12 @@ class Project():
                 agg_df.loc[cn,cresp] = cdepl
                 basekey = cresp.split(':')[0]
                 agg_base_stream_df.loc[cn,basekey] = cdepl
-            for cresp, cdepl in cw.depletion.items():
-                all_depl_ts[cresp] = cdepl
-            
+            all_depl_ts = pd.concat(
+                (all_depl_ts,pd.DataFrame(index=all_depl_ts.index, 
+                                          data=cw.depletion)), 
+                axis=1
+                )
+
         # totals
         #proposed
         for cresp, cdd in self.proposed_aggregated_drawdown.items():
