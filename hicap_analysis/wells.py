@@ -46,7 +46,7 @@ def _glover(T,S,time,dist,Q):
                         times/distances
     """
     z = dist/np.sqrt(4 * (T/S) * time)
-    return Q * sps.erfc(z) 
+    return Q * sps.erfc(z) /3600 / 24 # from CFD back to CFS
 
 def _sdf(T,S,dist,**kwargs):
     """[summary]
@@ -87,7 +87,7 @@ def _walton(T,S,dist,time, Q):
         G = 0
     I = 1 + .0705230784*G + .0422820123*(G**2) + 9.2705272e-03*(G**3)
     J = (I + 1.52014E-04*(G**4) + 2.76567E-04*(G**5)+4.30638E-05*(G**6)) ** 16
-    ret_vals = Q * (1/J) / 3600 / 24
+    ret_vals = Q * (1/J) / 3600 / 24 # from CFD back to CFS
     ret_vals[time==0] = 0.0
     return ret_vals
 

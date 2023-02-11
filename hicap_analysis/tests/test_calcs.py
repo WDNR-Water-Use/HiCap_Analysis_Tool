@@ -171,7 +171,7 @@ def test_glover():
     """
     from hicap_analysis import wells as wo
     dist = [1000, 5000, 10000]
-    Q = 1 # no normalization in the paper
+    Q = 1 * 3600 * 24 # no normalization in the paper but use to convert from CFS to CFD
     time = 365 * 5 # paper evaluates at 5 years in days
     K = 0.001 # ft/sec
     D = 100 # thickness in feet
