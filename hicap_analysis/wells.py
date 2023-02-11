@@ -32,12 +32,12 @@ def _theis(T,S,time,dist,Q):
 # define stream depletion methods here
 def _glover(T,S,time,dist,Q):
     """Calculate Glover 
-
+    from Glover and Balmer (1954)
     Args:
-    T (float): transmissivity [ft**2/d]
-    S (float): storage [unitless]
+    T (float): transmissivity [ft**2/d] (K*D in the original paper)
+    S (float): storage [unitless] (V in the original paper)
     time (float, optionally np.array or list): time at which to calculate results [d]
-    dist (float, optionaly np.array or list): distance at which to calculate results in [ft]
+    dist (float, optionally np.array or list): distance at which to calculate results in [ft] (X1 in the paper)
     Q (float): pumping rate (+ is extraction) [ft**3/d]
 
 
@@ -45,8 +45,8 @@ def _glover(T,S,time,dist,Q):
         float (array): depletion values at at input parameter
                         times/distances
     """
-    z = np.sqrt((dist**2*S)/(4 * T * time))
-    return Q * sps.erfc(z)
+    z = dist/np.sqrt(4 * (T/S) * time)
+    return Q * sps.erfc(z) 
 
 def _sdf(T,S,dist,**kwargs):
     """[summary]
@@ -83,14 +83,13 @@ def _walton(T,S,dist,time, Q):
         # time = time.values
         G = np.zeros_like(time).astype(float)
         G[time!=0] = dist / np.sqrt((0.535 * time[time!=0] * T/S))
-        # G = dist / np.sqrt((0.535 * time * T/S))
     else:
         G = 0
     I = 1 + .0705230784*G + .0422820123*(G**2) + 9.2705272e-03*(G**3)
     J = (I + 1.52014E-04*(G**4) + 2.76567E-04*(G**5)+4.30638E-05*(G**6)) ** 16
-    retvals = Q * (1/J) / 3600 / 24
-    retvals[time==0] = 0.0
-    return retvals
+    ret_vals = Q * (1/J) / 3600 / 24
+    ret_vals[time==0] = 0.0
+    return ret_vals
 
 ALL_DD_METHODS = {'theis': _theis}
 
@@ -168,9 +167,14 @@ class WellResponse():
             
         depl = np.zeros_like(self.baseyears[0], dtype=float)
         rech = np.zeros_like(self.baseyears[0], dtype=float)
+        if self.depl_method.lower() == 'walton':
+            # Walton method (only) needs these goofy units of gpd/dt for T
+            T = self.T_gpd_ft
+        else:
+            T = self.T
         for cby,ciy in zip(self.baseyears, self.imageyears):
-            depl += depl_f(self.T_gpd_ft,self.S,self.dist,cby, self.Q*self.stream_apportionment)
-            rech += depl_f(self.T_gpd_ft,self.S,self.dist,ciy, self.Q*self.stream_apportionment)
+            depl += depl_f(T,self.S,self.dist,cby, self.Q*self.stream_apportionment)
+            rech += depl_f(T,self.S,self.dist,ciy, self.Q*self.stream_apportionment)
         
         # NB! --> converting rech to negative values here    
         return depl - rech

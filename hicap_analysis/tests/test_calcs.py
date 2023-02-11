@@ -165,18 +165,22 @@ def test_distance():
     assert np.isclose(ap._loc_to_dist([89.38323, 43.07476],[89.38492, 43.07479]), 450.09, atol=0.1)
   #  ([2,3],[9,32.9]), 30.70846788753877)
 
-def test_glover(theis_results):
-    """Athens test for the glover calculations
-    TODO: find reference calcs to test against
-    Args:
-        theis_results (@fixture, dict): parameters and results from example spreadsheet
+def test_glover():
+    """Test for the glover calculations
+        against the Glover & Balmer (1954) paper
     """
     from hicap_analysis import wells as wo
-    pars = theis_results['params']
-    dist = theis_results['theis_res'].well1_r
-    Qs = wo._glover(pars['T'], pars['S'], pars['time'], dist, pars['Q'][0])
+    dist = [1000, 5000, 10000]
+    Q = 1 # no normalization in the paper
+    time = 365 * 5 # paper evaluates at 5 years in days
+    K = 0.001 # ft/sec
+    D = 100 # thickness in feet
+    T = K*D*24*60*60 # converting to ft/day
+    S = 0.2
+    Qs = wo._glover(T,S,time, dist, Q)
     assert all(np.isnan(Qs)== False)
-   
+    assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
+    
 def test_sdf():
     """Test for streamflow depletion factor
         using values from original Jenkins (1968) paper
