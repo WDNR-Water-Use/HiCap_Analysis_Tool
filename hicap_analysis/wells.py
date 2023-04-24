@@ -101,7 +101,7 @@ GPM2CFD = 60*24/7.48 # factor to convert from GPM to CFD
 class WellResponse():
     """[summary]
     """
-    def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, 
+    def __init__(self, name, response_type, first_pumping_month, T, S, dist, Q, stream_apportionment=None, 
                     dd_method='Theis', depl_method= 'Glover', theis_time = -9999,
                     depl_pump_time = -99999, depletion_years=5) -> None:
         """[summary]
@@ -119,6 +119,7 @@ class WellResponse():
             theis_time (int, optional): [description]. Defaults to -9999.
             depl_pump_time (int, optional): [description]. Defaults to -99999.
             depletion_years (int, optional): [description]. Defaults to 5.
+            first_pumping_month (str, optional): [description]. Defaults to pumping starting on first of year.
         """
         self._drawdown=None
         self._depletion=None
@@ -131,11 +132,12 @@ class WellResponse():
         self.dd_method=dd_method
         self.depl_method=depl_method
         self.depletion_years = depletion_years
+        self.first_pumping_month = first_pumping_month
         self.theis_time = theis_time
         self.depl_pump_time = depl_pump_time
         self.Q = Q
         self.stream_apportionment = stream_apportionment
-        
+           
     def _calc_drawdown(self):
         """calculate drawdown at requested distance and time
         """
@@ -144,6 +146,11 @@ class WellResponse():
         return dd_f(self.T, self.S, self.theis_time, self.dist, self.Q)
         
     def _calc_depletion(self):
+        # Establishing a dictionary to shift the start of pumping
+        start_month = {'JAN': 0, 'FEB': 30, 'MAR': 60, 'APR': 90, 'MAY': 120,
+                     'JUN': 150, 'JUL': 180, 'AUG': 210, 'SEP': 240,
+                     'OCT': 270, 'NOV': 300, 'DEC': 330, '#N/A': 0}      
+        
         depl_f = ALL_DEPL_METHODS[self.depl_method.lower()]
         
         # initialize containers for time series initialized with year 0
@@ -177,7 +184,15 @@ class WellResponse():
             rech += depl_f(T,self.S,self.dist,ciy, self.Q*self.stream_apportionment)
         
         # NB! --> converting rech to negative values here    
-        return depl - rech
+        sum_depl = depl - rech
+        
+        # rolling the pumping series to start in the first month of pumping
+        if pd.isnull(self.first_pumping_month) or self.first_pumping_month not in start_month.keys():
+            return sum_depl
+        else:
+            sum_depl[(len(sum_depl)-start_month[self.first_pumping_month])+1:]=0
+            sum_depl = np.roll(sum_depl,start_month[self.first_pumping_month]-1)
+            return sum_depl
 
     
     @property
@@ -194,7 +209,7 @@ class Well():
     """
 
     def __init__(self, well_status='pending', T=-9999, S=-99999, Q=-99999, depletion_years=5, theis_dd_days=-9999, depl_pump_time=-9999,
-         stream_dist=None, drawdown_dist=None,  stream_apportionment=None, depl_method='walton') -> None:
+         stream_dist=None, drawdown_dist=None,  stream_apportionment=None, depl_method='walton',first_pumping_month='JAN') -> None:
         """[summary]
 
         Args:
@@ -208,6 +223,7 @@ class Well():
             drawdown_dist ([type], optional): [description]. Defaults to None.
             stream_apportionment ([type], optional): [description]. Defaults to None.
             depl_method ([str], optional): [description]. Defaults to walton
+            first_pumping_month (str, optional): [description]. Defaults to pumping starting on first of year.
         """
 
         # placeholders for values returned with @property decorators
@@ -219,6 +235,7 @@ class Well():
         self.drawdown_dist = drawdown_dist
         self.T = T
         self.S = S
+        self.first_pumping_month = first_pumping_month
         self.depletion_years = depletion_years
         self.theis_dd_days = theis_dd_days
         self.depl_pump_time = depl_pump_time
@@ -244,7 +261,7 @@ class Well():
                 self.stream_responses[cs+1] = WellResponse(cname, 'stream', T=self.T, S=self.S, 
                                     dist=cdist, depl_pump_time =self.depl_pump_time, 
                                     Q=self.Q, stream_apportionment=self.stream_apportionment[cname], 
-                                    depl_method=self.depl_method)
+                                    depl_method=self.depl_method,first_pumping_month=self.first_pumping_month)
 
         # next for drawdown responses
         if self.drawdown_dist is not None:
@@ -252,7 +269,7 @@ class Well():
                 self.drawdown_responses[cw+1] = WellResponse(cname, 'well', T=self.T, S=self.S, 
                                     dist=cdist, theis_time=self.theis_dd_days, 
                                     Q=self.Q, dd_method='theis', 
-                                    depletion_years=self.depletion_years)        
+                                    depletion_years=self.depletion_years,first_pumping_month=self.first_pumping_month)        
         
     @property
     def drawdown(self):
