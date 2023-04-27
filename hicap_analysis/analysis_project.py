@@ -65,7 +65,7 @@ class Project():
         self.proposed_well_categories =['pending']
         self.existing_well_categories = ['existing', 'active',  'new_approved']
         self.existing_wells = []
-        self.proposed_wells = [] 
+        self.proposed_wells = []
         self.depl_method = 'Walton' # default, can specify in the yml file
     # def populate_from_yaml(self, ymlfile):
     #     """[summary]
@@ -174,7 +174,7 @@ class Project():
                 self.stream_apportionment_dict[d[ck]['name']] = {}
                 for cak in streamappkeys:
                     self.stream_apportionment_dict[d[ck]['name']][d[ck][cak]['name']] = d[ck][cak]['apportionment']
-                    
+
     def _create_well_objects(self):
         """[summary]
         """
@@ -210,9 +210,10 @@ class Project():
             
             self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
                     theis_dd_days=cw['dd_days'], depl_pump_time=cw['pumping_days'],
-                    stream_dist=stream_dist, drawdown_dist=dd_dist, first_pumping_month=cw['first_pumping_month'],
+                    stream_dist=stream_dist, drawdown_dist=dd_dist,
                     stream_apportionment=stream_app_d, depl_method = self.depl_method
             )
+
 
     def _report_yaml_input(self):
         """summarize broad details of the YAML file read in
@@ -302,7 +303,6 @@ class Project():
         j=2
 
     def aggregate_results(self):
-        
         # make dictionaries to contain the drawdown results
         self.existing_aggregated_drawdown = {}
         self.proposed_aggregated_drawdown = {}
@@ -446,7 +446,6 @@ class Project():
                                           data=cw.depletion)), 
                 axis=1
                 )
-        all_depl_ts.sort_index(axis=1,inplace=True)
 
         # totals
         #proposed
