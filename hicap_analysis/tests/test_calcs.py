@@ -1,5 +1,3 @@
-import sys
-sys.path.append(r"C:\Users\doughwd\Documents\Water Use\VSCODE\HiCap_Analysis_Tool")
 from hicap_analysis.wells import GPM2CFD
 from os import pardir
 import numpy as np
