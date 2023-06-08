@@ -207,7 +207,9 @@ class Project():
                 stream_app_d =self.stream_apportionment_dict[ck]
             else:
                 stream_app_d = None
-            
+            # Checking for the first pumping month in the inputs, if not setting as Jan
+            if 'first_pumping_month' not in cw.keys():
+                cw['first_pumping_month'] = 'JAN'
             self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
                     theis_dd_days=cw['dd_days'], depl_pump_time=cw['pumping_days'],
                     stream_dist=stream_dist, drawdown_dist=dd_dist, first_pumping_month=cw['first_pumping_month'],
