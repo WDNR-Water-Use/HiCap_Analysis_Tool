@@ -190,7 +190,7 @@ class WellResponse():
 
 class Well():
     """Object to evaluate a pending (or existing, or a couple other possibilities) well with all relevant impacts.
-        Preproceessing makes unit conversions and calculates distances as needed
+        Preprocessing makes unit conversions and calculates distances as needed
     """
 
     def __init__(self, well_status='pending', T=-9999, S=-99999, Q=-99999, depletion_years=5, theis_dd_days=-9999, depl_pump_time=-9999,
