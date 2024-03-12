@@ -135,11 +135,11 @@ class Project():
             raise('Formatting problem with "project_properties" block')
 
     def _parse_responses(self, keys, d):
-        """[summary]
+        """populate information about the responses to pull from in calculations
 
         Args:
             keys ([type]): [description]
-            d ([type]): [description]
+            d ([dict]): yml file data
         """
         if keys[0].lower().startswith('dd'):
             self.__dd_responses = {}
@@ -153,11 +153,12 @@ class Project():
            cr[d[ck]['name']] = d[ck]['loc']
 
     def _parse_wells(self, d):
-        """[summary]
+        """populate information about wells assigning apportionment values and
+            the lists of proposed and existing wells
 
         Args:
             keys ([type]): [description]
-            d ([type]): [description]
+            d ([dict]): yml file data
         """
         self.__well_data = {}
         for ck in self.wellkeys:
@@ -168,7 +169,7 @@ class Project():
                 self.proposed_wells.append(d[ck]['name'])
             elif d[ck]['status'] in self.existing_well_categories:
                 self.existing_wells.append(d[ck]['name'])
-            # also, parse out stream apportionment
+            # also, parse out stream apportionment for existing and proposed wells
             streamappkeys = [i for i in d[ck].keys() if 'apportion' in i]
             if len(streamappkeys) > 0:
                 self.stream_apportionment_dict[d[ck]['name']] = {}
@@ -176,7 +177,7 @@ class Project():
                     self.stream_apportionment_dict[d[ck]['name']][d[ck][cak]['name']] = d[ck][cak]['apportionment']
 
     def _create_well_objects(self):
-        """[summary]
+        """Prepare to populate a Well object for each well, using the attributes of each well and response
         """
 
         for ck, cw in self._Project__well_data.items():
