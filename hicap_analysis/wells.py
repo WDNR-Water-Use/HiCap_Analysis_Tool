@@ -5,7 +5,7 @@ from pandas.core import base
 import scipy.special as sps
 
 # define drawdown methods here
-def _theis(T,S,time,dist,Q):
+def _theis(T,S,time,dist,Q, **kwargs):
     """Calculate Theis drawdown at single location
 
     Args:
@@ -15,7 +15,7 @@ def _theis(T,S,time,dist,Q):
     time (float, optionally np.array or list): time at which to calculate results [d]
     dist (float, optionally np.array or list): distance at which to calculate results in [ft]
     Q (float): pumping rate (+ is extraction) [ft**3/d]
-    
+    **kwargs: just included to all for extra values in call    
     Returns:
         float (array): drawdown values at input parameter
                         times/distances 
@@ -30,7 +30,7 @@ def _theis(T,S,time,dist,Q):
     return (Q / (4. * np.pi * T)) * sps.exp1(u)
     
 # define stream depletion methods here
-def _glover(T,S,time,dist,Q):
+def _glover(T,S,time,dist,Q, **kwargs):
     """Calculate Glover 
     from Glover and Balmer (1954)
     Args:
@@ -39,7 +39,7 @@ def _glover(T,S,time,dist,Q):
     time (float, optionally np.array or list): time at which to calculate results [d]
     dist (float, optionally np.array or list): distance at which to calculate results in [ft] (X1 in the paper)
     Q (float): pumping rate (+ is extraction) [ft**3/d]
-
+    **kwargs: just included to all for extra values in call
 
     Returns:
         float (array): depletion values at at input parameter
@@ -63,7 +63,7 @@ def _sdf(T,S,dist,**kwargs):
         dist = np.array(dist)
     return dist**2*S/T
 
-def _walton(T,S,dist,time, Q):
+def _walton(T,S,dist,time, Q, **kwargs):
     """Calculate depletion using Watkins (1987) PT-8 BASIC program logic 
 
     Args:
@@ -72,7 +72,7 @@ def _walton(T,S,dist,time, Q):
     time (float, optionally np.array or list): time at which to calculate results [d]
     dist (float): distance at which to calculate results in [ft]
     Q (float): pumping rate (+ is extraction) [ft**3/d]
-
+    **kwargs: just included to all for extra values in call
 
     Returns:
         float (array): depletion values at at input parameter
