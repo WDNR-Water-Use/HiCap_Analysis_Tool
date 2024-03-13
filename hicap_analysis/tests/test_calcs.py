@@ -210,14 +210,14 @@ def test_walton(walton_results):
     for idx in [0,1]:
         dep[idx] = wo._walton(pars['T_gpd_ft'][idx],
                     pars['S'][idx],
-                    pars['dist'][idx],
                     res.t_well,
+                    pars['dist'][idx],
                     pars['Q'][idx]
                     )
         rch[idx] = wo._walton(pars['T_gpd_ft'][idx],
                     pars['S'][idx],
-                    pars['dist'][idx],
                     res.t_image,
+                    pars['dist'][idx],
                     pars['Q'][idx]
                     )
     dep_tot = dep[0]-rch[0] + dep[1]-rch[1]
@@ -300,3 +300,22 @@ def test_run_yml_example():
     ap = Project(datapath/yml_file)
     ap.report_responses()
     ap.write_responses_csv()
+
+def test_hunt99_results():
+    ''' Test of _hunt99() function in the 
+        well.py module.
+    '''
+    from hicap_analysis import wells as wo
+    dist = [1000, 5000, 10000]
+    Q = 1 * 3600 * 24 # no normalization in the paper but use to convert from CFS to CFD
+    time = 365 * 5 # paper evaluates at 5 years in days
+    K = 0.001 # ft/sec
+    D = 100 # thickness in feet
+    T = K*D*24*60*60 # converting to ft/day
+    S = 0.2
+    rlambda = 10000.  #large lambda value should return Glover and Balmer solution
+                       #see test_glover for these values.
+    Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
+    assert all(np.isnan(Qs)== False)
+    assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
+    # should add test for small values of lambda (low conductance streambed)
