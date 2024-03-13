@@ -1,4 +1,5 @@
 import sys
+sys.path.append('../')
 import hicap_analysis.wells
 import hicap_analysis.analysis_project as ap
 from hicap_analysis.analysis_project import Project
@@ -9,15 +10,15 @@ import pandas as pd
 
 # ### Path to the folder and the name of the .yml file you've created.
 # ##### Note use of double backslashes in the path name
-datapath = Path('./')
+datapath = Path('./MASTER')
 odir = datapath / 'output'
-yml_file = sys.argv[1]
-ts_path = sys.argv[2]
+yml_file = 'TestExample.yml'#sys.argv[1]
+# ts_path = sys.argv[2]
 # only read out year 5 for time series ::: hard coded
 times = range(365*4,365*5+1)
 
 
-bdplobs = pd.read_csv('basedeplobs.dat', header=None)
+bdplobs = pd.read_csv(datapath / 'basedeplobs.dat', header=None)
 bdplobs.columns = ['obsname']
 bdplobs.index = bdplobs.obsname
 bdplobs['obs_values'] = np.nan
