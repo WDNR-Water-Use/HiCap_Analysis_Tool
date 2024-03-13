@@ -63,7 +63,7 @@ def _sdf(T,S,dist,**kwargs):
         dist = np.array(dist)
     return dist**2*S/T
 
-def _walton(T,S,dist,time, Q, **kwargs):
+def _walton(T,S,time,dist, Q, **kwargs):
     """Calculate depletion using Watkins (1987) PT-8 BASIC program logic 
 
     Args:
@@ -91,10 +91,60 @@ def _walton(T,S,dist,time, Q, **kwargs):
     ret_vals[time==0] = 0.0
     return ret_vals
 
+def _hunt99(T,S,time,dist,Q,streambed, **kwargs):
+    '''Function for Hunt (1999) solution for streamflow depletion
+    by a pumping well.  
+
+    Hunt, B., 1999, Unsteady streamflow depletion from ground
+    water pumping: Groundwater, v. 37, no. 1, pgs. 98-102, 
+    https://doi.org/10.1111/j.1745-6584.1999.tb00962.x
+
+    Parameters
+    ----------
+    T: float
+        Transmissivity of aquifer (ft^2/day)
+    S: float
+        Storativity of aquifer (dimensionless)
+    time (float, optionally np.array or list): time at which to calculate results [d]
+    dist (float, optionally np.array or list): distance at which to calculate results in [ft] (l in the paper)
+    use an array for either time or distance but not both
+    Q (float): pumping rate (+ is extraction) [ft**3/d]
+    streambed (float): streambed conductance [ft/d] (lambda in the paper)
+    **kwargs: just included to all for extra values in call
+    
+    Returns
+    -------
+    Qs (float): streamflow depletion rate (CFS), optionally np.array or list 
+                depending on input of time and dist
+    '''
+    # turn lists into np.array so they get handled correctly
+    if isinstance(time, list):
+        time = np.array(time)
+    if isinstance(dist, list):
+        dist = np.array(dist)
+    a = np.sqrt(S * dist**2/(4. * T * time))
+    b = (streambed**2 * time)/(4 * S * T)
+    c = (streambed * dist)/(2. * T)
+    # Qs/Q = erfc(a) - exp(b+c)*erfc(sqrt(b) + a)
+    # in order to calculate exp(x)erfc(y) 
+    # as values get big. Use numpy special erfcx(),
+    # scaled complementary error function, which returns 
+    # exp(y**2)erfc(y)
+    # then compute exp(x)/exp(y**2) * erfcx(y)
+    # which may be computed as exp(x - y**2) * erfcx(y)
+    # This approach gives a product that goes to zero
+    # as the exp() term gets big and erfc() goes to zero
+    y = np.sqrt(b) + a
+    t1 = sps.erfcx(y)
+    t2 = np.exp(b+c-y**2)
+    depl = sps.erfc(a) - (t1*t2)
+    return (Q / (3600 * 24)) * depl
+
 ALL_DD_METHODS = {'theis': _theis}
 
 ALL_DEPL_METHODS = {'glover': _glover,
-                    'walton': _walton}
+                    'walton': _walton,
+                    'hunt99': _hunt99}
 
 GPM2CFD = 60*24/7.48 # factor to convert from GPM to CFD
 
@@ -173,8 +223,8 @@ class WellResponse():
         else:
             T = self.T
         for cby,ciy in zip(self.baseyears, self.imageyears):
-            depl += depl_f(T,self.S,self.dist,cby, self.Q*self.stream_apportionment)
-            rech += depl_f(T,self.S,self.dist,ciy, self.Q*self.stream_apportionment)
+            depl += depl_f(T,self.S,cby, self.dist,self.Q*self.stream_apportionment)
+            rech += depl_f(T,self.S,ciy, self.dist,self.Q*self.stream_apportionment)
         
         # NB! --> converting rech to negative values here    
         return depl - rech
