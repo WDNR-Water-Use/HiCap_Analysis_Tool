@@ -67,6 +67,8 @@ class Project():
         self.existing_wells = []
         self.proposed_wells = []
         self.depl_method = 'Walton' # default, can specify in the yml file
+        self.__dd_responses = None
+        self.__stream_responses = None
     # def populate_from_yaml(self, ymlfile):
     #     """[summary]
 
@@ -141,9 +143,10 @@ class Project():
             keys ([type]): [description]
             d ([dict]): yml file data
         """
+
         if keys[0].lower().startswith('dd'):
             self.__dd_responses = {}
-            cr = self.__dd_responses
+            cr = self.__dd_responses    
         elif keys[0].lower().startswith('stream'):
             self.__stream_responses = {}
             cr = self.__stream_responses
@@ -235,14 +238,14 @@ class Project():
                     _print_to_screen_and_file(f'{len(cw)} {ck} wells:',ofp)
                     [_print_to_screen_and_file(f'\t{i}',ofp) for i in cw]
             # stream response summary
-            if len(self._Project__stream_responses) > 0:
+            if self._Project__stream_responses is not None:
                 _print_to_screen_and_file('\nSTREAM RESPONSES:',ofp)
                 [_print_to_screen_and_file(f'\t{ck}', ofp) for ck in self._Project__stream_responses.keys()]
             else:
                 _print_to_screen_and_file('No Stream Responses in the yml file',ofp)
 
             # drawdown response summary
-            if len(self._Project__dd_responses) > 0:
+            if self._Project__dd_responses is not None:
                 _print_to_screen_and_file('DRAWDOWN RESPONSES:',ofp)
                 [_print_to_screen_and_file(f'\t{ck}', ofp) for ck in self._Project__dd_responses.keys()]
             else:
@@ -428,70 +431,102 @@ class Project():
         row_base = [i.replace(': existing','').replace(': proposed','') for i in rows]
         agg_df = pd.DataFrame(index=row_base, columns=col_base)
 
-        # now make a special case dataframe for aggregated results by base stream name
-        agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
-        all_depl_ts =pd.DataFrame(index=
-            self.wells[list(self.wells.keys())[0]].stream_responses[1].baseyears[0])
+        if self._Project__stream_responses is not None:
+            # now make a special case dataframe for aggregated results by base stream name
+            agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
+            all_depl_ts =pd.DataFrame(index=
+                self.wells[list(self.wells.keys())[0]].stream_responses[1].baseyears[0])
 
-        # fill in the dataframe
-        # individual wells
-        for cn, cw in self.wells.items():
-            for cresp, cdd in cw.drawdown.items():
-                agg_df.loc[cn,cresp] = cdd
-            for cresp, cdepl in cw.max_depletion.items():
-                agg_df.loc[cn,cresp] = cdepl
-                basekey = cresp.split(':')[0]
-                agg_base_stream_df.loc[cn,basekey] = cdepl
-            all_depl_ts = pd.concat(
-                (all_depl_ts,pd.DataFrame(index=all_depl_ts.index, 
-                                          data=cw.depletion)), 
-                axis=1
-                )
+            # fill in the dataframe
+            # individual wells
+            for cn, cw in self.wells.items():
+                for cresp, cdd in cw.drawdown.items():
+                    agg_df.loc[cn,cresp] = cdd
+                for cresp, cdepl in cw.max_depletion.items():
+                    agg_df.loc[cn,cresp] = cdepl
+                    basekey = cresp.split(':')[0]
+                    agg_base_stream_df.loc[cn,basekey] = cdepl
+                all_depl_ts = pd.concat(
+                    (all_depl_ts,pd.DataFrame(index=all_depl_ts.index, 
+                                            data=cw.depletion)), 
+                    axis=1
+                    )
 
-        # totals
-        #proposed
-        for cresp, cdd in self.proposed_aggregated_drawdown.items():
-            agg_df.loc['total_proposed', cresp] = cdd
-        for cresp, cdepl in self.proposed_aggregated_max_depletion.items():
-            agg_df.loc['total_proposed', cresp] = cdepl
-        for cresp, cdepl in self.proposed_aggregated_base_stream_sum_depletion.items():
-            agg_base_stream_df.loc['total_proposed', cresp] = np.max(cdepl)
-            
-        #existing
-        for cresp, cdd in self.existing_aggregated_drawdown.items():
-            agg_df.loc['total_existing', cresp] = cdd
-        for cresp, cdepl in self.existing_aggregated_max_depletion.items():
-            agg_df.loc['total_existing', cresp] = cdepl
-        for cresp, cdepl in self.existing_aggregated_base_stream_sum_depletion.items():
-            agg_base_stream_df.loc['total_existing', cresp] = np.max(cdepl)
-            
-        #total
-        for cresp, cdd in self.total_aggregated_drawdown.items():
-            agg_df.loc['total_combined', cresp] = cdd
-        for cresp, cdepl in self.total_aggregated_max_depletion.items():
-            agg_df.loc['total_combined', cresp] = cdepl
-        for cresp, cdepl in self.total_aggregated_base_stream_sum_depletion.items():
-            agg_base_stream_df.loc['total_combined', cresp] = np.max(cdepl)
-            
+            # totals
+            #proposed
+            for cresp, cdd in self.proposed_aggregated_drawdown.items():
+                agg_df.loc['total_proposed', cresp] = cdd
+            for cresp, cdepl in self.proposed_aggregated_max_depletion.items():
+                agg_df.loc['total_proposed', cresp] = cdepl
+            for cresp, cdepl in self.proposed_aggregated_base_stream_sum_depletion.items():
+                agg_base_stream_df.loc['total_proposed', cresp] = np.max(cdepl)
+                
+            #existing
+            for cresp, cdd in self.existing_aggregated_drawdown.items():
+                agg_df.loc['total_existing', cresp] = cdd
+            for cresp, cdepl in self.existing_aggregated_max_depletion.items():
+                agg_df.loc['total_existing', cresp] = cdepl
+            for cresp, cdepl in self.existing_aggregated_base_stream_sum_depletion.items():
+                agg_base_stream_df.loc['total_existing', cresp] = np.max(cdepl)
+                
+            #total
+            for cresp, cdd in self.total_aggregated_drawdown.items():
+                agg_df.loc['total_combined', cresp] = cdd
+            for cresp, cdepl in self.total_aggregated_max_depletion.items():
+                agg_df.loc['total_combined', cresp] = cdepl
+            for cresp, cdepl in self.total_aggregated_base_stream_sum_depletion.items():
+                agg_base_stream_df.loc['total_combined', cresp] = np.max(cdepl)
+                
 
-        agg_df.columns = cols
-        agg_df.index = rows
+            agg_df.columns = cols
+            agg_df.index = rows
+            
+            # make a report file - named from the YML name
+            ymlbase = self.ymlfile.name
+            outfile = ymlbase.replace('.yml','.table_report.csv')
+            # make a home for the report file
+            outpath = self.ymlfile.parent / 'output'
+            if not os.path.exists(outpath):
+                os.mkdir(outpath)
+
+            self.csv_output_filename = outpath / outfile
+            agg_df.to_csv(self.csv_output_filename)
+            # slap the csv dataframes into self
+            self.agg_df = agg_df
+            self.csv_stream_output_filename = outpath / outfile.replace('.csv','.base_stream_depletion.csv')
+            agg_base_stream_df.to_csv(self.csv_stream_output_filename)
+            self.csv_stream_output_ts_filename = outpath / outfile.replace('.csv','.all_ts.csv')
+            all_depl_ts.to_csv(self.csv_stream_output_ts_filename)
+
+            self.agg_base_stream_df = agg_base_stream_df
         
-        # make a report file - named from the YML name
-        ymlbase = self.ymlfile.name
-        outfile = ymlbase.replace('.yml','.table_report.csv')
-        # make a home for the report file
-        outpath = self.ymlfile.parent / 'output'
-        if not os.path.exists(outpath):
-            os.mkdir(outpath)
+        else:
+            for cn, cw in self.wells.items():
+                for cresp, cdd in cw.drawdown.items():
+                    agg_df.loc[cn,cresp] = cdd
+            # totals
+            #proposed
+            for cresp, cdd in self.proposed_aggregated_drawdown.items():
+                agg_df.loc['total_proposed', cresp] = cdd
+            #existing
+            for cresp, cdd in self.existing_aggregated_drawdown.items():
+                agg_df.loc['total_existing', cresp] = cdd
+            #total
+            for cresp, cdd in self.total_aggregated_drawdown.items():
+                agg_df.loc['total_combined', cresp] = cdd    
+                
 
-        self.csv_output_filename = outpath / outfile
-        agg_df.to_csv(self.csv_output_filename)
-        # slap the csv dataframes into self
-        self.agg_df = agg_df
-        self.csv_stream_output_filename = outpath / outfile.replace('.csv','.base_stream_depletion.csv')
-        agg_base_stream_df.to_csv(self.csv_stream_output_filename)
-        self.csv_stream_output_ts_filename = outpath / outfile.replace('.csv','.all_ts.csv')
-        all_depl_ts.to_csv(self.csv_stream_output_ts_filename)
+            agg_df.columns = cols
+            agg_df.index = rows
+            
+            # make a report file - named from the YML name
+            ymlbase = self.ymlfile.name
+            outfile = ymlbase.replace('.yml','.table_report.csv')
+            # make a home for the report file
+            outpath = self.ymlfile.parent / 'output'
+            if not os.path.exists(outpath):
+                os.mkdir(outpath)
 
-        self.agg_base_stream_df = agg_base_stream_df        
+            self.csv_output_filename = outpath / outfile
+            agg_df.to_csv(self.csv_output_filename)
+            
