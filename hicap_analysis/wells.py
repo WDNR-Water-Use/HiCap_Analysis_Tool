@@ -3,6 +3,7 @@ from numpy.lib.arraysetops import isin
 import pandas as pd
 from pandas.core import base
 import scipy.special as sps
+import sys
 
 # define drawdown methods here
 def _theis(T,S,time,dist,Q, **kwargs):
@@ -118,10 +119,16 @@ def _hunt99(T,S,time,dist,Q,streambed, **kwargs):
                 depending on input of time and dist
     '''
     # turn lists into np.array so they get handled correctly
-    if isinstance(time, list):
+    if isinstance(time, list) and isinstance(dist, list):
+        print('cannot have both time and distance as arrays')
+        print('in the Hunt99 method.  Need to externally loop')
+        print('over one of the arrays and pass the other')
+        sys.exit()
+    elif isinstance(time, list):
         time = np.array(time)
-    if isinstance(dist, list):
+    elif isinstance(dist, list):
         dist = np.array(dist)
+
     a = np.sqrt(S * dist**2/(4. * T * time))
     b = (streambed**2 * time)/(4 * S * T)
     c = (streambed * dist)/(2. * T)

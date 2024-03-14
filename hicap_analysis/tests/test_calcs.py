@@ -318,4 +318,27 @@ def test_hunt99_results():
     Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
-    # should add test for small values of lambda (low conductance streambed)
+
+    # check some values with varying time, using t/sdf, q/Q table
+    # from Jenkins (1968) - Table 1
+    dist = 1000.
+    sdf = dist**2 * S/T
+    time = [sdf*1.0, sdf*2.0, sdf*6.0]
+    obs = [0.480, 0.617, 0.773]
+    Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
+    assert all(np.isnan(Qs)== False)
+    assert np.allclose(Qs, obs, atol=5e-3)
+
+    # Check with lower streambed conductance using
+    # values from 28 days of pumping from STRMDEPL08 appendix
+    # T = 1,000 ft2/d, L = 100 ft, S = 20 ft/d, d = 500 ft, S = 0.1, and Qw = 0.557 ft3/s (250 gal/min).
+
+    dist = 500.
+    T = 1000.
+    S = 0.1
+    time = [10., 20., 28.]
+    rlambda = 20
+    obs = np.array([.1055, .1942, .2378])/0.5570
+    Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
+    assert all(np.isnan(Qs)== False)
+    assert np.allclose(Qs, obs, atol=5e-3)
