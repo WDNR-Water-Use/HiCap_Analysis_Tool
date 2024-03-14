@@ -7,6 +7,9 @@ import pytest
 
 
 datapath = Path('hicap_analysis/tests/data')
+from hicap_analysis.utilities import  create_timeseries_template
+create_timeseries_template(filename=datapath / 'test_ts.csv',
+                            well_ids=[f'well{i}' for i in range(1,6)])
 
 @pytest.fixture
 def theis_results():
@@ -342,10 +345,14 @@ def test_hunt99_results():
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, obs, atol=5e-3)
     
-def test_yml_ts_parsing():
+@pytest.mark.xfail
+def test_yml_ts_parsing1():
     from hicap_analysis.analysis_project import Project 
-    from hicap_analysis.utilities import  create_timeseries_template
-    create_timeseries_template(filename=datapath / 'test_ts.csv',
-                               well_ids=[f'well{i}' for i in range(1,5)])
-    yml_file = 'example3.yml'
-    ap = Project(datapath/yml_file)
+        # this should fail on the integrity tests
+    ap = Project(datapath/'example3.yml')
+    
+def test_yml_ts_parsing2():
+    from hicap_analysis.analysis_project import Project 
+        # this should fail on the integrity tests
+    ap = Project(datapath/'example4.yml')
+    

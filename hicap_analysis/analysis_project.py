@@ -86,14 +86,29 @@ class Project():
         else:
             raise('Configuration YAML file must have a "project_properties" block')
 
-        # look for a timeseries file in the project_properties block to determine how to 
-        # handle pumping 
-
         # get the keys for all the remaining blocks
         self.wellkeys = [i for i in d.keys() if i.lower().startswith('well')]
         self.ddkeys = [i for i in d.keys() if i.lower().startswith('dd_resp')]
         self.streamkeys = [i for i in d.keys() if i.lower().startswith('stream')]
 
+        # look for a timeseries file in the project_properties block to determine how to 
+        # handle pumping 
+        if 'pumping_timeseries_file' in d['project_properties'].keys():
+            self.tsfile = d['project_properties']['pumping_timeseries_file']
+            self.ts = True
+            self.Q_ts = pd.read_csv(self.tsfile).set_index('sequential_day')
+            # first test, if there is a time series file that all well keys are columns
+            if self.ts is True:
+                try:
+                    assert all([i  in self.Q_ts.columns for i in self.wellkeys])
+                except:
+                    raise AssertionError('not all well names are represented in the time series file') 
+                # convert from GPM to CFD
+                self.Q_ts[self.Q_ts.columns[3:]] *= GPM2CFD
+        else:
+            self.ts = False
+            self.Q_ts = None
+            
         # parse stream responses blocks
         if len(self.streamkeys)>0:
             self._parse_responses(self.streamkeys, d)
@@ -108,7 +123,7 @@ class Project():
 
         # parse well blocks
         if len(self.wellkeys)>0:
-            self._parse_wells(d)
+            self._parse_wells(d, self.ts, self.Q_ts)
         else:
             raise('No wells were defined in the input file. Goodbye')
 
@@ -157,20 +172,30 @@ class Project():
         # populate the appropriate dictionary on self with location and name
         # information of response
         for ck in keys:
-           cr[d[ck]['name']] = d[ck]['loc']
+            cr[d[ck]['name']] = d[ck]['loc']
 
-    def _parse_wells(self, d):
+    def _parse_wells(self, d, ts, Q_ts):
         """populate information about wells assigning apportionment values and
             the lists of proposed and existing wells
 
         Args:
-            keys ([type]): [description]
-            d ([dict]): yml file data
+            d (dict): yml file data
+            ts (bool): flag as to whether a timeseries dataframe was read in
+            Q_ts (pandas DataFrame): pumping data table for all the wells
         """
         self.__well_data = {}
+        
         for ck in self.wellkeys:
             # populate dictionary using well name as key with all well data
             self.__well_data[d[ck]['name']] = d[ck]
+            
+            # make sure if ts is supplied that Q is not supplied for each well
+            if ts is True:
+                if 'Q' in d[ck].keys() or 'pumping_days' in d[ck].keys():
+                    raise('ERROR:\ntime series file was supplied AND Q of pumping_days was supplied for at\n' +
+                        'one well. User can only supply pumping rates in one or the other\n' +
+                        'Please try again....')
+            
             # populate categories of wells
             if d[ck]['status'] in self.proposed_well_categories:
                 self.proposed_wells.append(d[ck]['name'])
@@ -216,8 +241,16 @@ class Project():
             else:
                 stream_app_d = None
             
-            self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
-                    theis_dd_days=cw['dd_days'], depl_pump_time=cw['pumping_days'],
+            # sort out the time series for wells
+            if self.Q_ts is True:
+                Q = self.Q_ts[ck]
+            else:
+                y1 = np.zeros(365)
+                y1[:cw['pumping_days']] = cw['Q']
+                Q = pd.Series(index = range(1,(cw['depletion_years']*365)+1),
+                            data = list(y1)*cw['depletion_years'])
+            self.wells[ck] = Well(T=self.T, S=self.S, Q=Q, 
+                    theis_dd_days=cw['dd_days'], 
                     stream_dist=stream_dist, drawdown_dist=dd_dist,
                     stream_apportionment=stream_app_d, depl_method = self.depl_method
             )
@@ -295,20 +328,17 @@ class Project():
             if len(self.proposed_wells) == 0:
                 ofp.write('  there were no proposed wells in the configuration file!\n')
             else:
-                 _print_dd_depl(ofp, self.proposed_aggregated_drawdown, self.proposed_aggregated_max_depletion)
+                _print_dd_depl(ofp, self.proposed_aggregated_drawdown, self.proposed_aggregated_max_depletion)
                     
             ofp.write('\n\nCOMBINED EXISTING WELL REPORTS\n' + '#'*50 + '\n')
             if len(self.existing_wells) == 0:
                 ofp.write('  there were no existing wells in the configuration file!\n')
             else:
-                 _print_dd_depl(ofp, self.existing_aggregated_drawdown, self.existing_aggregated_max_depletion)
+                _print_dd_depl(ofp, self.existing_aggregated_drawdown, self.existing_aggregated_max_depletion)
                     
             ofp.write('\n\nTOTAL COMBINED WELL REPORTS\n' + '#'*50 + '\n')
             _print_dd_depl(ofp, self.total_aggregated_drawdown, self.total_aggregated_max_depletion)
             
-
-
-        j=2
 
     def aggregate_results(self):
         # make dictionaries to contain the drawdown results

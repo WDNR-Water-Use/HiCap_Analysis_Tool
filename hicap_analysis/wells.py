@@ -160,7 +160,7 @@ class WellResponse():
     """
     def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, 
                     dd_method='Theis', depl_method= 'Glover', theis_time = -9999,
-                    depl_pump_time = -99999, depletion_years=5) -> None:
+                    depl_pump_time = -99999) -> None:
         """Class to calculate a single response for a single pumping well.
         Args:
             name (str): pumping well name
@@ -174,7 +174,6 @@ class WellResponse():
             depl_method (str, optional): [description]. Defaults to 'Glover'.
             theis_time (int, optional): [description]. Defaults to -9999.
             depl_pump_time (int, optional): [description]. Defaults to -99999.
-            depletion_years (int, optional): [description]. Defaults to 5.
         """
         self._drawdown=None
         self._depletion=None
@@ -186,7 +185,6 @@ class WellResponse():
         self.dist = dist
         self.dd_method=dd_method
         self.depl_method=depl_method
-        self.depletion_years = depletion_years
         self.theis_time = theis_time
         self.depl_pump_time = depl_pump_time
         self.Q = Q
@@ -197,44 +195,33 @@ class WellResponse():
         """
         dd_f = ALL_DD_METHODS[self.dd_method.lower()]
 
-        return dd_f(self.T, self.S, self.theis_time, self.dist, self.Q)
+        return dd_f(self.T, self.S, self.theis_time, self.dist, self.Q.iloc[0])
         
     def _calc_depletion(self):
         depl_f = ALL_DEPL_METHODS[self.depl_method.lower()]
         
-        # initialize containers for time series initialized with year 0
-        self.baseyears = [np.arange(1,365*self.depletion_years + 1)]
-        self.imageyears = [np.zeros_like(self.baseyears[0])]
-        self.imageyears[0][self.depl_pump_time:] = np.arange(1,len(self.imageyears[0])-self.depl_pump_time+1)
-
+        # find the differences in pumping
+        dq = self.Q.copy()
+        dq.iloc[1:] = np.diff(self.Q)
         
-        # construct full time series for each year
-        for y in range(1,self.depletion_years):
-            # need full pumping and image time series for each year -   
-            # with zeros leading previous years
-            # baseyears first
-            cby = np.zeros_like(self.baseyears[0])
-            cby[365*y:] = self.baseyears[0][0:len(self.baseyears[0])-365*y]
-            # image years
-            ciy = np.zeros_like(self.baseyears[0])
-            poffset = 365*y + self.depl_pump_time
-            ciy[poffset:] = self.baseyears[0][0:len(ciy)- poffset]
-            self.baseyears.append(cby)
-            self.imageyears.append(ciy)
-            
-        depl = np.zeros_like(self.baseyears[0], dtype=float)
-        rech = np.zeros_like(self.baseyears[0], dtype=float)
-        if self.depl_method.lower() == 'walton':
-            # Walton method (only) needs these goofy units of gpd/dt for T
-            T = self.T_gpd_ft
-        else:
-            T = self.T
-        for cby,ciy in zip(self.baseyears, self.imageyears):
-            depl += depl_f(T,self.S,cby, self.dist,self.Q*self.stream_apportionment)
-            rech += depl_f(T,self.S,ciy, self.dist,self.Q*self.stream_apportionment)
+        # start with zero depletion
+        depl = np.zeros(len(self.Q))
         
-        # NB! --> converting rech to negative values here    
-        return depl - rech
+        # get the locations of changes
+        deltaQ = dq.loc[dq!=0]
+        
+        # initialize with pumping at the first time being positive
+        idx = deltaQ.index[0]-1
+        cQ = deltaQ.iloc[0]
+        ct = list(range(idx,len(self.Q)))
+        depl[idx:] = depl_f(self.T, self.S, ct, self.dist, cQ*self.stream_apportionment)
+        if len(deltaQ) > 1:
+            deltaQ = deltaQ.iloc[1:]
+            for idx,cQ in zip(deltaQ.index,deltaQ.values):
+                idx-=1
+                ct = list(range(len(self.Q)-idx))
+                depl[idx:] -= depl_f(self.T, self.S, ct, self.dist, cQ*self.stream_apportionment)
+        return depl
 
     
     @property
@@ -250,15 +237,15 @@ class Well():
         Preprocessing makes unit conversions and calculates distances as needed
     """
 
-    def __init__(self, well_status='pending', T=-9999, S=-99999, Q=-99999, depletion_years=5, theis_dd_days=-9999, depl_pump_time=-9999,
-         stream_dist=None, drawdown_dist=None,  stream_apportionment=None, depl_method='walton') -> None:
+    def __init__(self, well_status='pending', T=-9999, S=-99999, Q=None,
+                theis_dd_days=-9999, stream_dist=None, drawdown_dist=None, 
+                stream_apportionment=None, depl_method='walton') -> None:
         """[summary]
 
         Args:
             T ([type]): [description]
             S ([type]): [description]
             Q ([type]): [description]
-            depletion_years (int, optional): [description]. Defaults to 4.
             theis_dd_days (int, optional): [description]. Defaults to -9999.
             depl_pump_time (int, optional): [description]. Defaults to -9999.
             stream_dist ([type], optional): [description]. Defaults to None.
@@ -276,9 +263,7 @@ class Well():
         self.drawdown_dist = drawdown_dist
         self.T = T
         self.S = S
-        self.depletion_years = depletion_years
         self.theis_dd_days = theis_dd_days
-        self.depl_pump_time = depl_pump_time
         self.Q = Q
         self.stream_apportionment=stream_apportionment
         self.stream_responses = {} # dict of WellResponse objects for this well with streams
@@ -299,8 +284,7 @@ class Well():
         if self.stream_dist is not None:
             for cs, (cname, cdist) in enumerate(self.stream_dist.items()):
                 self.stream_responses[cs+1] = WellResponse(cname, 'stream', T=self.T, S=self.S, 
-                                    dist=cdist, depl_pump_time =self.depl_pump_time, 
-                                    Q=self.Q, stream_apportionment=self.stream_apportionment[cname], 
+                                    dist=cdist, Q=self.Q, stream_apportionment=self.stream_apportionment[cname], 
                                     depl_method=self.depl_method)
 
         # next for drawdown responses
@@ -308,8 +292,7 @@ class Well():
             for cw, (cname,cdist) in enumerate(self.drawdown_dist.items()):
                 self.drawdown_responses[cw+1] = WellResponse(cname, 'well', T=self.T, S=self.S, 
                                     dist=cdist, theis_time=self.theis_dd_days, 
-                                    Q=self.Q, dd_method='theis', 
-                                    depletion_years=self.depletion_years)        
+                                    Q=self.Q, dd_method='theis')        
         
     @property
     def drawdown(self):
