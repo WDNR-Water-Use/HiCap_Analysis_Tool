@@ -292,7 +292,6 @@ def test_complex_yml():
     return('stoked')
 
 def test_run_yml_example():
-    import hicap_analysis.wells
     import hicap_analysis.analysis_project as ap
     from hicap_analysis.analysis_project import Project
 
@@ -342,3 +341,11 @@ def test_hunt99_results():
     Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, obs, atol=5e-3)
+    
+def test_yml_ts_parsing():
+    from hicap_analysis.analysis_project import Project 
+    from hicap_analysis.utilities import  create_timeseries_template
+    create_timeseries_template(filename=datapath / 'test_ts.csv',
+                               well_ids=[f'well{i}' for i in range(1,5)])
+    yml_file = 'example3.yml'
+    ap = Project(datapath/yml_file)

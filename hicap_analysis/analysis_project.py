@@ -79,11 +79,15 @@ class Project():
         with open(ymlfile) as ifp:
             d = yaml.safe_load(ifp)
 
+
         # parse project_properties block
         if 'project_properties' in d.keys():
             self._parse_project_properties(d['project_properties'])
         else:
             raise('Configuration YAML file must have a "project_properties" block')
+
+        # look for a timeseries file in the project_properties block to determine how to 
+        # handle pumping 
 
         # get the keys for all the remaining blocks
         self.wellkeys = [i for i in d.keys() if i.lower().startswith('well')]

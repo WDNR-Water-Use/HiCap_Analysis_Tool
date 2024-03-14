@@ -39,4 +39,4 @@ def create_timeseries_template(filename='../examples/blank_ts.csv',
     # and write it out
     ts_df.to_csv(filename, index=None)    
 if __name__=="__main__":
-    create_timeseries_template()
+    create_timeseries_template(well_ids=[f'well{i}' for i in range(1,5)])

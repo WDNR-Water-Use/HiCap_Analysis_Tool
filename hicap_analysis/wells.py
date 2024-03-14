@@ -161,15 +161,14 @@ class WellResponse():
     def __init__(self, name, response_type, T, S, dist, Q, stream_apportionment=None, 
                     dd_method='Theis', depl_method= 'Glover', theis_time = -9999,
                     depl_pump_time = -99999, depletion_years=5) -> None:
-        """[summary]
-
+        """Class to calculate a single response for a single pumping well.
         Args:
-            name ([type]): [description]
-            response_type ([type]): [description]
-            T ([type]): [description]
-            S ([type]): [description]
-            dist ([type]): [description]
-            Q ([type]): [description]
+            name (str): pumping well name
+            response_type (str): reserved for future implementation
+            T (float): Aquifer Transmissivity
+            S (float): Aquifer Storage
+            dist (float): Distance between well and response
+            Q (pandas Series): ...
             stream_apportionment ([type], optional): [description]. Defaults to None.
             dd_method (str, optional): [description]. Defaults to 'Theis'.
             depl_method (str, optional): [description]. Defaults to 'Glover'.
@@ -208,6 +207,7 @@ class WellResponse():
         self.imageyears = [np.zeros_like(self.baseyears[0])]
         self.imageyears[0][self.depl_pump_time:] = np.arange(1,len(self.imageyears[0])-self.depl_pump_time+1)
 
+        
         # construct full time series for each year
         for y in range(1,self.depletion_years):
             # need full pumping and image time series for each year -   
