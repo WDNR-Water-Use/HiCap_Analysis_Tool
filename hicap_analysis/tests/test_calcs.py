@@ -1,12 +1,13 @@
 from hicap_analysis.wells import GPM2CFD
-from os import pardir
+from os import pardir, getcwd
 import numpy as np
 import pandas as pd
 import geopandas as gpd
 from pathlib import Path
 import pytest
 
-datapath = Path('./tests/data')
+homepath = Path(getcwd())
+datapath = homepath / 'tests' / 'data'
 
 @pytest.fixture
 def theis_results():
