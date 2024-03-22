@@ -16,3 +16,4 @@ dependencies:
 - flake8
 - codecov
 - coverage
+- geopandas
