@@ -6,8 +6,9 @@ import geopandas as gpd
 from pathlib import Path
 import pytest
 
-homepath = Path(getcwd())
-datapath = homepath / 'tests' / 'data'
+#homepath = Path(getcwd())
+#datapath = homepath / 'tests' / 'data'
+datapath = Path('hicap_analysis/tests/data')
 
 @pytest.fixture
 def theis_results():
