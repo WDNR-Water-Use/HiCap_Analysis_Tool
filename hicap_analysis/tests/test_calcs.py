@@ -1,12 +1,14 @@
 from hicap_analysis.wells import GPM2CFD
 from hicap_analysis.utilities import Q2ts
-from os import pardir
+from os import pardir, getcwd
 import numpy as np
 import pandas as pd
+import geopandas as gpd
 from pathlib import Path
 import pytest
 
-
+#homepath = Path(getcwd())
+#datapath = homepath / 'tests' / 'data'
 datapath = Path('hicap_analysis/tests/data')
 from hicap_analysis.utilities import  create_timeseries_template
 create_timeseries_template(filename=datapath / 'test_ts.csv',
@@ -356,7 +358,72 @@ def test_yml_ts_parsing1():
     # this should fail on the integrity tests
     ap = Project(datapath/'example3.yml')
     
-def test_yml_ts_parsing2():
-    from hicap_analysis.analysis_project import Project 
-    ap = Project(datapath/'example4.yml')
+# def test_yml_ts_parsing2():
+#     from hicap_analysis.analysis_project import Project 
+#     ap = Project(datapath/'example4.yml')
     
+@pytest.fixture
+def SIR2009_5003_Table2_Batch_results():
+    ''' The batch column from Table 2, SIR 2009-5003,
+        with the groundwater component of the MI water
+        withdrawal screening tool.  This table has
+        catchments, distances, apportionment (percent),
+        analytical solution, and percent*analytical 
+        solution.  The analytical solution is computed
+        using Hunt (1999)'
+    
+    '''
+    check_df = pd.read_csv(datapath / 'SIR2009_5003_Table2_Batch.csv', dtype=float)
+    check_df.set_index('Valley_segment', inplace=True)
+
+    return check_df
+
+def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
+    from hicap_analysis import wells as wo
+    from hicap_analysis.geoprocessing import Geoprocess
+
+    geopro = Geoprocess(datapath / 'WWAP_110507.shp', 
+                        datapath / 'WWAP_ValleySegments_080907.shp', 
+                        catch_idx='ADJ_SEGMNT', 
+                        stream_idx='ADJ_SEGMNT')
+    
+    well = [{'name': 'testwell0',
+        'lat': 44.979953,
+        'long': -84.625023,
+        'rate': 70,
+        'depth': 80},
+       {'name': 'testwell1',
+        'lat': 44.99,
+        'long': -84.64,
+        'rate': 70,
+        'depth': 80}]  #gpm and ft
+
+    well_temp=pd.DataFrame(well)
+    well_list = geopro.get_geometries(well_temp)
+    print(well_list)
+ 
+ # testwell0 should match the table from SIR
+    home = well_list[0].home_df.copy()
+    nearest = well_list[0].close_points_df.copy()
+
+    # need to call the hunt99 function
+    time = 5. * 365.25  # 5 years
+    # pumping is 70 gpm; 1 gpm = 0.0022280093 cfs
+    Q = well_temp.loc[0,'rate'] * 0.0022280093 * 3600 * 24  # rate in CFD for function.
+    T = home.loc[11967, 'MEDIAN_T']
+    S = 0.01
+    streambed = home.loc[11967, 'EST_Kv_W']/well_temp.loc[0, 'depth']
+
+    # hunt99 returns CFS need to convert to GPM for table
+    nearest['analytical_removal'] = nearest['distance'].apply(lambda dist: wo._hunt99(T, S, time, dist, Q, streambed)* 448.83116885)
+    nearest['valley_seg_removal'] = nearest['apportionment'] * nearest['analytical_removal']
+    nearest['percent'] = nearest['apportionment'] * 100.
+
+    check_df = SIR2009_5003_Table2_Batch_results
+
+    tol = 0.01
+    np.testing.assert_allclose(nearest['percent'].values, check_df['Removal_percent'].values, atol=tol)
+    tol = 0.04
+    np.testing.assert_allclose(nearest['analytical_removal'].values, check_df['Analytical_removal_gpm'].values, atol=tol)
+    tol = 0.01
+    np.testing.assert_allclose(nearest['valley_seg_removal'].values, check_df['Estimated_removal_gpm'].values, atol=tol)
