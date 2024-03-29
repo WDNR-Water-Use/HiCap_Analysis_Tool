@@ -1,9 +1,28 @@
 import calendar
 import pandas as pd
+from hicap_analysis.wells import GPM2CFD
+import numpy as np
+
+def Q2ts(depl_pump_time, depletion_years, Q_scalar):
+    """Function to convert a scalar Q to a time series
+
+    Args:
+        depl_pump_time (float): Number of days the well should be pumping from day 0
+        depletion_years (float): Number of years of pumping to be simulated
+        Q_scalar (float): Pumping rate in GPM
+
+    Returns:
+        Q (pd.Series): day-indexed time series of pumping in CFD
+    """
+    y1 = np.zeros(365)
+    y1[:depl_pump_time] = Q_scalar
+    Q = pd.Series(index = range(1,(depletion_years*365)+1),
+                data = list(y1)*depletion_years) * GPM2CFD
+    return Q
 
 def create_timeseries_template(filename='../examples/blank_ts.csv', 
-                               numyears=1, 
-                               well_ids = ['well1','well2']):
+                numyears=1, 
+                well_ids = ['well1','well2']):
     """create a template timeseries CSV file ready to populate with 
     pumping rates in gallons per minute for running multiple times
 

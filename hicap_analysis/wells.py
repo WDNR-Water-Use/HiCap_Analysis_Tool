@@ -64,7 +64,7 @@ def _sdf(T,S,dist,**kwargs):
         dist = np.array(dist)
     return dist**2*S/T
 
-def _walton(T,S,time,dist, Q, **kwargs):
+def _walton(T,S,time,dist, Q,**kwargs):
     """Calculate depletion using Watkins (1987) PT-8 BASIC program logic 
 
     Args:
@@ -79,6 +79,10 @@ def _walton(T,S,time,dist, Q, **kwargs):
         float (array): depletion values at at input parameter
                         times/distances [CFS]
     """
+    if isinstance(time, list):
+        time = np.array(time)
+    if isinstance(time, pd.Series):
+        time=time.values
     if dist > 0:
         # avoid divide by zero for time==0
         # time = time.values
@@ -214,13 +218,20 @@ class WellResponse():
         idx = deltaQ.index[0]-1
         cQ = deltaQ.iloc[0]
         ct = list(range(idx,len(self.Q)))
-        depl[idx:] = depl_f(self.T, self.S, ct, self.dist, cQ*self.stream_apportionment)
+        if self.depl_method.lower() == 'walton':
+            # Walton method (only) needs these goofy units of gpd/dt for T
+            T = self.T_gpd_ft
+        else:
+            T = self.T
+        depl[idx:] = depl_f(T, self.S, ct, self.dist, cQ*self.stream_apportionment)
         if len(deltaQ) > 1:
             deltaQ = deltaQ.iloc[1:]
             for idx,cQ in zip(deltaQ.index,deltaQ.values):
                 idx-=1
                 ct = list(range(len(self.Q)-idx))
-                depl[idx:] -= depl_f(self.T, self.S, ct, self.dist, cQ*self.stream_apportionment)
+                # note that by setting Q negative from the diff calculations, we always add
+                # below for the image wells
+                depl[idx:] += depl_f(T, self.S, ct, self.dist, cQ*self.stream_apportionment)
         return depl
 
     
@@ -237,8 +248,8 @@ class Well():
         Preprocessing makes unit conversions and calculates distances as needed
     """
 
-    def __init__(self, well_status='pending', T=-9999, S=-99999, Q=None,
-                theis_dd_days=-9999, stream_dist=None, drawdown_dist=None, 
+    def __init__(self, well_status='pending', T=-9999, S=-99999, Q=None, depl_pump_time=5,
+                 depletion_years=5.0,theis_dd_days=-9999, stream_dist=None, drawdown_dist=None, 
                 stream_apportionment=None, depl_method='walton') -> None:
         """[summary]
 
@@ -247,6 +258,7 @@ class Well():
             S ([type]): [description]
             Q ([type]): [description]
             theis_dd_days (int, optional): [description]. Defaults to -9999.
+            depletion_years (float, optional): [description]. Defaults to 5.0.
             depl_pump_time (int, optional): [description]. Defaults to -9999.
             stream_dist ([type], optional): [description]. Defaults to None.
             drawdown_dist ([type], optional): [description]. Defaults to None.
@@ -263,6 +275,8 @@ class Well():
         self.drawdown_dist = drawdown_dist
         self.T = T
         self.S = S
+        self.depletion_years = depletion_years
+        self.depl_pump_time = depl_pump_time
         self.theis_dd_days = theis_dd_days
         self.Q = Q
         self.stream_apportionment=stream_apportionment

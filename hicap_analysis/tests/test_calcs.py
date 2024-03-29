@@ -1,4 +1,5 @@
 from hicap_analysis.wells import GPM2CFD
+from hicap_analysis.utilities import Q2ts
 from os import pardir
 import numpy as np
 import pandas as pd
@@ -122,12 +123,16 @@ def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
-    well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
+    well1 = Well(T=pars['T'], S=pars['S'], 
+                Q=Q2ts(pars['depl_pump_time'],5, pars['Q1_gpm']),
+                depletion_years=5,
                 theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w1s1_dist'], pars['stream_name_2']:pars['w1s2_dist']},
                 drawdown_dist={'muni':pars['w1muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w1s1_appor'],pars['stream_name_2']:pars['w1s2_appor']})
-    well2 = Well(T=pars['T'], S=pars['S'], Q=pars['Q2_gpm']*GPM2CFD, depletion_years=5,
+    well2 = Well(T=pars['T'], S=pars['S'], 
+                Q=Q2ts(pars['depl_pump_time'],5, pars['Q2_gpm']),
+                depletion_years=5,
                 theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
                 drawdown_dist={'muni':pars['w2muni_dist']},
@@ -243,7 +248,7 @@ def test_yaml_parsing(project_spreadsheet_results):
     
     # spot check some numbers
     assert ap.wells['new1'].T == 35
-    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q)
+    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q.iloc[0])
     assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.3
 
 
@@ -316,7 +321,7 @@ def test_hunt99_results():
     T = K*D*24*60*60 # converting to ft/day
     S = 0.2
     rlambda = 10000.  #large lambda value should return Glover and Balmer solution
-                       #see test_glover for these values.
+                    #see test_glover for these values.
     Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
@@ -348,11 +353,10 @@ def test_hunt99_results():
 @pytest.mark.xfail
 def test_yml_ts_parsing1():
     from hicap_analysis.analysis_project import Project 
-        # this should fail on the integrity tests
+    # this should fail on the integrity tests
     ap = Project(datapath/'example3.yml')
     
 def test_yml_ts_parsing2():
     from hicap_analysis.analysis_project import Project 
-        # this should fail on the integrity tests
     ap = Project(datapath/'example4.yml')
     

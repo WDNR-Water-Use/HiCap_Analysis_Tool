@@ -1,4 +1,5 @@
 from hicap_analysis.wells import GPM2CFD, Well, WellResponse
+from hicap_analysis.utilities import Q2ts
 import numpy as np
 import pandas as pd
 import yaml, os, shutil
@@ -13,19 +14,19 @@ from math import radians, cos, sin, asin, sqrt
 
 
 def _loc_to_dist(loc0, loc1):
-     '''
-     Distance between two points in lat/long using Haversine Formula assuming lat/long in decimal degrees, returned in feet
-     '''
-     #convert decimal degrees to radians
-     lon1, lat1, lon2, lat2 = map(radians, [loc0[0], loc0[1], loc1[0],loc1[1]])
-     #haversine
-     dlon = abs(lon2 - lon1)
-     dlat = abs(lat2 - lat1)
-     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-     c = 2 * asin(sqrt(a))
-     r = 3956*5280 # radius of the earth in feet
-     dist = c*r
-     return dist
+    '''
+    Distance between two points in lat/long using Haversine Formula assuming lat/long in decimal degrees, returned in feet
+    '''
+    #convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [loc0[0], loc0[1], loc1[0],loc1[1]])
+    #haversine
+    dlon = abs(lon2 - lon1)
+    dlat = abs(lat2 - lat1)
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    r = 3956*5280 # radius of the earth in feet
+    dist = c*r
+    return dist
 
 def _print_to_screen_and_file(s, ofp):
     """[summary]
@@ -103,12 +104,11 @@ class Project():
                     assert all([i  in self.Q_ts.columns for i in self.wellkeys])
                 except:
                     raise AssertionError('not all well names are represented in the time series file') 
-                # convert from GPM to CFD
-                self.Q_ts[self.Q_ts.columns[3:]] *= GPM2CFD
+                
         else:
             self.ts = False
             self.Q_ts = None
-            
+
         # parse stream responses blocks
         if len(self.streamkeys)>0:
             self._parse_responses(self.streamkeys, d)
@@ -241,14 +241,12 @@ class Project():
             else:
                 stream_app_d = None
             
-            # sort out the time series for wells
+            # sort out the time series for wells and convert to CFD
             if self.Q_ts is True:
-                Q = self.Q_ts[ck]
+                Q = self.Q_ts[ck] * GPM2CFD
             else:
-                y1 = np.zeros(365)
-                y1[:cw['pumping_days']] = cw['Q']
-                Q = pd.Series(index = range(1,(cw['depletion_years']*365)+1),
-                            data = list(y1)*cw['depletion_years'])
+                Q = Q2ts(cw['pumping_days'], cw['depletion_years'], cw['Q'])
+
             self.wells[ck] = Well(T=self.T, S=self.S, Q=Q, 
                     theis_dd_days=cw['dd_days'], 
                     stream_dist=stream_dist, drawdown_dist=dd_dist,
@@ -469,7 +467,7 @@ class Project():
             # now make a special case dataframe for aggregated results by base stream name
             agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
             all_depl_ts =pd.DataFrame(index=
-                self.wells[list(self.wells.keys())[0]].stream_responses[1].baseyears[0])
+                self.wells[list(self.wells.keys())[0]].Q.index)
 
             # fill in the dataframe
             # individual wells
