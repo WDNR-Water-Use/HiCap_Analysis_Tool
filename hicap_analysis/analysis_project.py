@@ -173,6 +173,8 @@ class Project():
         # information of response
         for ck in keys:
             cr[d[ck]['name']] = d[ck]['loc']
+            if 'streambed_conductance' in d[ck].keys():
+                cr[d[ck]['name']]['streambed_conductance'] = d[ck]['streambed_conductance']
 
     def _parse_wells(self, d, ts, Q_ts):
         """populate information about wells assigning apportionment values and
@@ -223,10 +225,19 @@ class Project():
             stream_dist = None
             if 'stream_response' in cw.keys():   
                 stream_dist = {}
+                streambed_conductance = {}
+                streambed_cond_calc = 0
                 for c_resp in cw['stream_response']:
                     streamx = self._Project__stream_responses[c_resp]['x']
                     streamy = self._Project__stream_responses[c_resp]['y'] 
                     stream_dist[c_resp] = _loc_to_dist([cw['loc']['x'],cw['loc']['y']], [streamx, streamy])
+                    if 'streambed_conductance' in self._Project__stream_responses[c_resp].keys():
+                        streambed_conductance[c_resp] = self._Project__stream_responses[c_resp]['streambed_conductance']
+                        streambed_cond_calc += 1
+                if streambed_cond_calc < 1:
+                    streambed_conductance = None
+
+
             # next, drawdowns
             dd_dist = None
             if 'dd_response' in cw.keys():   
@@ -242,15 +253,16 @@ class Project():
                 stream_app_d = None
             
             # sort out the time series for wells and convert to CFD
-            if self.Q_ts is True:
+            if self.ts is True:
                 Q = self.Q_ts[ck] * GPM2CFD
             else:
                 Q = Q2ts(cw['pumping_days'], cw['depletion_years'], cw['Q'])
 
             self.wells[ck] = Well(T=self.T, S=self.S, Q=Q, 
-                    theis_dd_days=cw['dd_days'], 
+                    theis_dd_days=cw['dd_days'], depletion_years=cw['depletion_years'],
                     stream_dist=stream_dist, drawdown_dist=dd_dist,
-                    stream_apportionment=stream_app_d, depl_method = self.depl_method
+                    stream_apportionment=stream_app_d, depl_method = self.depl_method,
+                    streambed_conductance=streambed_conductance
             )
 
 
