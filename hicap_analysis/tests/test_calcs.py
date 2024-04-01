@@ -1,4 +1,5 @@
 from hicap_analysis.wells import GPM2CFD
+from hicap_analysis.utilities import Q2ts
 from os import pardir, getcwd
 import numpy as np
 import pandas as pd
@@ -9,6 +10,9 @@ import pytest
 #homepath = Path(getcwd())
 #datapath = homepath / 'tests' / 'data'
 datapath = Path('hicap_analysis/tests/data')
+from hicap_analysis.utilities import  create_timeseries_template
+create_timeseries_template(filename=datapath / 'test_ts.csv',
+                            well_ids=[f'well{i}' for i in range(1,6)])
 
 @pytest.fixture
 def theis_results():
@@ -63,8 +67,6 @@ def walton_results():
     params = {'Q':Q, 'S':S, 'T_gpd_ft':T_gpd_ft,
             'Q_start_day':Q_start_day,
             'Q_end_day':Q_end_day, 'dist':dist}
-  
-  
     return {'params':params, 'walton_res':walton_res}
 
 @pytest.fixture
@@ -114,19 +116,23 @@ def project_spreadsheet_results():
                     'muni_dd_total_combined': p4.loc['Cumulative Impact Drawdown (ft)'].values[0],
                     'stream1_depl_existing':p5.iloc[0].values[0],
                     'stream1_depl_total_combined':p5.iloc[3].values[0]
-                     }            
+                    }            
     return params
 
 def test_project_spreadsheet(project_spreadsheet_results):
     from hicap_analysis.wells import Well, GPM2CFD
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
-    well1 = Well(T=pars['T'], S=pars['S'], Q=pars['Q1_gpm']*GPM2CFD, depletion_years=5,
+    well1 = Well(T=pars['T'], S=pars['S'], 
+                Q=Q2ts(pars['depl_pump_time'],5, pars['Q1_gpm']),
+                depletion_years=5,
                 theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w1s1_dist'], pars['stream_name_2']:pars['w1s2_dist']},
                 drawdown_dist={'muni':pars['w1muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w1s1_appor'],pars['stream_name_2']:pars['w1s2_appor']})
-    well2 = Well(T=pars['T'], S=pars['S'], Q=pars['Q2_gpm']*GPM2CFD, depletion_years=5,
+    well2 = Well(T=pars['T'], S=pars['S'], 
+                Q=Q2ts(pars['depl_pump_time'],5, pars['Q2_gpm']),
+                depletion_years=5,
                 theis_dd_days=pars['theis_p_time'],depl_pump_time=pars['depl_pump_time'],
                 stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
                 drawdown_dist={'muni':pars['w2muni_dist']},
@@ -165,7 +171,7 @@ def test_theis(theis_results):
 def test_distance():
     from hicap_analysis import analysis_project as ap
     assert np.isclose(ap._loc_to_dist([89.38323, 43.07476],[89.38492, 43.07479]), 450.09, atol=0.1)
-  #  ([2,3],[9,32.9]), 30.70846788753877)
+    #  ([2,3],[9,32.9]), 30.70846788753877)
 
 def test_glover():
     """Test for the glover calculations
@@ -242,7 +248,7 @@ def test_yaml_parsing(project_spreadsheet_results):
     
     # spot check some numbers
     assert ap.wells['new1'].T == 35
-    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q)
+    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q.iloc[0])
     assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.3
 
 
@@ -279,13 +285,12 @@ def test_complex_yml():
     e_cols_tot =e_cols_exist + e_cols_prop
     
     df_ts_max['read'] = [df_agg.loc[i.split(':')[1],i.split(':')[0]] for i in df_ts_max.index ]
-  
     assert all(np.isclose(df_ts_max.raw, df_ts_max['read']) )
     
     keys = ('SpringBrook:proposed','SpringBrook:existing','SpringBrook:combined',
-         'EBranchEauClaire:proposed','EBranchEauClaire:existing','EBranchEauClaire:combined')
+            'EBranchEauClaire:proposed','EBranchEauClaire:existing','EBranchEauClaire:combined')
     vals = (s_cols_prop, s_cols_exist, s_cols_tot,
-           e_cols_prop, e_cols_exist, e_cols_tot)
+            e_cols_prop, e_cols_exist, e_cols_tot)
     for k,v in zip(keys,vals):
         df_agg_val = df_agg.loc[f'total_{k.split(":")[1]}', k.split(':')[0]]
         calc_val = np.max(df_ts[v].sum(axis=1))
@@ -294,7 +299,6 @@ def test_complex_yml():
     return('stoked')
 
 def test_run_yml_example():
-    import hicap_analysis.wells
     import hicap_analysis.analysis_project as ap
     from hicap_analysis.analysis_project import Project
 
@@ -316,8 +320,8 @@ def test_hunt99_results():
     T = K*D*24*60*60 # converting to ft/day
     S = 0.2
     rlambda = 10000.  #large lambda value should return Glover and Balmer solution
-                       #see test_glover for these values.
-    Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
+                    #see test_glover for these values.
+    Qs = wo._hunt99(T, S, time, dist, Q, streambed=rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
 
@@ -327,7 +331,7 @@ def test_hunt99_results():
     sdf = dist**2 * S/T
     time = [sdf*1.0, sdf*2.0, sdf*6.0]
     obs = [0.480, 0.617, 0.773]
-    Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
+    Qs = wo._hunt99(T, S, time, dist, Q, streambed=rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, obs, atol=5e-3)
 
@@ -341,11 +345,16 @@ def test_hunt99_results():
     time = [10., 20., 28.]
     rlambda = 20
     obs = np.array([.1055, .1942, .2378])/0.5570
-    Qs = wo._hunt99(T, S, time, dist, Q, rlambda)
+    Qs = wo._hunt99(T, S, time, dist, Q, streambed=rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, obs, atol=5e-3)
-
-
+    
+@pytest.mark.xfail
+def test_yml_ts_parsing1():
+    from hicap_analysis.analysis_project import Project 
+    # this should fail on the integrity tests
+    ap = Project(datapath/'example3.yml')
+    
 @pytest.fixture
 def SIR2009_5003_Table2_Batch_results():
     ''' The batch column from Table 2, SIR 2009-5003,
@@ -376,7 +385,7 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
         'long': -84.625023,
         'rate': 70,
         'depth': 80},
-       {'name': 'testwell1',
+        {'name': 'testwell1',
         'lat': 44.99,
         'long': -84.64,
         'rate': 70,
@@ -386,7 +395,7 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
     well_list = geopro.get_geometries(well_temp)
     print(well_list)
  
- # testwell0 should match the table from SIR
+    # testwell0 should match the table from SIR
     home = well_list[0].home_df.copy()
     nearest = well_list[0].close_points_df.copy()
 
@@ -399,7 +408,7 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
     streambed = home.loc[11967, 'EST_Kv_W']/well_temp.loc[0, 'depth']
 
     # hunt99 returns CFS need to convert to GPM for table
-    nearest['analytical_removal'] = nearest['distance'].apply(lambda dist: wo._hunt99(T, S, time, dist, Q, streambed)* 448.83116885)
+    nearest['analytical_removal'] = nearest['distance'].apply(lambda dist: wo._hunt99(T, S, time, dist, Q, streambed=streambed)* 448.83116885)
     nearest['valley_seg_removal'] = nearest['apportionment'] * nearest['analytical_removal']
     nearest['percent'] = nearest['apportionment'] * 100.
 
@@ -411,3 +420,17 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
     np.testing.assert_allclose(nearest['analytical_removal'].values, check_df['Analytical_removal_gpm'].values, atol=tol)
     tol = 0.01
     np.testing.assert_allclose(nearest['valley_seg_removal'].values, check_df['Estimated_removal_gpm'].values, atol=tol)
+
+def test_hunt_continuous():
+    df = pd.read_csv(datapath / 'hunt_test_ts.csv')
+    from hicap_analysis.analysis_project import Project 
+    from hicap_analysis import wells as wo
+    ap = Project(datapath / 'hunt_example.yml')
+    
+    ap.report_responses()
+    
+    ap.write_responses_csv()
+
+    agg_results = pd.read_csv(ap.csv_output_filename, index_col=0)
+    # read in the CSV file and spot check against the spreadsheet output
+    assert np.isclose(df.resp_testing.max(), agg_results.loc['well1: proposed', 'testriver:depl (cfs)'], atol=0.001)

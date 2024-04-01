@@ -1,4 +1,5 @@
 from hicap_analysis.wells import GPM2CFD, Well, WellResponse
+from hicap_analysis.utilities import Q2ts
 import numpy as np
 import pandas as pd
 import yaml, os, shutil
@@ -13,19 +14,19 @@ from math import radians, cos, sin, asin, sqrt
 
 
 def _loc_to_dist(loc0, loc1):
-     '''
-     Distance between two points in lat/long using Haversine Formula assuming lat/long in decimal degrees, returned in feet
-     '''
-     #convert decimal degrees to radians
-     lon1, lat1, lon2, lat2 = map(radians, [loc0[0], loc0[1], loc1[0],loc1[1]])
-     #haversine
-     dlon = abs(lon2 - lon1)
-     dlat = abs(lat2 - lat1)
-     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-     c = 2 * asin(sqrt(a))
-     r = 3956*5280 # radius of the earth in feet
-     dist = c*r
-     return dist
+    '''
+    Distance between two points in lat/long using Haversine Formula assuming lat/long in decimal degrees, returned in feet
+    '''
+    #convert decimal degrees to radians
+    lon1, lat1, lon2, lat2 = map(radians, [loc0[0], loc0[1], loc1[0],loc1[1]])
+    #haversine
+    dlon = abs(lon2 - lon1)
+    dlat = abs(lat2 - lat1)
+    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+    c = 2 * asin(sqrt(a))
+    r = 3956*5280 # radius of the earth in feet
+    dist = c*r
+    return dist
 
 def _print_to_screen_and_file(s, ofp):
     """[summary]
@@ -79,6 +80,7 @@ class Project():
         with open(ymlfile) as ifp:
             d = yaml.safe_load(ifp)
 
+
         # parse project_properties block
         if 'project_properties' in d.keys():
             self._parse_project_properties(d['project_properties'])
@@ -89,6 +91,23 @@ class Project():
         self.wellkeys = [i for i in d.keys() if i.lower().startswith('well')]
         self.ddkeys = [i for i in d.keys() if i.lower().startswith('dd_resp')]
         self.streamkeys = [i for i in d.keys() if i.lower().startswith('stream')]
+
+        # look for a timeseries file in the project_properties block to determine how to 
+        # handle pumping 
+        if 'pumping_timeseries_file' in d['project_properties'].keys():
+            self.tsfile = d['project_properties']['pumping_timeseries_file']
+            self.ts = True
+            self.Q_ts = pd.read_csv(self.tsfile).set_index('sequential_day')
+            # first test, if there is a time series file that all well keys are columns
+            if self.ts is True:
+                try:
+                    assert all([i  in self.Q_ts.columns for i in self.wellkeys])
+                except:
+                    raise AssertionError('not all well names are represented in the time series file') 
+                
+        else:
+            self.ts = False
+            self.Q_ts = None
 
         # parse stream responses blocks
         if len(self.streamkeys)>0:
@@ -104,7 +123,7 @@ class Project():
 
         # parse well blocks
         if len(self.wellkeys)>0:
-            self._parse_wells(d)
+            self._parse_wells(d, self.ts, self.Q_ts)
         else:
             raise('No wells were defined in the input file. Goodbye')
 
@@ -153,20 +172,32 @@ class Project():
         # populate the appropriate dictionary on self with location and name
         # information of response
         for ck in keys:
-           cr[d[ck]['name']] = d[ck]['loc']
+            cr[d[ck]['name']] = d[ck]['loc']
+            if 'streambed_conductance' in d[ck].keys():
+                cr[d[ck]['name']]['streambed_conductance'] = d[ck]['streambed_conductance']
 
-    def _parse_wells(self, d):
+    def _parse_wells(self, d, ts, Q_ts):
         """populate information about wells assigning apportionment values and
             the lists of proposed and existing wells
 
         Args:
-            keys ([type]): [description]
-            d ([dict]): yml file data
+            d (dict): yml file data
+            ts (bool): flag as to whether a timeseries dataframe was read in
+            Q_ts (pandas DataFrame): pumping data table for all the wells
         """
         self.__well_data = {}
+        
         for ck in self.wellkeys:
             # populate dictionary using well name as key with all well data
             self.__well_data[d[ck]['name']] = d[ck]
+            
+            # make sure if ts is supplied that Q is not supplied for each well
+            if ts is True:
+                if 'Q' in d[ck].keys() or 'pumping_days' in d[ck].keys():
+                    raise('ERROR:\ntime series file was supplied AND Q of pumping_days was supplied for at\n' +
+                        'one well. User can only supply pumping rates in one or the other\n' +
+                        'Please try again....')
+            
             # populate categories of wells
             if d[ck]['status'] in self.proposed_well_categories:
                 self.proposed_wells.append(d[ck]['name'])
@@ -194,10 +225,19 @@ class Project():
             stream_dist = None
             if 'stream_response' in cw.keys():   
                 stream_dist = {}
+                streambed_conductance = {}
+                streambed_cond_calc = 0
                 for c_resp in cw['stream_response']:
                     streamx = self._Project__stream_responses[c_resp]['x']
                     streamy = self._Project__stream_responses[c_resp]['y'] 
                     stream_dist[c_resp] = _loc_to_dist([cw['loc']['x'],cw['loc']['y']], [streamx, streamy])
+                    if 'streambed_conductance' in self._Project__stream_responses[c_resp].keys():
+                        streambed_conductance[c_resp] = self._Project__stream_responses[c_resp]['streambed_conductance']
+                        streambed_cond_calc += 1
+                if streambed_cond_calc < 1:
+                    streambed_conductance = None
+
+
             # next, drawdowns
             dd_dist = None
             if 'dd_response' in cw.keys():   
@@ -212,10 +252,17 @@ class Project():
             else:
                 stream_app_d = None
             
-            self.wells[ck] = Well(T=self.T, S=self.S, Q=cw['Q']*GPM2CFD, depletion_years=cw['depletion_years'],
-                    theis_dd_days=cw['dd_days'], depl_pump_time=cw['pumping_days'],
+            # sort out the time series for wells and convert to CFD
+            if self.ts is True:
+                Q = self.Q_ts[ck] * GPM2CFD
+            else:
+                Q = Q2ts(cw['pumping_days'], cw['depletion_years'], cw['Q'])
+
+            self.wells[ck] = Well(T=self.T, S=self.S, Q=Q, 
+                    theis_dd_days=cw['dd_days'], depletion_years=cw['depletion_years'],
                     stream_dist=stream_dist, drawdown_dist=dd_dist,
-                    stream_apportionment=stream_app_d, depl_method = self.depl_method
+                    stream_apportionment=stream_app_d, depl_method = self.depl_method,
+                    streambed_conductance=streambed_conductance
             )
 
 
@@ -291,20 +338,17 @@ class Project():
             if len(self.proposed_wells) == 0:
                 ofp.write('  there were no proposed wells in the configuration file!\n')
             else:
-                 _print_dd_depl(ofp, self.proposed_aggregated_drawdown, self.proposed_aggregated_max_depletion)
+                _print_dd_depl(ofp, self.proposed_aggregated_drawdown, self.proposed_aggregated_max_depletion)
                     
             ofp.write('\n\nCOMBINED EXISTING WELL REPORTS\n' + '#'*50 + '\n')
             if len(self.existing_wells) == 0:
                 ofp.write('  there were no existing wells in the configuration file!\n')
             else:
-                 _print_dd_depl(ofp, self.existing_aggregated_drawdown, self.existing_aggregated_max_depletion)
+                _print_dd_depl(ofp, self.existing_aggregated_drawdown, self.existing_aggregated_max_depletion)
                     
             ofp.write('\n\nTOTAL COMBINED WELL REPORTS\n' + '#'*50 + '\n')
             _print_dd_depl(ofp, self.total_aggregated_drawdown, self.total_aggregated_max_depletion)
             
-
-
-        j=2
 
     def aggregate_results(self):
         # make dictionaries to contain the drawdown results
@@ -435,7 +479,7 @@ class Project():
             # now make a special case dataframe for aggregated results by base stream name
             agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
             all_depl_ts =pd.DataFrame(index=
-                self.wells[list(self.wells.keys())[0]].stream_responses[1].baseyears[0])
+                self.wells[list(self.wells.keys())[0]].Q.index)
 
             # fill in the dataframe
             # individual wells
