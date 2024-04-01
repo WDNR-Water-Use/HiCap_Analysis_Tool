@@ -296,7 +296,7 @@ def test_complex_yml():
         calc_val = np.max(df_ts[v].sum(axis=1))
         assert np.isclose(df_agg_val, calc_val)
         
-    return('stoked')
+    print('stoked')
 
 def test_run_yml_example():
     import hicap_analysis.analysis_project as ap
@@ -422,9 +422,11 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
     np.testing.assert_allclose(nearest['valley_seg_removal'].values, check_df['Estimated_removal_gpm'].values, atol=tol)
 
 def test_hunt_continuous():
+    # read in the pumping timeseries and the depletion results included as a column
     df = pd.read_csv(datapath / 'hunt_test_ts.csv')
     from hicap_analysis.analysis_project import Project 
     from hicap_analysis import wells as wo
+    # only one well in the 
     ap = Project(datapath / 'hunt_example.yml')
     
     ap.report_responses()
@@ -432,5 +434,5 @@ def test_hunt_continuous():
     ap.write_responses_csv()
 
     agg_results = pd.read_csv(ap.csv_output_filename, index_col=0)
-    # read in the CSV file and spot check against the spreadsheet output
+    # read in the CSV file and check against STRMDEPL08 Appendix 1 output (OFR2008-1166)
     assert np.isclose(df.resp_testing.max(), agg_results.loc['well1: proposed', 'testriver:depl (cfs)'], atol=0.001)
