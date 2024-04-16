@@ -240,7 +240,7 @@ class WellResponse():
         if len(deltaQ) > 1:
             deltaQ = deltaQ.iloc[1:]
             for idx,cQ in zip(deltaQ.index,deltaQ.values):
-                idx-=1
+                idx-=2
                 ct = list(range(len(self.Q)-idx))
                 # note that by setting Q negative from the diff calculations, we always add
                 # below for the image wells

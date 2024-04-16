@@ -423,7 +423,7 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
 
 def test_hunt_continuous():
     # read in the pumping timeseries and the depletion results included as a column
-    df = pd.read_csv(datapath / 'hunt_test_ts.csv')
+    df = pd.read_csv(datapath / 'hunt_test_ts.csv', index_col=3)
     from hicap_analysis.analysis_project import Project 
     from hicap_analysis import wells as wo
     # only one well in the 
@@ -436,3 +436,4 @@ def test_hunt_continuous():
     agg_results = pd.read_csv(ap.csv_output_filename, index_col=0)
     # read in the CSV file and check against STRMDEPL08 Appendix 1 output (OFR2008-1166)
     assert np.isclose(df.resp_testing.max(), agg_results.loc['well1: proposed', 'testriver:depl (cfs)'], atol=0.001)
+    assert np.allclose(df.resp_testing.values, ap.wells['well1'].depletion['testriver'], atol=0.001)
