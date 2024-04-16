@@ -111,7 +111,7 @@ class Project():
 
         # parse stream responses blocks
         if len(self.streamkeys)>0:
-            self._parse_responses(self.streamkeys, d)
+             self._parse_responses(self.streamkeys, d)
         else:
             print('no stream responses supplied for evaluation ')
 
