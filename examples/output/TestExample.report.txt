@@ -37,7 +37,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23983           0.0427                        
+TomorrowRiver:23983           0.0426                        
 ##################################################
 Well Name: 70548
 Well status: existing
@@ -53,7 +53,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:70262           0.0385                        
+TomorrowRiver:70262           0.0384                        
 ##################################################
 Well Name: 67401
 Well status: existing
@@ -69,7 +69,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:986             0.0229                        
+TomorrowRiver:986             0.0228                        
 ##################################################
 Well Name: 68690
 Well status: existing
@@ -85,7 +85,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23883           0.0355                        
+TomorrowRiver:23883           0.0354                        
 ##################################################
 Well Name: 72737
 Well status: existing
@@ -101,7 +101,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:24155           0.0170                        
+TomorrowRiver:24155           0.0169                        
 ##################################################
 Well Name: 24037
 Well status: existing
@@ -133,7 +133,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:91706           0.0632                        
+TomorrowRiver:91706           0.0631                        
 ##################################################
 Well Name: 91411
 Well status: existing
@@ -149,7 +149,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:92199           0.0192                        
+TomorrowRiver:92199           0.0191                        
 ##################################################
 Well Name: 92045
 Well status: existing
@@ -165,7 +165,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:93141           0.0832                        
+TomorrowRiver:93141           0.0831                        
 ##################################################
 Well Name: 91562
 Well status: existing
@@ -189,7 +189,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:92299           0.0268                        
+TomorrowRiver:92299           0.0267                        
 ##################################################
 Well Name: 24285
 Well status: existing
@@ -237,7 +237,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:91173           0.0109                        
+TomorrowRiver:91173           0.0108                        
 ##################################################
 Well Name: 23993
 Well status: existing
@@ -245,7 +245,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23993           0.0890                        
+TomorrowRiver:23993           0.0889                        
 ##################################################
 Well Name: 23699
 Well status: existing
@@ -285,7 +285,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:91175           0.0152                        
+TomorrowRiver:91175           0.0151                        
 ##################################################
 Well Name: 91072
 Well status: existing
@@ -309,7 +309,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:67563           0.0502                        
+TomorrowRiver:67563           0.0501                        
 ##################################################
 Well Name: 71998
 Well status: existing
@@ -333,7 +333,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:92136           0.0076                        
+TomorrowRiver:92136           0.0075                        
 ##################################################
 Well Name: 3719
 Well status: existing
@@ -349,7 +349,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:91670           0.0209                        
+TomorrowRiver:91670           0.0208                        
 ##################################################
 Well Name: 91997
 Well status: existing
@@ -365,7 +365,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23926           0.0127                        
+TomorrowRiver:23926           0.0126                        
 ##################################################
 Well Name: 68905
 Well status: existing
@@ -381,7 +381,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23637           0.0122                        
+TomorrowRiver:23637           0.0121                        
 ##################################################
 Well Name: 23698
 Well status: existing
@@ -413,7 +413,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23979           0.0112                        
+TomorrowRiver:23979           0.0111                        
 ##################################################
 Well Name: 23616
 Well status: existing
@@ -429,7 +429,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23754           0.0135                        
+TomorrowRiver:23754           0.0134                        
 ##################################################
 Well Name: 67329
 Well status: existing
@@ -477,7 +477,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23715           0.0062                        
+TomorrowRiver:23715           0.0061                        
 ##################################################
 Well Name: 68917
 Well status: existing
@@ -493,7 +493,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:1860            0.0064                        
+TomorrowRiver:1860            0.0063                        
 ##################################################
 Well Name: 24161
 Well status: existing
@@ -509,7 +509,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:617             0.0157                        
+TomorrowRiver:617             0.0156                        
 ##################################################
 Well Name: 69289
 Well status: existing
@@ -605,7 +605,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23961           0.0436                        
+TomorrowRiver:23961           0.0435                        
 ##################################################
 Well Name: 91161
 Well status: existing
@@ -669,7 +669,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23827           0.0190                        
+TomorrowRiver:23827           0.0189                        
 ##################################################
 Well Name: 71326
 Well status: existing
@@ -693,7 +693,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:24022           0.0160                        
+TomorrowRiver:24022           0.0159                        
 ##################################################
 Well Name: 24080
 Well status: existing
@@ -789,7 +789,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:24302           0.0023                        
+TomorrowRiver:24302           0.0022                        
 ##################################################
 Well Name: 23647
 Well status: existing
@@ -797,7 +797,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:23647           0.0031                        
+TomorrowRiver:23647           0.0030                        
 ##################################################
 Well Name: 73346
 Well status: existing
@@ -885,7 +885,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:3473            0.0049                        
+TomorrowRiver:3473            0.0048                        
 ##################################################
 Well Name: 24286
 Well status: existing
@@ -909,7 +909,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:73625           0.0069                        
+TomorrowRiver:73625           0.0068                        
 ##################################################
 Well Name: 1323
 Well status: existing
@@ -981,7 +981,7 @@ Well status: existing
 Response                      Drawdown(ft)                  
           **Maximum Depletion**
 Response                      Depletion(cfs)                
-TomorrowRiver:69679           0.0180                        
+TomorrowRiver:69679           0.0179                        
 ##################################################
 Well Name: 73597
 Well status: existing
@@ -1660,66 +1660,66 @@ LakeEmily                     0.0000
 Response                      Depletion(cfs)                
 TomorrowRiver:92743           0.0099                        
 TomorrowRiver:73262           0.0089                        
-TomorrowRiver:23983           0.0427                        
+TomorrowRiver:23983           0.0426                        
 TomorrowRiver:70548           0.4774                        
-TomorrowRiver:70262           0.0385                        
+TomorrowRiver:70262           0.0384                        
 TomorrowRiver:67401           0.0490                        
-TomorrowRiver:986             0.0229                        
+TomorrowRiver:986             0.0228                        
 TomorrowRiver:68690           0.1606                        
-TomorrowRiver:23883           0.0355                        
+TomorrowRiver:23883           0.0354                        
 TomorrowRiver:72737           0.0961                        
-TomorrowRiver:24155           0.0170                        
+TomorrowRiver:24155           0.0169                        
 TomorrowRiver:24037           0.0148                        
 TomorrowRiver:23978           0.0127                        
 TomorrowRiver:91803           0.0105                        
-TomorrowRiver:91706           0.0632                        
+TomorrowRiver:91706           0.0631                        
 TomorrowRiver:91411           0.0297                        
-TomorrowRiver:92199           0.0192                        
+TomorrowRiver:92199           0.0191                        
 TomorrowRiver:92045           0.0330                        
-TomorrowRiver:93141           0.0832                        
+TomorrowRiver:93141           0.0831                        
 TomorrowRiver:91562           0.0049                        
 TomorrowRiver:73744           0.0495                        
-TomorrowRiver:92299           0.0268                        
+TomorrowRiver:92299           0.0267                        
 TomorrowRiver:24285           0.0059                        
 TomorrowRiver:68785           0.0364                        
 TomorrowRiver:72422           0.0199                        
 TomorrowRiver:815             0.0827                        
 TomorrowRiver:23867           0.0114                        
-TomorrowRiver:91173           0.0109                        
-TomorrowRiver:23993           0.0890                        
+TomorrowRiver:91173           0.0108                        
+TomorrowRiver:23993           0.0889                        
 TomorrowRiver:23699           0.0098                        
 TomorrowRiver:23957           0.0128                        
 TomorrowRiver:71916           0.0066                        
 TomorrowRiver:23682           0.0823                        
-TomorrowRiver:91175           0.0152                        
+TomorrowRiver:91175           0.0151                        
 TomorrowRiver:91072           0.0178                        
 TomorrowRiver:91181           0.0342                        
-TomorrowRiver:67563           0.0502                        
+TomorrowRiver:67563           0.0501                        
 TomorrowRiver:71998           0.0390                        
 TomorrowRiver:70248           0.0589                        
-TomorrowRiver:92136           0.0076                        
+TomorrowRiver:92136           0.0075                        
 TomorrowRiver:3719            0.0670                        
-TomorrowRiver:91670           0.0209                        
+TomorrowRiver:91670           0.0208                        
 TomorrowRiver:91997           0.0209                        
-TomorrowRiver:23926           0.0127                        
+TomorrowRiver:23926           0.0126                        
 TomorrowRiver:68905           0.0778                        
-TomorrowRiver:23637           0.0122                        
+TomorrowRiver:23637           0.0121                        
 TomorrowRiver:23698           0.0181                        
 TomorrowRiver:23869           0.0103                        
 TomorrowRiver:70263           0.0296                        
-TomorrowRiver:23979           0.0112                        
+TomorrowRiver:23979           0.0111                        
 TomorrowRiver:23616           0.0452                        
-TomorrowRiver:23754           0.0135                        
+TomorrowRiver:23754           0.0134                        
 TomorrowRiver:67329           0.0381                        
 TomorrowRiver:23870           0.0098                        
 TomorrowRiver:23635           0.0142                        
 TomorrowRiver:70881           0.0021                        
 TomorrowRiver:24050           0.0246                        
-TomorrowRiver:23715           0.0062                        
+TomorrowRiver:23715           0.0061                        
 TomorrowRiver:68917           0.0327                        
-TomorrowRiver:1860            0.0064                        
+TomorrowRiver:1860            0.0063                        
 TomorrowRiver:24161           0.0268                        
-TomorrowRiver:617             0.0157                        
+TomorrowRiver:617             0.0156                        
 TomorrowRiver:69289           0.0265                        
 TomorrowRiver:73002           0.0136                        
 TomorrowRiver:24169           0.0117                        
@@ -1731,7 +1731,7 @@ TomorrowRiver:92981           0.0049
 TomorrowRiver:69480           0.0070                        
 TomorrowRiver:24132           0.0109                        
 TomorrowRiver:23700           0.0081                        
-TomorrowRiver:23961           0.0436                        
+TomorrowRiver:23961           0.0435                        
 TomorrowRiver:91161           0.0171                        
 TomorrowRiver:23697           0.0127                        
 TomorrowRiver:68049           0.0091                        
@@ -1739,10 +1739,10 @@ TomorrowRiver:23863           0.0170
 TomorrowRiver:73344           0.0337                        
 TomorrowRiver:69961           0.0229                        
 TomorrowRiver:24017           0.0078                        
-TomorrowRiver:23827           0.0190                        
+TomorrowRiver:23827           0.0189                        
 TomorrowRiver:71326           0.0099                        
 TomorrowRiver:74131           0.0238                        
-TomorrowRiver:24022           0.0160                        
+TomorrowRiver:24022           0.0159                        
 TomorrowRiver:24080           0.0046                        
 TomorrowRiver:23846           0.0025                        
 TomorrowRiver:23852           0.0160                        
@@ -1754,8 +1754,8 @@ TomorrowRiver:23868           0.0060
 TomorrowRiver:69508           0.0125                        
 TomorrowRiver:92077           0.0141                        
 TomorrowRiver:23949           0.0104                        
-TomorrowRiver:24302           0.0023                        
-TomorrowRiver:23647           0.0031                        
+TomorrowRiver:24302           0.0022                        
+TomorrowRiver:23647           0.0030                        
 TomorrowRiver:73346           0.0154                        
 TomorrowRiver:1013            0.0219                        
 TomorrowRiver:4174            0.0096                        
@@ -1766,10 +1766,10 @@ TomorrowRiver:23826           0.0228
 TomorrowRiver:23873           0.0098                        
 TomorrowRiver:72437           0.0008                        
 TomorrowRiver:24216           0.0030                        
-TomorrowRiver:3473            0.0049                        
+TomorrowRiver:3473            0.0048                        
 TomorrowRiver:24286           0.0053                        
 TomorrowRiver:24294           0.0056                        
-TomorrowRiver:73625           0.0069                        
+TomorrowRiver:73625           0.0068                        
 TomorrowRiver:1323            0.0005                        
 TomorrowRiver:1302            0.0030                        
 TomorrowRiver:70961           0.0118                        
@@ -1778,7 +1778,7 @@ TomorrowRiver:73347           0.0100
 TomorrowRiver:70943           0.0227                        
 TomorrowRiver:23716           0.0024                        
 TomorrowRiver:69693           0.0152                        
-TomorrowRiver:69679           0.0180                        
+TomorrowRiver:69679           0.0179                        
 TomorrowRiver:73597           0.0021                        
 TomorrowRiver:71990           0.0057                        
 TomorrowRiver:92808           0.0027                        
@@ -1872,66 +1872,66 @@ LakeEmily                     0.0000
 Response                      Depletion(cfs)                
 TomorrowRiver:92743           0.0099                        
 TomorrowRiver:73262           0.0089                        
-TomorrowRiver:23983           0.0427                        
+TomorrowRiver:23983           0.0426                        
 TomorrowRiver:70548           0.4774                        
-TomorrowRiver:70262           0.0385                        
+TomorrowRiver:70262           0.0384                        
 TomorrowRiver:67401           0.0490                        
-TomorrowRiver:986             0.0229                        
+TomorrowRiver:986             0.0228                        
 TomorrowRiver:68690           0.1606                        
-TomorrowRiver:23883           0.0355                        
+TomorrowRiver:23883           0.0354                        
 TomorrowRiver:72737           0.0961                        
-TomorrowRiver:24155           0.0170                        
+TomorrowRiver:24155           0.0169                        
 TomorrowRiver:24037           0.0148                        
 TomorrowRiver:23978           0.0127                        
 TomorrowRiver:91803           0.0105                        
-TomorrowRiver:91706           0.0632                        
+TomorrowRiver:91706           0.0631                        
 TomorrowRiver:91411           0.0297                        
-TomorrowRiver:92199           0.0192                        
+TomorrowRiver:92199           0.0191                        
 TomorrowRiver:92045           0.0330                        
-TomorrowRiver:93141           0.0832                        
+TomorrowRiver:93141           0.0831                        
 TomorrowRiver:91562           0.0049                        
 TomorrowRiver:73744           0.0495                        
-TomorrowRiver:92299           0.0268                        
+TomorrowRiver:92299           0.0267                        
 TomorrowRiver:24285           0.0059                        
 TomorrowRiver:68785           0.0364                        
 TomorrowRiver:72422           0.0199                        
 TomorrowRiver:815             0.0827                        
 TomorrowRiver:23867           0.0114                        
-TomorrowRiver:91173           0.0109                        
-TomorrowRiver:23993           0.0890                        
+TomorrowRiver:91173           0.0108                        
+TomorrowRiver:23993           0.0889                        
 TomorrowRiver:23699           0.0098                        
 TomorrowRiver:23957           0.0128                        
 TomorrowRiver:71916           0.0066                        
 TomorrowRiver:23682           0.0823                        
-TomorrowRiver:91175           0.0152                        
+TomorrowRiver:91175           0.0151                        
 TomorrowRiver:91072           0.0178                        
 TomorrowRiver:91181           0.0342                        
-TomorrowRiver:67563           0.0502                        
+TomorrowRiver:67563           0.0501                        
 TomorrowRiver:71998           0.0390                        
 TomorrowRiver:70248           0.0589                        
-TomorrowRiver:92136           0.0076                        
+TomorrowRiver:92136           0.0075                        
 TomorrowRiver:3719            0.0670                        
-TomorrowRiver:91670           0.0209                        
+TomorrowRiver:91670           0.0208                        
 TomorrowRiver:91997           0.0209                        
-TomorrowRiver:23926           0.0127                        
+TomorrowRiver:23926           0.0126                        
 TomorrowRiver:68905           0.0778                        
-TomorrowRiver:23637           0.0122                        
+TomorrowRiver:23637           0.0121                        
 TomorrowRiver:23698           0.0181                        
 TomorrowRiver:23869           0.0103                        
 TomorrowRiver:70263           0.0296                        
-TomorrowRiver:23979           0.0112                        
+TomorrowRiver:23979           0.0111                        
 TomorrowRiver:23616           0.0452                        
-TomorrowRiver:23754           0.0135                        
+TomorrowRiver:23754           0.0134                        
 TomorrowRiver:67329           0.0381                        
 TomorrowRiver:23870           0.0098                        
 TomorrowRiver:23635           0.0142                        
 TomorrowRiver:70881           0.0021                        
 TomorrowRiver:24050           0.0246                        
-TomorrowRiver:23715           0.0062                        
+TomorrowRiver:23715           0.0061                        
 TomorrowRiver:68917           0.0327                        
-TomorrowRiver:1860            0.0064                        
+TomorrowRiver:1860            0.0063                        
 TomorrowRiver:24161           0.0268                        
-TomorrowRiver:617             0.0157                        
+TomorrowRiver:617             0.0156                        
 TomorrowRiver:69289           0.0265                        
 TomorrowRiver:73002           0.0136                        
 TomorrowRiver:24169           0.0117                        
@@ -1943,7 +1943,7 @@ TomorrowRiver:92981           0.0049
 TomorrowRiver:69480           0.0070                        
 TomorrowRiver:24132           0.0109                        
 TomorrowRiver:23700           0.0081                        
-TomorrowRiver:23961           0.0436                        
+TomorrowRiver:23961           0.0435                        
 TomorrowRiver:91161           0.0171                        
 TomorrowRiver:23697           0.0127                        
 TomorrowRiver:68049           0.0091                        
@@ -1951,10 +1951,10 @@ TomorrowRiver:23863           0.0170
 TomorrowRiver:73344           0.0337                        
 TomorrowRiver:69961           0.0229                        
 TomorrowRiver:24017           0.0078                        
-TomorrowRiver:23827           0.0190                        
+TomorrowRiver:23827           0.0189                        
 TomorrowRiver:71326           0.0099                        
 TomorrowRiver:74131           0.0238                        
-TomorrowRiver:24022           0.0160                        
+TomorrowRiver:24022           0.0159                        
 TomorrowRiver:24080           0.0046                        
 TomorrowRiver:23846           0.0025                        
 TomorrowRiver:23852           0.0160                        
@@ -1966,8 +1966,8 @@ TomorrowRiver:23868           0.0060
 TomorrowRiver:69508           0.0125                        
 TomorrowRiver:92077           0.0141                        
 TomorrowRiver:23949           0.0104                        
-TomorrowRiver:24302           0.0023                        
-TomorrowRiver:23647           0.0031                        
+TomorrowRiver:24302           0.0022                        
+TomorrowRiver:23647           0.0030                        
 TomorrowRiver:73346           0.0154                        
 TomorrowRiver:1013            0.0219                        
 TomorrowRiver:4174            0.0096                        
@@ -1978,10 +1978,10 @@ TomorrowRiver:23826           0.0228
 TomorrowRiver:23873           0.0098                        
 TomorrowRiver:72437           0.0008                        
 TomorrowRiver:24216           0.0030                        
-TomorrowRiver:3473            0.0049                        
+TomorrowRiver:3473            0.0048                        
 TomorrowRiver:24286           0.0053                        
 TomorrowRiver:24294           0.0056                        
-TomorrowRiver:73625           0.0069                        
+TomorrowRiver:73625           0.0068                        
 TomorrowRiver:1323            0.0005                        
 TomorrowRiver:1302            0.0030                        
 TomorrowRiver:70961           0.0118                        
@@ -1990,7 +1990,7 @@ TomorrowRiver:73347           0.0100
 TomorrowRiver:70943           0.0227                        
 TomorrowRiver:23716           0.0024                        
 TomorrowRiver:69693           0.0152                        
-TomorrowRiver:69679           0.0180                        
+TomorrowRiver:69679           0.0179                        
 TomorrowRiver:73597           0.0021                        
 TomorrowRiver:71990           0.0057                        
 TomorrowRiver:92808           0.0027                        

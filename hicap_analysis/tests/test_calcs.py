@@ -272,9 +272,7 @@ def test_complex_yml():
     
     df_ts = pd.read_csv(ap.csv_stream_output_ts_filename, index_col=0)
     df_agg = pd.read_csv(ap.csv_stream_output_filename, index_col=0)
-    
-    # just for this test, remove the well name from the columns of df_ts
-    df_ts.columns = [i.split('__')[1] for i in df_ts.columns]
+
     
     df_ts_max = df_ts.max().to_frame()
     df_ts_max.rename(columns={0:'raw'}, inplace=True)
