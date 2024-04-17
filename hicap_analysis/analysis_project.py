@@ -68,8 +68,11 @@ class Project():
         self.existing_wells = []
         self.proposed_wells = []
         self.depl_method = 'Walton' # default, can specify in the yml file
+        self.ts_len = np.inf
         self.__dd_responses = None
         self.__stream_responses = None
+
+            
     # def populate_from_yaml(self, ymlfile):
     #     """[summary]
 
@@ -79,7 +82,10 @@ class Project():
         self.ymlfile = ymlfile
         with open(ymlfile) as ifp:
             d = yaml.safe_load(ifp)
-
+        # make a home for the report file
+        self.outpath = self.ymlfile.parent / 'output'
+        if not os.path.exists(self.outpath):
+            os.mkdir(self.outpath)
 
         # parse project_properties block
         if 'project_properties' in d.keys():
@@ -111,7 +117,7 @@ class Project():
 
         # parse stream responses blocks
         if len(self.streamkeys)>0:
-             self._parse_responses(self.streamkeys, d)
+            self._parse_responses(self.streamkeys, d)
         else:
             print('no stream responses supplied for evaluation ')
 
@@ -150,7 +156,7 @@ class Project():
             self.S = pp['S']
             self.default_parameters = {}
             self.default_parameters['default_dd_days'] = pp['default_dd_days']
-            self.default_parameters['default_depletion_years'] = pp['default_depletion_years']
+            self.default_parameters['default_depletion_years'] = int(pp['default_depletion_years'])
             self.default_parameters['default_pumping_days'] = pp['default_pumping_days']
         except:
             raise('Formatting problem with "project_properties" block')
@@ -190,6 +196,7 @@ class Project():
         for ck in self.wellkeys:
             # populate dictionary using well name as key with all well data
             self.__well_data[d[ck]['name']] = d[ck]
+            
             
             # make sure if ts is supplied that Q is not supplied for each well
             if ts is True:
@@ -256,10 +263,11 @@ class Project():
             if self.ts is True:
                 Q = self.Q_ts[ck] * GPM2CFD
             else:
-                Q = Q2ts(cw['pumping_days'], cw['depletion_years'], cw['Q'])
-
+                Q = Q2ts(cw['pumping_days'], int(cw['depletion_years']), cw['Q'])
+            if np.isinf(self.ts_len):
+                self.ts_len= len(Q)
             self.wells[ck] = Well(T=self.T, S=self.S, Q=Q, 
-                    theis_dd_days=cw['dd_days'], depletion_years=cw['depletion_years'],
+                    theis_dd_days=cw['dd_days'], depletion_years=int(cw['depletion_years']),
                     stream_dist=stream_dist, drawdown_dist=dd_dist,
                     stream_apportionment=stream_app_d, depl_method = self.depl_method,
                     streambed_conductance=streambed_conductance
@@ -303,11 +311,7 @@ class Project():
         # make a report file - named from the YML name
         ymlbase = self.ymlfile.name
         outfile = ymlbase.replace('.yml','.report.txt')
-        # make a home for the report file
-        outpath = self.ymlfile.parent / 'output'
-        if not os.path.exists(outpath):
-            os.mkdir(outpath)
-        self.report_filename = outpath  / outfile
+        self.report_filename = self.outpath  / outfile
         with open(self.report_filename, 'w') as ofp:
             ofp.write(f'HiCap well analysis report, configured from: {ymlbase}\n')
 
@@ -351,6 +355,10 @@ class Project():
             
 
     def aggregate_results(self):
+        # make a master dataframe for all the results
+        times = range(1,self.ts_len+1)
+        self.all_depl_ts = pd.DataFrame(index=times)
+        
         # make dictionaries to contain the drawdown results
         self.existing_aggregated_drawdown = {}
         self.proposed_aggregated_drawdown = {}
@@ -382,6 +390,10 @@ class Project():
             # first sum up depletion time series per well to later get max of sum by location
             cw_dep = self.wells[cwell].depletion
             for ck, v in cw_dep.items():
+                self.all_depl_ts = pd.concat(
+                    (self.all_depl_ts,pd.DataFrame(
+                    index=self.all_depl_ts.index, data=v)), 
+                    axis=1).rename(columns={0:ck})
                 if ck not in self.existing_aggregated_sum_depletion.keys():
                     self.existing_aggregated_sum_depletion[ck] = v
                 else:
@@ -416,6 +428,10 @@ class Project():
             # first sum up depletion time series per well to later get max of sum by location
             cw_dep = self.wells[cwell].depletion
             for ck, v in cw_dep.items():
+                self.all_depl_ts = pd.concat(
+                    (self.all_depl_ts,pd.DataFrame(
+                    index=self.all_depl_ts.index, data=v)), 
+                    axis=1).rename(columns={0:ck})
                 if ck not in self.proposed_aggregated_sum_depletion.keys():
                     self.proposed_aggregated_sum_depletion[ck] = v
                 else:
@@ -478,8 +494,8 @@ class Project():
         if self._Project__stream_responses is not None:
             # now make a special case dataframe for aggregated results by base stream name
             agg_base_stream_df  =  pd.DataFrame(index=row_base, columns=self.base_streams)
-            all_depl_ts =pd.DataFrame(index=
-                self.wells[list(self.wells.keys())[0]].Q.index)
+            # all_depl_ts =pd.DataFrame(index=
+            #     self.wells[list(self.wells.keys())[0]].Q.index)
 
             # fill in the dataframe
             # individual wells
@@ -490,11 +506,7 @@ class Project():
                     agg_df.loc[cn,cresp] = cdepl
                     basekey = cresp.split(':')[0]
                     agg_base_stream_df.loc[cn,basekey] = cdepl
-                all_depl_ts = pd.concat(
-                    (all_depl_ts,pd.DataFrame(index=all_depl_ts.index, 
-                                            data=cw.depletion)), 
-                    axis=1
-                    )
+
 
             # totals
             #proposed
@@ -528,19 +540,15 @@ class Project():
             # make a report file - named from the YML name
             ymlbase = self.ymlfile.name
             outfile = ymlbase.replace('.yml','.table_report.csv')
-            # make a home for the report file
-            outpath = self.ymlfile.parent / 'output'
-            if not os.path.exists(outpath):
-                os.mkdir(outpath)
 
-            self.csv_output_filename = outpath / outfile
+            self.csv_output_filename = self.outpath / outfile
             agg_df.to_csv(self.csv_output_filename)
             # slap the csv dataframes into self
             self.agg_df = agg_df
-            self.csv_stream_output_filename = outpath / outfile.replace('.csv','.base_stream_depletion.csv')
+            self.csv_stream_output_filename = self.outpath / outfile.replace('.csv','.base_stream_depletion.csv')
             agg_base_stream_df.to_csv(self.csv_stream_output_filename)
-            self.csv_stream_output_ts_filename = outpath / outfile.replace('.csv','.all_ts.csv')
-            all_depl_ts.to_csv(self.csv_stream_output_ts_filename)
+            self.csv_stream_output_ts_filename = self.outpath / outfile.replace('.csv','.all_ts.csv')
+            self.all_depl_ts.to_csv(self.csv_stream_output_ts_filename)
 
             self.agg_base_stream_df = agg_base_stream_df
         
