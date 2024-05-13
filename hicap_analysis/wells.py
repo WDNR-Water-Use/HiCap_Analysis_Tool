@@ -3,6 +3,7 @@ from numpy.lib.arraysetops import isin
 import pandas as pd
 from pandas.core import base
 import scipy.special as sps
+import scipy.integrate as integrate
 import sys
 
 # define drawdown methods here
@@ -93,7 +94,7 @@ def _walton(T,S,time,dist, Q, **kwargs):
     return ret_vals
 
 def _hunt99(T,S,time,dist,Q,streambed, **kwargs):
-    '''Function for Hunt (1999) solution for streamflow depletion
+    ''' Function for Hunt (1999) solution for streamflow depletion
     by a pumping well.  
 
     Hunt, B., 1999, Unsteady streamflow depletion from ground
@@ -147,11 +148,185 @@ def _hunt99(T,S,time,dist,Q,streambed, **kwargs):
     depl = sps.erfc(a) - (t1*t2)
     return (Q / (3600 * 24)) * depl
 
+def _hunt2003(T,S,time,dist,Q,Bprime, Bdouble, K, sigma, width, streambed, **kwargs):
+    ''' Function for Hunt (2003) solution for streamflow depletion
+    by a pumping well in a semiconfined aquifer.
+
+    Hunt, B., 2003, Unsteady streamflow depletion when pumping
+    from semiconfined aquifer: Journal of Hydrologic Engineering,
+    v.8, no. 1, pgs 12-19. https://doi.org/10.1061/(ASCE)1084-0699(2003)8:1(12)
+    
+
+    Parameters
+    ----------
+    T: float
+        Transmissivity of aquifer (ft^2/day)
+    S: float
+        Storativity of aquifer (dimensionless)
+    time (float, optionally np.array or list): time at which to calculate results [d]
+    dist (float, optionally np.array or list): distance at which to calculate results in [ft] (l in the paper)
+    use an array for either time or distance but not both
+    Q (float): pumping rate (+ is extraction) [ft**3/d]
+    Bprime: float
+        saturated thickness of semiconfining layer containing stream, [ft]
+    Bdouble: float
+        distance from bottom of stream to bottom of semiconfining layer, [ft] (aquitard thickness beneath the stream)
+    K: float
+        hydraulic conductivity of semiconfining layer [ft/day]
+    sigma: float
+        porosity of semiconfining layer
+    width: float
+        stream width (b in paper) ,[ft]
+    streambed (float): streambed conductance [ft/d] (lambda in the paper),
+                        only used if K is less than 1e-10
+    **kwargs: just included to all for extra values in call
+
+    Returns
+    -------
+    Qs (float): streamflow depletion rate (CFS), optionally np.array or list 
+                depending on input of time and dist
+    '''
+    # turn lists into np.array so they get handled correctly
+    if isinstance(time, list) and isinstance(dist, list):
+        print('cannot have both time and distance as arrays')
+        print('in the Hunt2003 method.  Need to externally loop')
+        print('over one of the arrays and pass the other')
+        sys.exit()
+    elif isinstance(time, list):
+        time = np.array(time)
+    elif isinstance(dist, list):
+        dist = np.array(dist)
+
+    # make dimensionless group used in equations
+    dtime = (T * time) / (S * np.power(dist, 2))
+
+    # if K is really small, set streambed conductance to a value
+    # so solution collapses to Hunt 1999 (confined aquifer solution)
+    if K<1.e-10:
+        lam = streambed
+    else:
+        lam = K * width/Bdouble
+    dlam = lam * dist/T
+    epsilon = S/sigma
+    dK = (K/Bprime) * np.power(dist, 2)/T
+
+    # numerical integration of F() and G() functions to
+    # get correction to Hunt(1999) estimate of streamflow depletion
+    # because of storage in the semiconfining aquifer
+    correction = []
+    for dt in dtime:
+        [y, err] = integrate.quad(_integrand, 
+                                                0., 
+                                                1., 
+                                                args=(dlam, dt, epsilon, dK), 
+                                                limit=100)
+        correction.append(dlam * y)
+    
+    # terms for depletion, similar to Hunt (1999) but repeated
+    # here so it matches the 2003 paper.
+    a = (1. / (2. * np.sqrt(dtime)))
+    b = (dlam/2. + (dtime * np.power(dlam,2)/4.))
+    c = a + (dlam * np.sqrt(dtime)/2.)
+
+    # use erfxc() function from scipy (see _hunt99 above)
+    # for erf(b)*erfc(c) term
+    t1 = sps.erfcx(c)
+    t2 = np.exp(b-c**2)
+    depl = sps.erfc(a) - (t1*t2) 
+
+    ## corrected depletion for storage of upper semiconfining unit
+    return (Q / (3600 * 24)) * (depl - correction)           
+
+
+def _F(alpha, dlam, dtime):
+    ''' F function from paper in equation (46) as given
+        by equation (47)
+
+        Parameters
+        ----------
+        alpha: float
+            integration variable
+        dlam: float
+            dimensionless streambed/semiconfining unit conductance
+            (width * K/B'') * distance/Transmissivity
+        dt: float
+            dimensionless time
+            (time * transmissivity)/(storativity * distance**2)
+    '''
+    # Hunt uses an expansion if dimensionless time>3 
+    if dtime <= 3:
+        z = alpha*dlam*np.sqrt(dtime)/2. + 1./(2.*alpha*np.sqrt(dtime))
+        a = dlam/2. + (dtime * alpha**2 * np.power(dlam,2)/4.)
+        t1 = sps.erfcx(z)
+        t2 = np.exp(a-z**2)
+        b = -1./(4 * dtime * alpha**2)
+        # equation 47 in paper
+        depl = sps.erfc(b) * np.sqrt(dtime/np.pi) - (alpha * dtime * dlam)/2. * (t1*t2)
+    else:
+        z = alpha*dlam*np.sqrt(dtime)/2. + 1./(2.*alpha*np.sqrt(dtime))
+        t1 = np.exp(-(1./(4.*dtime*alpha**2)))/(2.*alpha*z*np.sqrt(np.pi))
+        t2 = 2./(dlam*(1.+(1./(dlam*dtime*alpha**2))**2))
+        sumterm = 1 - (3./(2 * z**2)) + (15./(4. * z**4)) - (105./(8 * z**6))
+        depl = t1*(1.0 + t2*sumterm)  # equation 53 in paper
+
+    return depl
+
+def _G(alpha, epsilon, dK, dtime):
+    ''' G function from paper in equation (46) as given
+        by equation (53). Uses scipy special for 
+        incomplete Gamma Function (P(a,b)), binomial coefficient, 
+        and modified Bessel function of zero order (I0).
+
+        Parameters
+        ----------
+        alpha: float
+            integration variable
+        epsilon: float
+            dimensionless storage
+            storativity/porosity of semiconfining bed
+        dK: float
+            dimensionless conductivity of semiconfining unit
+            (K * Bprime) * dist**2/Transmissivity
+    '''
+    # if dimensionless K is zero (check really small), return 0
+    # this avoids divide by zero error in terms that have divide by (a+b)
+    if dK < 1.0e-10:
+        return 0.
+    
+    a = epsilon * dK * dtime * (1. - alpha**2)
+    b = dK * dtime * alpha**2
+
+    term1 = 1. - np.exp(-(a + b)) * sps.i0(2.*np.sqrt(a*b))
+
+    sum = 0 
+    for n in range(0, 101):
+        bi_term = sps.binom(2*n, n)
+        inc_gamma = sps.gammainc(2*n+1, a+b)
+        term = bi_term * inc_gamma * (np.sqrt(a*b)/(a+b))**(2*n)
+        sum = sum + term
+        if term < 1.0e-08:
+            break
+    
+    term2 = (b-a)/(a+b) * sum
+    eqn53 = 0.5 * (term1 + term2)
+    return eqn53
+
+
+def _integrand(alpha, dlam, dtime, epsilon, dK):
+    ''' Product of F() and G() terms for numerical 
+        integration in equation 48
+    
+    '''
+    return _F(alpha, dlam, dtime) * _G(alpha, epsilon, dK, dtime)
+
+
+
 ALL_DD_METHODS = {'theis': _theis}
 
 ALL_DEPL_METHODS = {'glover': _glover,
                     'walton': _walton,
-                    'hunt99': _hunt99}
+                    'hunt99': _hunt99,
+                    'hunt03': _hunt2003}
 
 GPM2CFD = 60*24/7.48 # factor to convert from GPM to CFD
 
