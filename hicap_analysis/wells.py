@@ -218,8 +218,8 @@ def _hunt2003(T,S,time,dist,Q,Bprime, Bdouble, K, sigma, width, streambed, **kwa
         [y, err] = integrate.quad(_integrand, 
                                                 0., 
                                                 1., 
-                                                args=(dlam, dt, epsilon, dK), 
-                                                limit=100)
+                                                args=(dlam, dt, epsilon, dK),
+                                                limit=500)
         correction.append(dlam * y)
     
     # terms for depletion, similar to Hunt (1999) but repeated
@@ -254,22 +254,24 @@ def _F(alpha, dlam, dtime):
             (time * transmissivity)/(storativity * distance**2)
     '''
     # Hunt uses an expansion if dimensionless time>3 
-    if dtime <= 3:
-        z = alpha*dlam*np.sqrt(dtime)/2. + 1./(2.*alpha*np.sqrt(dtime))
-        a = dlam/2. + (dtime * alpha**2 * np.power(dlam,2)/4.)
+    z = alpha*dlam*np.sqrt(dtime)/2. + 1./(2.*alpha*np.sqrt(dtime))
+    if np.abs(z) < 3.0:
+        a = dlam/2. + (dtime * np.power(alpha,2) * np.power(dlam,2)/4.)
         t1 = sps.erfcx(z)
         t2 = np.exp(a-z**2)
         b = -1./(4 * dtime * alpha**2)
         # equation 47 in paper
-        depl = sps.erfc(b) * np.sqrt(dtime/np.pi) - (alpha * dtime * dlam)/2. * (t1*t2)
+        F = np.exp(b) * np.sqrt(dtime/np.pi) - (alpha * dtime * dlam)/2. * (t1*t2)
     else:
-        z = alpha*dlam*np.sqrt(dtime)/2. + 1./(2.*alpha*np.sqrt(dtime))
         t1 = np.exp(-(1./(4.*dtime*alpha**2)))/(2.*alpha*z*np.sqrt(np.pi))
         t2 = 2./(dlam*(1.+(1./(dlam*dtime*alpha**2))**2))
         sumterm = 1 - (3./(2 * z**2)) + (15./(4. * z**4)) - (105./(8 * z**6))
-        depl = t1*(1.0 + t2*sumterm)  # equation 53 in paper
+        F = t1*(1.0 + t2*sumterm)  # equation 53 in paper
 
-    return depl
+    if np.isnan(F):
+        print(f'alpha {alpha}, dtime {dtime}, dlam {dlam}')
+        sys.exit()
+    return F
 
 def _G(alpha, epsilon, dK, dtime):
     ''' G function from paper in equation (46) as given
@@ -296,20 +298,35 @@ def _G(alpha, epsilon, dK, dtime):
     a = epsilon * dK * dtime * (1. - alpha**2)
     b = dK * dtime * alpha**2
 
-    term1 = 1. - np.exp(-(a + b)) * sps.i0(2.*np.sqrt(a*b))
+    if (a + b) < 80.:
+        term1 = np.exp(-(a+b))*sps.i0(2.*np.sqrt(a*b))
+    else:
+        term1 = 0.
+    abterm = np.sqrt(a*b)/(a+b)
 
     sum = 0 
     for n in range(0, 101):
-        bi_term = sps.binom(2*n, n)
-        inc_gamma = sps.gammainc(2*n+1, a+b)
-        term = bi_term * inc_gamma * (np.sqrt(a*b)/(a+b))**(2*n)
-        sum = sum + term
-        if term < 1.0e-08:
+        if n <=6:
+            addterm = sps.binom(2*n, n)*sps.gammainc(2*n+1,a+b)*abterm**(2*n)
+        else:
+            bi_term = np.log10(sps.binom(2*n, n))
+            inc_gamma = np.log10(sps.gammainc(2*n+1, a+b))
+            logab = (2*n)*np.log10(abterm)
+            addterm = np.power(bi_term + inc_gamma + logab, 10)
+        sum = sum + addterm
+        if addterm < 1.0e-08:
             break
     
-    term2 = (b-a)/(a+b) * sum
-    eqn53 = 0.5 * (term1 + term2)
-    return eqn53
+    eqn52= 0.5 * (1. - term1 + ((b-a)/(a+b)) * sum)
+    if eqn52 < 0:
+        eqn52 = 0.
+    if eqn52 > 1.:
+        eqn52 = 1.
+
+    if np.isnan(eqn52):
+        print('equation 52 is nan')
+        sys.exit()
+    return eqn52
 
 
 def _integrand(alpha, dlam, dtime, epsilon, dK):
