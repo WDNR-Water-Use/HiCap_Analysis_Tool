@@ -25,8 +25,11 @@ def _theis(T,S,time,dist,Q, **kwargs):
         time = np.array(time)
     if isinstance(dist, list):
         dist = np.array(dist)
+    
     # construct the well function argument
     u = dist**2. * S / (4. * T * time)
+    if u == 0.:
+        u = (0.001)**2. * S / (4. * T * time)  # function does not exist at u=0
     # calculate and return
     return (Q / (4. * np.pi * T)) * sps.exp1(u)
 
@@ -63,6 +66,8 @@ def _hunt99ddwn(T,S,time,dist,Q,streambed, x, y, **kwargs):
     spacescalar = True
     if isinstance(time, list):
         time = np.array(time)
+    
+    if isinstance(time, np.ndarray):
         timescalar = False
 
     if isinstance(x, np.ndarray):
@@ -107,6 +112,8 @@ def _ddwn1(dist, x, y, T, streambed, time, S):
     '''
     
     u1 = ((dist - x)**2 + y**2)/(4. * T * time/S)
+    if u1 == 0.:
+        u1 =  ((0.001)**2 + y**2)/(4. * T * time/S) # function does not exist at u=0
     return sps.exp1(u1)
 
 
