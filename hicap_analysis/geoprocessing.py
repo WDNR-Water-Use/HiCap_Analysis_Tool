@@ -206,7 +206,7 @@ class Geoprocess():
             sys.exit('need to pass geodataframe, lat/long, or Well to get_neighbors()')
         
         neighbors_df = gpd.sjoin(self.catchment_df, home_catch)
-        neighbors_df.drop(columns='index_right', inplace=True)
+        # neighbors_df.drop(columns='index_right', inplace=True)
 
         return neighbors_df
     
