@@ -7,9 +7,9 @@ import geopandas as gpd
 from pathlib import Path
 import pytest
 
-#homepath = Path(getcwd())
-#datapath = homepath / 'tests' / 'data'
-datapath = Path('hicap_analysis/tests/data')
+homepath = Path(getcwd())
+datapath = homepath / 'tests' / 'data'
+#datapath = Path('hicap_analysis/tests/data')
 from hicap_analysis.utilities import  create_timeseries_template
 create_timeseries_template(filename=datapath / 'test_ts.csv',
                             well_ids=[f'well{i}' for i in range(1,6)])

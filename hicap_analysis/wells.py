@@ -21,15 +21,29 @@ def _theis(T,S,time,dist,Q, **kwargs):
         float (array): drawdown values at input parameter
                         times/distances 
     """
+    isarray = False
     if isinstance(time, list):
         time = np.array(time)
     if isinstance(dist, list):
         dist = np.array(dist)
+    if isinstance(dist, pd.Series):
+        dist = dist.values
+
+    if isinstance(dist, np.ndarray):
+        isarray = True
     
     # construct the well function argument
+    # is dist is zero, then function does not exist
+    # trap for dist==0 and set to small value
+    if isarray:
+        dist = np.where(dist==0, 0.001, dist)
+    else:
+        if dist == 0.:
+            dist = 0.001
+    
+    # compute u and then the Theis solution
     u = dist**2. * S / (4. * T * time)
-    if u == 0.:
-        u = (0.001)**2. * S / (4. * T * time)  # function does not exist at u=0
+    
     # calculate and return
     return (Q / (4. * np.pi * T)) * sps.exp1(u)
 
@@ -110,10 +124,26 @@ def _ddwn1(dist, x, y, T, streambed, time, S):
         computing Hunt, 1999 estimate of drawdown.  Equation 30 from 
         the paper.  Variables described in _hunt99ddwn function.
     '''
+    if isinstance(dist, list):
+        dist = np.array(dist)
+    if isinstance(dist, pd.Series):
+        dist = dist.values
     
+    isarray = False
+    if isinstance(dist, np.ndarray):
+        isarray = True
+    
+    # construct the well function argument
+    # is dist is zero, then function does not exist
+    # trap for dist==0 and set to small value
+    if isarray:
+        dist = np.where(dist==0, 0.001, dist)
+    else:
+        if dist == 0.:
+            dist = 0.001
+
     u1 = ((dist - x)**2 + y**2)/(4. * T * time/S)
-    if u1 == 0.:
-        u1 =  ((0.001)**2 + y**2)/(4. * T * time/S) # function does not exist at u=0
+    
     return sps.exp1(u1)
 
 
