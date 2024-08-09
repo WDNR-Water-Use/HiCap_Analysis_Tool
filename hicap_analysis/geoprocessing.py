@@ -80,6 +80,10 @@ class Geoprocess():
             -------
             None
         '''
+        if catchment_shp is None:
+            sys.exit('need to provide catchment shapefile')
+        if streamline_shp is None:
+            sys.exit('need to provide streamline shapefile')
 
         if not isinstance(catchment_shp, Path):
             catchment_shp = Path(catchment_shp)
@@ -326,9 +330,14 @@ class WellGeometry():
         is located in.  The neighboring catchments.  The streams in those
         catchments. And a table of the closest points on the streams to the 
         well, distances, and apportionments.
+
+        If the geoprocessor is set up to pass transmissivity, storativity,
+        and streambed conductance, these are added to the object.
     '''
 
-    def __init__(self, name, well_df, home_df, neighbors_df, streams_df, close_points_df):
+    def __init__(self, name, well_df, home_df, neighbors_df,
+                streams_df, close_points_df, transmissivity=None, storativity=None,
+                streambed_cond=None, aq_type=None):
         '''
             Parameters
             ----------
@@ -344,7 +353,19 @@ class WellGeometry():
                 stream linework in the home and neighboring catchments
             close_points_df: geodataframe
                 closest points and apportionments
-        
+
+            Some calls to WellGeometry may have this information for the object,
+            but the default is None
+
+            transmissivity: float,
+                transmissivity of catchment from shapefile
+            storativity: float,
+                transmissivity of catchment using default for glacial or bedrock
+            streambed_cond: float,
+                streambed conductance (lambda) from Kv_w/depth of well screen
+            aq_type: string
+                typically bedrock or drift (or unconsolidated, etc)
+
             Returns
             -------
             None
@@ -356,6 +377,10 @@ class WellGeometry():
         self.neighbors_df = neighbors_df
         self.streams_df = streams_df
         self.close_points_df = close_points_df
+        self.transmissivity = transmissivity
+        self.storativity = storativity
+        self.streambed_cond = streambed_cond
+        self.aq_type = aq_type
 
 
 

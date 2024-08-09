@@ -424,7 +424,9 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
 
 def test_hunt_continuous():
     # read in the pumping timeseries and the depletion results included as a column
-    df = pd.read_csv(datapath / 'hunt_test_ts.csv', index_col=3)
+    flname = datapath / 'hunt_test_ts.csv'
+    assert(flname.exists())
+    df = pd.read_csv(flname, index_col=3)
     from hicap_analysis.analysis_project import Project 
     from hicap_analysis import wells as wo
     # only one well in the 
