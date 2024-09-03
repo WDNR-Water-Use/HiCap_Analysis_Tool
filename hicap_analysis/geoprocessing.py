@@ -383,6 +383,27 @@ class WellGeometry():
         self.aq_type = aq_type
 
 
+    def summarize(self):
+        ''' print out the attributes of the WellGeometry object
+        
+        '''
+        print(f'Name = {self.name}')
+        print(f'Aquifer type = {self.aq_type}')
+        print(f'Transmissivity = {self.transmissivity}')
+        print(f'Storativity = {self.storativity}')
+        print(f'Streambed conductance = {self.streambed_cond}')
+        print(f'Home Catchment')
+        print(self.home_df[['BASIN', 'lat', 'long', 'rate', 'depth']].to_markdown())
+        print()
+        print(f'Neighboring Catchments')
+        print(self.neighbors_df[['BASIN_left', 'TYPE_left']].to_markdown())
+        print()
+        print(f'Streams')
+        print(self.streams_df[['BASIN', 'SUBBASIN', 'TYPE']].to_markdown())
+        print()
+        print(f'Closest Points')
+        print(self.close_points_df[['distance', 'inv_distance', 'inv_dist2', 'apportionment', 'apport2']].to_markdown())
+
 
 
 
