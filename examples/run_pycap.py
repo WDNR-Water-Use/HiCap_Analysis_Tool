@@ -10,7 +10,7 @@ import pandas as pd
 
 # ### Path to the folder and the name of the .yml file you've created.
 # ##### Note use of double backslashes in the path name
-datapath = Path('./MASTER')
+datapath = Path('./')
 odir = datapath / 'output'
 yml_file = 'TestExample.yml'#sys.argv[1]
 # ts_path = sys.argv[2]
@@ -38,7 +38,7 @@ for cob in bdplobs.obsname:
     riv,wel,_ = cob.split(':')
     print(cob)
     bdplobs.loc[cob, 'obs_values'] = base_data.loc[wel][riv]
-
+ts_path = Path('.') / 'ts_obs.dat'
 output_ts = [i.strip() for i in open(ts_path, 'r').readlines()]
 
 ts_obs = []
