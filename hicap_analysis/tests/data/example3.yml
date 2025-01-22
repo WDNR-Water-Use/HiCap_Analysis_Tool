@@ -1,0 +1,31 @@
+project_properties:
+  name: ComplexGeometryExample
+  T: 17000.0
+  S: 0.15
+  default_dd_days: 90
+  default_depletion_years: 5
+  default_pumping_days: 90
+  pumping_timeseries_file: 'hicap_analysis/tests/data/test_ts.csv'
+
+dd_response1:
+  name: None
+  loc:
+    x: 90.0
+    y: 45.0
+
+well1:
+  name: '93444'
+  status: pending
+  loc:
+    x: 89.11925
+    y: 45.2231
+  Q: 46.0
+  pumping_days: 90
+  stream_apportionment1:
+    name: SpringBrook:93444
+    apportionment: 0.41
+  stream_apportionment2:
+    name: EBranchEauClaire:93444
+    apportionment: 0.59
+  stream_response:
+    ['SpringBrook:93444','EBranchEauClaire:93444']
