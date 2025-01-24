@@ -39,10 +39,15 @@ def _print_to_screen_and_file(s, ofp):
     print(s)
 
 # some helper functions for printing out results
-def _print_dd_depl(ofp, cw_dd, cw_max_depl):
+def _print_dd_depl(ofp, cw_dd, cw_max_depl, theis_dd_days = None):
     ofp.write(f'             **Drawdown**\n{"Response":30s}{"Drawdown(ft)":30s}\n')
     for ck,v in cw_dd.items():
-        ofp.write(f'{ck:30s}{v:<30.4f}\n')
+        if type(v) is np.ndarray:
+            dd = v[theis_dd_days]
+        else:
+            dd = v
+            
+        ofp.write(f'{ck:30s}{dd:<30.4f}\n')
     ofp.write(f'          **Maximum Depletion**\n{"Response":30s}{"Depletion(cfs)":30s}\n')
     for ck,v in cw_max_depl.items():
         ofp.write(f'{ck:30s}{v:<30.4f}\n')
@@ -72,13 +77,7 @@ class Project():
         self.__dd_responses = None
         self.__stream_responses = None
 
-            
-    # def populate_from_yaml(self, ymlfile):
-    #     """[summary]
-
-    #     Args:
-    #         ymlfile ([Path or string]): Configuration file (YAML style) for a project
-    #     """
+        
         self.ymlfile = ymlfile
         with open(ymlfile) as ifp:
             d = yaml.safe_load(ifp)
@@ -244,16 +243,21 @@ class Project():
                 if streambed_cond_calc < 1:
                     streambed_conductance = None
 
-
             # next, drawdowns
             dd_dist = None
             if 'dd_response' in cw.keys():   
                 dd_dist = {}
+                streambed_cond_calc = 0
+
                 for c_resp in cw['dd_response']:
                     ddx = self._Project__dd_responses[c_resp]['x']
                     ddy = self._Project__dd_responses[c_resp]['y'] 
                     dd_dist[c_resp] = _loc_to_dist([cw['loc']['x'],cw['loc']['y']], [ddx, ddy])
-            
+                    if 'streambed_conductance' in self._Project__dd_responses[c_resp].keys():
+                        streambed_conductance[c_resp] = self._Project__dd_responses[c_resp]['streambed_conductance']
+                        streambed_cond_calc += 1
+                    if streambed_cond_calc < 1:
+                        streambed_conductance = None      
             if ck in self.stream_apportionment_dict.keys():
                 stream_app_d =self.stream_apportionment_dict[ck]
             else:
@@ -323,7 +327,7 @@ class Project():
                 for cex in self.proposed_wells:
                     _print_single_well_header(ofp, cex, self._Project__well_data[cex]["status"])
                     cw_dat = self.wells[cex]
-                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion)
+                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion, cw_dat.theis_dd_days)
                 ofp.write('\n')
 
             ofp.write('\n\nINDIVIDUAL EXISTING WELL REPORTS\n')
@@ -333,7 +337,7 @@ class Project():
                 for cex in self.existing_wells:
                     _print_single_well_header(ofp, cex, self._Project__well_data[cex]["status"])
                     cw_dat = self.wells[cex]
-                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion)
+                    _print_dd_depl(ofp, cw_dat.drawdown, cw_dat.max_depletion, cw_dat.theis_dd_days)
                 ofp.write('\n')
 
             self.aggregate_results()
@@ -379,14 +383,16 @@ class Project():
         self.proposed_aggregated_base_stream_sum_depletion = {}
         self.total_aggregated_base_stream_sum_depletion = {}        
         self.base_streams = []
+        
+        
         # first existing wells
         for cwell in self.existing_wells:
             cw_dd = self.wells[cwell].drawdown
             for ck, v in cw_dd.items():
                 if ck not in self.existing_aggregated_drawdown.keys():
-                    self.existing_aggregated_drawdown[ck] = v
+                    self.existing_aggregated_drawdown[ck] = v[self.wells[cwell].theis_dd_days]
                 else:
-                    self.existing_aggregated_drawdown[ck] += v
+                    self.existing_aggregated_drawdown[ck] += v[self.wells[cwell].theis_dd_days]
             # first sum up depletion time series per well to later get max of sum by location
             cw_dep = self.wells[cwell].depletion
             for ck, v in cw_dep.items():
@@ -422,9 +428,9 @@ class Project():
             cw_dd = self.wells[cwell].drawdown
             for ck, v in cw_dd.items():
                 if ck not in self.proposed_aggregated_drawdown.keys():
-                    self.proposed_aggregated_drawdown[ck] = v
+                    self.proposed_aggregated_drawdown[ck] = v[self.wells[cwell].theis_dd_days]
                 else:
-                    self.proposed_aggregated_drawdown[ck] += v
+                    self.proposed_aggregated_drawdown[ck] += v[self.wells[cwell].theis_dd_days]
             # first sum up depletion time series per well to later get max of sum by location
             cw_dep = self.wells[cwell].depletion
             for ck, v in cw_dep.items():
@@ -455,9 +461,9 @@ class Project():
             cw_dd = self.wells[cwell].drawdown
             for ck, v in cw_dd.items():
                 if ck not in self.total_aggregated_drawdown.keys():
-                    self.total_aggregated_drawdown[ck] = v
+                    self.total_aggregated_drawdown[ck] = v[self.wells[cwell].theis_dd_days]
                 else:
-                    self.total_aggregated_drawdown[ck] += v
+                    self.total_aggregated_drawdown[ck] += v[self.wells[cwell].theis_dd_days]
             # first sum up depletion time series per well to later get max of sum by location
             cw_dep = self.wells[cwell].depletion
             for ck, v in cw_dep.items():
@@ -501,7 +507,7 @@ class Project():
             # individual wells
             for cn, cw in self.wells.items():
                 for cresp, cdd in cw.drawdown.items():
-                    agg_df.loc[cn,cresp] = cdd
+                    agg_df.loc[cn,cresp] = cdd[cw.theis_dd_days]
                 for cresp, cdepl in cw.max_depletion.items():
                     agg_df.loc[cn,cresp] = cdepl
                     basekey = cresp.split(':')[0]
