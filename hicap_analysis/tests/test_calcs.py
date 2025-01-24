@@ -137,8 +137,8 @@ def test_project_spreadsheet(project_spreadsheet_results):
                 stream_dist = {pars['stream_name_1']:pars['w2s1_dist'], pars['stream_name_2']:pars['w2s2_dist']},
                 drawdown_dist={'muni':pars['w2muni_dist']},
                 stream_apportionment={pars['stream_name_1']:pars['w2s1_appor'],pars['stream_name_2']:pars['w2s2_appor']})
-    dd1 = well1.drawdown['muni']
-    dd2 = well2.drawdown['muni']
+    dd1 = well1.drawdown['muni'][well1.theis_dd_days]
+    dd2 = well2.drawdown['muni'][well2.theis_dd_days]
  
     assert np.allclose(dd1+dd2, pars['muni_dd_combined_proposed'], atol=0.1)
     
@@ -440,3 +440,18 @@ def test_hunt_continuous():
     # read in the CSV file and check against STRMDEPL08 Appendix 1 output (OFR2008-1166)
     assert np.isclose(df.resp_testing.max(), agg_results.loc['well1: proposed', 'testriver:depl (cfs)'], atol=0.001)
     assert np.allclose(df.resp_testing.values, ap.wells['well1'].depletion['testriver'], atol=0.001)
+    
+def test_transient_dd():
+    # read in the pumping timeseries and the depletion results included as a column
+    flname = datapath / 'transient_dd_ts.csv'
+    assert(flname.exists())
+    df = pd.read_csv(flname, index_col=3)
+    from hicap_analysis.analysis_project import Project 
+    # only one well in the 
+    ap = Project(datapath / 'transient_drawdown.yml')
+    
+    ap.report_responses()
+    
+    ap.write_responses_csv()
+
+    agg_results = pd.read_csv(ap.csv_output_filename, index_col=0)

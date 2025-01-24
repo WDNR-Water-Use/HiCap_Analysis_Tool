@@ -470,9 +470,28 @@ def _integrand(alpha, dlam, dtime, epsilon, dK):
     '''
     return _F(alpha, dlam, dtime) * _G(alpha, epsilon, dK, dtime)
 
+def _calc_deltaQ(Q):   
+    """parse the Q time series to find changes and their associated times
+
+    Args:
+        Q (pandas Series): time series of pumping
+    returns:
+        deltaQ (pandas Series): times and changes in Q over time
+    """
+        # find the differences in pumping
+    dq = Q.copy()
+    dq.iloc[1:] = np.diff(Q)
+        # get the locations of changes
+    deltaQ = dq.loc[dq!=0]
+    # special case for starting with 0 pumping
+    if Q.index[0] not in deltaQ.index:
+        deltaQ.loc[Q.index[0]] = Q.iloc[0]
+        deltaQ.sort_index(inplace=True)
+    return deltaQ
 
 
-ALL_DD_METHODS = {'theis': _theis}
+ALL_DD_METHODS = {'theis': _theis,
+                    'hunt99ddwn': _hunt99ddwn}
 
 ALL_DEPL_METHODS = {'glover': _glover,
                     'walton': _walton,
@@ -523,26 +542,32 @@ class WellResponse():
         """calculate drawdown at requested distance and time
         """
         dd_f = ALL_DD_METHODS[self.dd_method.lower()]
-
-        return dd_f(self.T, self.S, self.theis_time, self.dist, self.Q.iloc[0])
+        # start with zero drawdown
+        dd = np.zeros(len(self.Q))
+        deltaQ = _calc_deltaQ(self.Q.copy())
+        # initialize with pumping at the first time being positive
+        idx = deltaQ.index[0]-1
+        cQ = deltaQ.iloc[0]
+        ct = list(range(idx,len(self.Q)))       
+        extra_args= {}
+        dd[idx:] = dd_f(self.T, self.S, ct, self.dist, cQ, **extra_args)
+        if len(deltaQ) > 1:
+            deltaQ = deltaQ.iloc[1:]
+            for idx,cQ in zip(deltaQ.index,deltaQ.values):
+                idx-=2
+                ct = list(range(len(self.Q)-idx))
+                # note that by setting Q negative from the diff calculations, we always add
+                # below for the image wells
+                dd[idx:] += dd_f(self.T, self.S, ct, self.dist, cQ, **extra_args)
+        return dd
         
     def _calc_depletion(self):
         depl_f = ALL_DEPL_METHODS[self.depl_method.lower()]
-        
-        # find the differences in pumping
-        dq = self.Q.copy()
-        dq.iloc[1:] = np.diff(self.Q)
-        
         # start with zero depletion
         depl = np.zeros(len(self.Q))
         
-        # get the locations of changes
-        deltaQ = dq.loc[dq!=0]
-        
-        # special case for starting with 0 pumping
-        if self.Q.index[0] not in deltaQ.index:
-            deltaQ.loc[self.Q.index[0]] = self.Q.iloc[0]
-            deltaQ.sort_index(inplace=True)
+        deltaQ = _calc_deltaQ(self.Q.copy())
+
         # initialize with pumping at the first time being positive
         idx = deltaQ.index[0]-1
         cQ = deltaQ.iloc[0]
