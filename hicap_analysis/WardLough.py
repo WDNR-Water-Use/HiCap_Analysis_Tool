@@ -1,23 +1,18 @@
 import numpy as np
 from scipy.integrate import quad
 from scipy.special import gammaln
-
 import pandas as pd
 import matplotlib.pyplot as plt
+
 def WardLoughDepletion(T1, S1, K, lambd, x, y, t, NSteh1):
 
-    # Initialize output array
-    DeltaQ = np.zeros_like(t)
-
     # Inverse Fourier transform
-    for ii in range(len(t)):
-        DeltaQ[ii] = StehfestCoeff(1, NSteh1) * if1(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
-        for jj in range(2, NSteh1 + 1):
-            DeltaQ[ii] += StehfestCoeff(jj, NSteh1) * if1(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
-        DeltaQ[ii] = 2 * np.pi * lambd * DeltaQ[ii] * np.log(2) / t[ii]
+    DeltaQ = StehfestCoeff(1, NSteh1) * if1_dQ(T1, S1, K, lambd, np.log(2) / t, x, y)
+    for jj in range(2, NSteh1 + 1):
+        DeltaQ += StehfestCoeff(jj, NSteh1) * if1_dQ(T1, S1, K, lambd, jj * np.log(2) / t, x, y)
+    DeltaQ = 2 * np.pi * lambd * DeltaQ * np.log(2) / t
 
     return DeltaQ
-
 
 def WardLoughDrawdown(T1, S1, K, lambd, x, y, t, NSteh1, NSteh2):
     
@@ -46,6 +41,9 @@ def WardLoughDrawdown(T1, S1, K, lambd, x, y, t, NSteh1, NSteh2):
             s2[ii] = np.nan  # Assign NaN if there's an overflow
 
     return s1, s2
+
+def if1_dQ(T1, S1, K, lambda_, p, x, y):
+    return kernel1(T1,S1,K,lambda_,0,0,p)+kernel2(T1,S1,K,lambda_,0,0,p)
 
 def if1(T1, S1, K, lambd, x, y, p):
     G = lambda phi: 2 * (kernel1(T1, S1, K, lambd, x, np.tan(phi), p) +
@@ -162,17 +160,17 @@ if __name__ == "__main__":
     NSteh2 = 2  # Example number for Stehfest coefficients
 
 
-    s1, s2 = WardLoughDrawdown(T1, S1, K, lambd, x, y, t, NSteh1, NSteh2)
+    # s1, s2 = WardLoughDrawdown(T1, S1, K, lambd, x, y, t, NSteh1, NSteh2)
     
-    df = pd.DataFrame(index=t, data={'s1':s1,'s2':s2})
-    df.to_csv('s1s2.csv')
-    ax = df.plot()
-    # ax.set_ylim(0,.4)
-    ax.set_ylim(0,1)
-    plt.grid()
-    ax.set_xscale('log')
-    ax.set_xlim([1e-2,1e8])
-    plt.savefig('tmp.pdf')
+    # df = pd.DataFrame(index=t, data={'s1':s1,'s2':s2})
+    # df.to_csv('s1s2.csv')
+    # ax = df.plot()
+    # # ax.set_ylim(0,.4)
+    # ax.set_ylim(0,1)
+    # plt.grid()
+    # ax.set_xscale('log')
+    # ax.set_xlim([1e-2,1e8])
+    # plt.savefig('tmp.pdf')
     
     dQ = WardLoughDepletion(T1, S1, K, lambd, x, y, t, NSteh1)
     
