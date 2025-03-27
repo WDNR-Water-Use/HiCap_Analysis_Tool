@@ -3,6 +3,11 @@ from scipy.integrate import quad
 from scipy.special import gammaln
 import pandas as pd
 import matplotlib.pyplot as plt
+import sys
+sys.path.append('./tests/data')
+
+
+
 
 def WardLoughDepletion(T1, S1, K, lambd, x, y, t, NSteh1):
 
@@ -149,7 +154,7 @@ def StehfestCoeff(jj, N):
     return V
 
 if __name__ == "__main__":
-    T1 = .0001  # Example parameter
+    T1 = 1.0  # Example parameter
     S1 = 1000  # Example parameter
     K = 0.1   # Example parameter
     lambd = 0.1  # Example parameter
@@ -159,27 +164,35 @@ if __name__ == "__main__":
     NSteh1 = 2  # Example number for Stehfest coefficients
     NSteh2 = 2  # Example number for Stehfest coefficients
 
+    from ward_lough_data import *
 
-    # s1, s2 = WardLoughDrawdown(T1, S1, K, lambd, x, y, t, NSteh1, NSteh2)
+
+
+    s1, s2 = WardLoughDrawdown(T1, S1, K, lambd, x, y, t, NSteh1, NSteh2)
     
-    # df = pd.DataFrame(index=t, data={'s1':s1,'s2':s2})
-    # df.to_csv('s1s2.csv')
-    # ax = df.plot()
-    # # ax.set_ylim(0,.4)
-    # ax.set_ylim(0,1)
-    # plt.grid()
-    # ax.set_xscale('log')
-    # ax.set_xlim([1e-2,1e8])
-    # plt.savefig('tmp.pdf')
+    df = pd.DataFrame(index=t, data={'s1':s1,'s2':s2})
+    df.to_csv('s1s2.csv')
+    ax = df.plot()
+    ax.plot(s1_t,s1_obs,'*')
+    ax.plot(s2_t,s2_obs,'o')
+    
+    # ax.set_ylim(0,.4)
+    ax.set_ylim(0,1)
+    plt.grid()
+    ax.set_xscale('log')
+    ax.set_xlim([1e-2,1e8])
+    plt.savefig('tmp.pdf')
     
     dQ = WardLoughDepletion(T1, S1, K, lambd, x, y, t, NSteh1)
     
     df = pd.DataFrame(index=t, data={'dQ':dQ})
     df.to_csv('dQ.csv')
     ax = df.plot()
+    ax.plot(q_t_1p0,dQ_1p0, 'o')
     # ax.set_ylim(0,.4)
     ax.set_ylim(0,1)
     plt.grid()
     ax.set_xscale('log')
     ax.set_xlim([1e-2,1e8])
     plt.savefig('tmp_Q.pdf')
+    

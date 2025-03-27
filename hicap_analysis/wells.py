@@ -490,6 +490,170 @@ def _calc_deltaQ(Q):
     return deltaQ
 
 
+def _WardLoughNonDimensionalize(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambed_K, aquitard_thick, aquitard_K, t, x, y):
+    x /= dist
+    y /= dist
+    t = t*T2/(S2 * (dist**2))
+    T1 /= T2
+    S1 /= S2
+    K = ((aquitard_K/aquitard_thick)*(dist**2))/T2
+    lambd = ((streambed_K * width) / streambed_thick) *dist / T2
+    return x,y,t,T1,S1,K,lambd    
+    
+
+def _WardLoughDepletion(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambed_K, aquitard_thick, aquitard_K, t, x=0, y=0,  NSteh1=2, NStehl2=2):
+    # first nondimensionalize all the parameters
+    x,y,t,T1,S1,K,lambd = _WardLoughNonDimensionalize(T1, T2, S1, S2, 
+                                                    width, Q, dist, 
+                                                    streambed_thick, streambed_K, 
+                                                    aquitard_thick, aquitard_K, t, x, y)
+    # Inverse Fourier transform
+    DeltaQ = _StehfestCoeff(1, NSteh1) * _if1_dQ(T1, S1, K, lambd, np.log(2) / t, x, y)
+    for jj in range(2, NSteh1 + 1):
+        DeltaQ += _StehfestCoeff(jj, NSteh1) * _if1_dQ(T1, S1, K, lambd, jj * np.log(2) / t, x, y)
+    DeltaQ = 2 * np.pi * lambd * DeltaQ * np.log(2) / t
+
+    return DeltaQ
+
+def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambed_K, aquitard_thick, aquitard_L, t, x, y, NSteh1=2, NStehl2=2):
+    # first nondimensionalize all the parameters
+    x,y,t,T1,S1,K,lambd = _WardLoughNonDimensionalize(T1, T2, S1, S2, 
+                                                    width, Q, dist, 
+                                                    streambed_thick, streambed_K, 
+                                                    aquitard_thick, aquitard_K, t, x, y)
+    # Initialize output arrays
+    s1 = np.zeros_like(t)
+    s2 = np.zeros_like(t)
+
+    # Inverse Fourier transform
+    for ii in range(len(t)):
+        try:
+            s1[ii] = _StehfestCoeff(1, NSteh1) * if1(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
+            for jj in range(2, NSteh1 + 1):
+                s1[ii] += _StehfestCoeff(jj, NSteh1) * if1(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
+            s1[ii] *= np.log(2) / t[ii]
+        except OverflowError as e:
+            print(f"Overflow error in s1 calculation at index {ii}: {e}")
+            s1[ii] = np.nan  # Assign NaN if there's an overflow
+
+        try:
+            s2[ii] = _StehfestCoeff(1, NSteh2) * if2(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
+            for jj in range(2, NSteh2 + 1):
+                s2[ii] += _StehfestCoeff(jj, NSteh2) * if2(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
+            s2[ii] *= np.log(2) / t[ii]
+        except OverflowError as e:
+            print(f"Overflow error in s2 calculation at index {ii}: {e}")
+            s2[ii] = np.nan  # Assign NaN if there's an overflow
+
+    return s1, s2
+
+def _if1_dQ(T1, S1, K, lambda_, p, x, y):
+    return _kernel1(T1,S1,K,lambda_,0,0,p)+_kernel2(T1,S1,K,lambda_,0,0,p)
+
+def _if1(T1, S1, K, lambd, x, y, p):
+    G = lambda phi: 2 * (_kernel1(T1, S1, K, lambd, x, np.tan(phi), p) +
+                          _kernel2(T1, S1, K, lambd, x, np.tan(phi), p)) * \
+                          np.cos(np.tan(phi) * y) / np.cos(phi) ** 2
+
+    s1InvFour, _ = quad(G, 0, np.pi / 2, epsrel=1e-1, epsabs=1e-1, limit=10000)
+    return s1InvFour
+
+def _if2(T1, S1, K, lambd, x, y, p):
+    H = lambda phi: 2 * (_coeff_s1_1(T1, S1, K, lambd, np.tan(phi), p) * 
+                        _kernel1(T1, S1, K, lambd, x, np.tan(phi), p) +
+                        _coeff_s1_2(T1, S1, K, lambd, np.tan(phi), p) *
+                        _kernel2(T1, S1, K, lambd, x, np.tan(phi), p)) * \
+                        np.cos(np.tan(phi) * y) / np.cos(phi) ** 2
+
+    s2InvFour, errbnd = quad(H, 0, np.pi / 2, epsrel=1e-1, epsabs=1e-1, limit=10000)
+    return s2InvFour
+
+def _coeff_s1_1(T1, S1, K, lambd, theta, p):
+    b11, b12, b22, mu1, mu2, l1, l2, beta1, beta2, A1, A2 = _coeffs(T1, S1, K, lambd, theta, p)
+    B1 = (mu1 * T1 - b11) / b12
+    return B1
+
+def _coeff_s1_2(T1, S1, K, lambd, theta, p):
+    b11, b12, b22, mu1, mu2, l1, l2, beta1, beta2, A1, A2 = _coeffs(T1, S1, K, lambd, theta, p)
+    B2 = (mu2 * T1 - b11) / b12
+    return B2
+
+def _kernel1(T1, S1, K, lambd, x, theta_or_y, p):
+    b11, b12, b22, mu1, mu2, l1, l2, beta1, beta2, A1, A2 = _coeffs(T1, S1, K, lambd, theta_or_y, p)
+
+    if x < 0:
+        F1 = A1 * np.exp(x * np.sqrt(mu1))
+    elif 0 <= x <= 1:
+        F1 = A1 * np.exp(-x * np.sqrt(mu1)) + beta1 / (2 * np.sqrt(mu1) * l1) * \
+             (np.exp((x - 1) * np.sqrt(mu1)) - np.exp(-(x + 1) * np.sqrt(mu1)))
+    else:
+        F1 = A1 * np.exp(-x * np.sqrt(mu1)) + beta1 / (2 * np.sqrt(mu1) * l1) * \
+             (np.exp((1 - x) * np.sqrt(mu1)) - np.exp(-(x + 1) * np.sqrt(mu1)))
+    return F1
+
+def _kernel2(T1, S1, K, lambd, x, theta_or_y, p):
+    b11, b12, b22, mu1, mu2, l1, l2, beta1, beta2, A1, A2 = _coeffs(T1, S1, K, lambd, theta_or_y, p)
+
+    if x < 0:
+        F2 = A2 * np.exp(x * np.sqrt(mu2))
+    elif 0 <= x <= 1:
+        F2 = A2 * np.exp(-x * np.sqrt(mu2)) + beta2 / (2 * np.sqrt(mu2) * l2) * \
+             (np.exp((x - 1) * np.sqrt(mu2)) - np.exp(-(x + 1) * np.sqrt(mu2)))
+    else:
+        F2 = A2 * np.exp(-x * np.sqrt(mu2)) + beta2 / (2 * np.sqrt(mu2) * l2) * \
+             (np.exp((1 - x) * np.sqrt(mu1)) - np.exp(-(x + 1) * np.sqrt(mu1)))
+    return F2
+
+def _coeffs(T1, S1, K, lambd, theta_or_y, p):
+    b11 = T1 * theta_or_y ** 2 + S1 * p + K
+    b12 = -K
+    b22 = theta_or_y ** 2 + p + K
+
+    mu1 = (b11 / T1 + b22) / 2 + np.sqrt((b11 / T1 + b22) ** 2 / 4 + (b12 ** 2 - b11 * b22) / T1)
+    mu2 = (b11 / T1 + b22) / 2 - np.sqrt((b11 / T1 + b22) ** 2 / 4 + (b12 ** 2 - b11 * b22) / T1)
+    l1 = T1 + ((mu1 * T1 - b11) / b12) ** 2
+    l2 = T1 + ((mu2 * T1 - b11) / b12) ** 2
+
+    beta1 = (mu1 * T1 - b11) / (b12 * 2 * np.pi * p)
+    beta2 = (mu2 * T1 - b11) / (b12 * 2 * np.pi * p)
+
+    Delta = 4 * np.sqrt(mu1 * mu2) + 2 * lambd * (np.sqrt(mu1) / l2 + np.sqrt(mu2) / l1)
+
+    A1 = ((lambd / l2 + 2 * np.sqrt(mu2)) * beta1 * np.exp(-np.sqrt(mu1)) - 
+           lambd * beta2 / l2 * np.exp(-np.sqrt(mu2))) / Delta / l1
+
+    A2 = (-lambd * beta1 / l1 * np.exp(-np.sqrt(mu1)) + 
+          (lambd / l1 + 2 * np.sqrt(mu1)) * beta2 * np.exp(-np.sqrt(mu2))) / Delta / l2
+
+    return b11, b12, b22, mu1, mu2, l1, l2, beta1, beta2, A1, A2
+
+def _safe_factorial(n):
+    """Calculate factorial using logarithmic method to avoid overflow."""
+    if n < 0:
+        return float('inf')
+    elif n < 2:
+        return 1
+    else:
+        return np.exp(gammaln(n + 1))
+
+def _StehfestCoeff(jj, N):
+    LowerLimit = (jj + 1) // 2
+    UpperLimit = min(jj, N // 2)
+
+    V = 0
+    for kk in range(LowerLimit, UpperLimit + 1):
+        denominator = (_safe_factorial(N // 2 - kk) *
+                       _safe_factorial(kk) *
+                       _safe_factorial(kk - 1) *
+                       _safe_factorial(jj - kk) *
+                       _safe_factorial(2 * kk - jj))
+        if denominator != 0:  # Prevent division by zero
+            V += (kk**(N // 2) * _safe_factorial(2 * kk) / denominator)
+    
+    V *= (-1) ** (N // 2 + jj)
+    return V
+
+
 ALL_DD_METHODS = {'theis': _theis,
                     'hunt99ddwn': _hunt99ddwn}
 

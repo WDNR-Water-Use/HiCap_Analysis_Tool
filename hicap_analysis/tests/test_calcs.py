@@ -1,6 +1,7 @@
 from hicap_analysis.wells import GPM2CFD
 from hicap_analysis.utilities import Q2ts
 from os import pardir, getcwd
+import sys
 import numpy as np
 import pandas as pd
 import geopandas as gpd
@@ -38,7 +39,11 @@ def theis_results():
       
     return {'params':params, 'theis_res':theis_res}
 
-
+@pytest.fixture
+def ward_lough_test_data():
+    sys.path.append(datapath)
+    from ward_lough_data import s1_test, s2_test, dQ1_test, dQ2_test
+    return s1_test, s2_test, dQ1_test, dQ2_test
 @pytest.fixture
 def walton_results():
     from hicap_analysis import wells as wo
@@ -455,3 +460,22 @@ def test_transient_dd():
     ap.write_responses_csv()
 
     agg_results = pd.read_csv(ap.csv_output_filename, index_col=0)
+
+
+def test_ward_lough_depletion(ward_lough_test_data):
+    from hicap_analysis.wells import _WardLoughDepletion
+    T1=100
+    T2=100
+    S1=1000
+    S2=1 
+    width=1
+    Q=9999
+    dist=100
+    streambed_thick=10 
+    streambed_K=1
+    aquitard_thick=1
+    aquitard_K=.01
+    t=np.logspace(0,10)
+    x=50
+    y=100
+    s1_test
