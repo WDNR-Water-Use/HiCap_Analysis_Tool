@@ -3,6 +3,8 @@ import pandas as pd
 from pandas.core import base
 import scipy.special as sps
 import scipy.integrate as integrate
+from scipy.integrate import quad
+from scipy.special import gammaln
 import sys
 
 # define drawdown methods here
@@ -515,7 +517,7 @@ def _WardLoughDepletion(T1, T2, S1, S2, width, Q, dist, streambed_thick, streamb
 
     return DeltaQ
 
-def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambed_K, aquitard_thick, aquitard_L, t, x, y, NSteh1=2, NStehl2=2):
+def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambed_K, aquitard_thick, aquitard_K, t, x, y, NSteh1=2, NSteh2=2):
     # first nondimensionalize all the parameters
     x,y,t,T1,S1,K,lambd = _WardLoughNonDimensionalize(T1, T2, S1, S2, 
                                                     width, Q, dist, 
@@ -528,18 +530,18 @@ def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambe
     # Inverse Fourier transform
     for ii in range(len(t)):
         try:
-            s1[ii] = _StehfestCoeff(1, NSteh1) * if1(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
+            s1[ii] = _StehfestCoeff(1, NSteh1) * _if1(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
             for jj in range(2, NSteh1 + 1):
-                s1[ii] += _StehfestCoeff(jj, NSteh1) * if1(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
+                s1[ii] += _StehfestCoeff(jj, NSteh1) * _if1(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
             s1[ii] *= np.log(2) / t[ii]
         except OverflowError as e:
             print(f"Overflow error in s1 calculation at index {ii}: {e}")
             s1[ii] = np.nan  # Assign NaN if there's an overflow
 
         try:
-            s2[ii] = _StehfestCoeff(1, NSteh2) * if2(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
+            s2[ii] = _StehfestCoeff(1, NSteh2) * _if2(T1, S1, K, lambd, x, y, np.log(2) / t[ii])
             for jj in range(2, NSteh2 + 1):
-                s2[ii] += _StehfestCoeff(jj, NSteh2) * if2(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
+                s2[ii] += _StehfestCoeff(jj, NSteh2) * _if2(T1, S1, K, lambd, x, y, jj * np.log(2) / t[ii])
             s2[ii] *= np.log(2) / t[ii]
         except OverflowError as e:
             print(f"Overflow error in s2 calculation at index {ii}: {e}")
