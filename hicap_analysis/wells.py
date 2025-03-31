@@ -509,6 +509,10 @@ def _WardLoughDepletion(T1, T2, S1, S2, width, Q, dist, streambed_thick, streamb
                                                     width, Q, dist, 
                                                     streambed_thick, streambed_K, 
                                                     aquitard_thick, aquitard_K, t, x, y)
+
+    # Initialize output arrays
+    s1 = np.zeros_like(t)
+    s2 = np.zeros_like(t)
     # Inverse Fourier transform
     DeltaQ = _StehfestCoeff(1, NSteh1) * _if1_dQ(T1, S1, K, lambd, np.log(2) / t, x, y)
     for jj in range(2, NSteh1 + 1):
@@ -523,6 +527,7 @@ def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambe
                                                     width, Q, dist, 
                                                     streambed_thick, streambed_K, 
                                                     aquitard_thick, aquitard_K, t, x, y)
+
     # Initialize output arrays
     s1 = np.zeros_like(t)
     s2 = np.zeros_like(t)

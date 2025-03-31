@@ -182,13 +182,13 @@ if __name__ == "__main__":
     ax.set_xscale('log')
     ax.set_xlim([1e-2,1e8])
     plt.savefig('tmp.pdf')
-    
-    dQ = WardLoughDepletion(T1, S1, K, lambd, x, y, t, NSteh1)
+    T1=0.0001
+    dQ = WardLoughDepletion(0.0001, S1, K, lambd, x, y, t, NSteh1)
     
     df = pd.DataFrame(index=t, data={'dQ':dQ})
     df.to_csv('dQ.csv')
     ax = df.plot()
-    ax.plot(q_t_1p0,dQ_1p0, 'o')
+    ax.plot(q_t_0p0001,dQ_0p0001, 'o')
     # ax.set_ylim(0,.4)
     ax.set_ylim(0,1)
     plt.grid()

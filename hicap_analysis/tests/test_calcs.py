@@ -470,7 +470,10 @@ def test_transient_dd():
 
 
 def test_ward_lough_depletion(ward_lough_test_data):
+    # note: the parameters defined below are intended to result in the nondimensional
+    # parameters corresponding with Fig. 6 in DOI: 10.1061/ (ASCE)HE.1943-5584.0000382.
     from hicap_analysis.wells import _WardLoughDepletion
+    import matplotlib.pyplot as plt
     T1=100
     T2=100
     S1=1000
@@ -482,18 +485,24 @@ def test_ward_lough_depletion(ward_lough_test_data):
     streambed_K=1
     aquitard_thick=1
     aquitard_K=.01
-    t=np.logspace(0,10)
     x=50
     y=100
-    s1_test = ward_lough_test_data['s1_test']
-    s1_obs = _WardLoughDepletion
-    
-    s2_test = ward_lough_test_data['s2_test']
     dQ1_test = ward_lough_test_data['dQ1_test']
     dQ2_test = ward_lough_test_data['dQ2_test']
-    j=2
+    dQ2_test['mod']  = _WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+                            streambed_K,aquitard_thick,aquitard_K,dQ2_test.index*100, x, y)   
+    T1=0.01
+    aquitard_K=0.001
+    dQ1_test['mod'] = _WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+                            streambed_K,aquitard_thick,aquitard_K,dQ1_test.index*100, x, y)
+    assert np.allclose(dQ1_test['mod'],dQ1_test['dQ'], atol=.1)
+    assert np.allclose(dQ2_test['mod'],dQ2_test['dQ'], atol=.1)
+    
+
 def test_ward_lough_drawdown(ward_lough_test_data):
     from hicap_analysis.wells import _WardLoughDrawdown
+    # note: the parameters defined below are intended to result in the nondimensional
+    # parameters corresponding with Fig. 3 in DOI: 10.1061/ (ASCE)HE.1943-5584.0000382.
     T1=100
     T2=100
     S1=1000
@@ -505,14 +514,16 @@ def test_ward_lough_drawdown(ward_lough_test_data):
     streambed_K=1
     aquitard_thick=10
     aquitard_K=.01
-    t=np.logspace(0,10)
     x=50
     y=100
     s1_test = ward_lough_test_data['s1_test']
     s2_test = ward_lough_test_data['s2_test']
-
+    
     s1_test['mod'], _  = _WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                                 streambed_K,aquitard_thick,aquitard_K,s1_test.index*100, x, y)
-    s2_test['mod'], _  = _WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
-                                streambed_K,aquitard_thick,aquitard_K,s2_test.index*100, x, y)    
-    j=2
+    _, s2_test['mod']  = _WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+                                streambed_K,aquitard_thick,aquitard_K,s2_test.index*100, x, y)   
+    
+    assert np.allclose(s1_test['mod'],s1_test['s'], atol=.035)
+    assert np.allclose(s2_test['mod'],s2_test['s'], atol=.035)
+    
