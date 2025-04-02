@@ -519,7 +519,7 @@ def _WardLoughDepletion(T1, T2, S1, S2, width, Q, dist, streambed_thick, streamb
         DeltaQ += _StehfestCoeff(jj, NSteh1) * _if1_dQ(T1, S1, K, lambd, jj * np.log(2) / t, x, y)
     DeltaQ = 2 * np.pi * lambd * DeltaQ * np.log(2) / t
 
-    return DeltaQ
+    return DeltaQ*Q
 
 def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambed_K, aquitard_thick, aquitard_K, t, x, y, NSteh1=2, NSteh2=2):
     # first nondimensionalize all the parameters
@@ -552,7 +552,7 @@ def _WardLoughDrawdown(T1, T2, S1, S2, width, Q, dist, streambed_thick, streambe
             print(f"Overflow error in s2 calculation at index {ii}: {e}")
             s2[ii] = np.nan  # Assign NaN if there's an overflow
 
-    return s1, s2
+    return s1*Q/T2, s2*Q/T2 # re-dimensionalize
 
 def _if1_dQ(T1, S1, K, lambda_, p, x, y):
     return _kernel1(T1,S1,K,lambda_,0,0,p)+_kernel2(T1,S1,K,lambda_,0,0,p)

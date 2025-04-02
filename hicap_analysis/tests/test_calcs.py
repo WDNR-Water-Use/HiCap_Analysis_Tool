@@ -479,7 +479,7 @@ def test_ward_lough_depletion(ward_lough_test_data):
     S1=1000
     S2=1 
     width=1
-    Q=9999
+    Q=125
     dist=100
     streambed_thick=10 
     streambed_K=1
@@ -495,8 +495,8 @@ def test_ward_lough_depletion(ward_lough_test_data):
     aquitard_K=0.001
     dQ1_test['mod'] = _WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                             streambed_K,aquitard_thick,aquitard_K,dQ1_test.index*100, x, y)
-    assert np.allclose(dQ1_test['mod'],dQ1_test['dQ'], atol=.1)
-    assert np.allclose(dQ2_test['mod'],dQ2_test['dQ'], atol=.1)
+    assert np.allclose(dQ1_test['mod']/Q,dQ1_test['dQ'], atol=.1)
+    assert np.allclose(dQ2_test['mod']/Q,dQ2_test['dQ'], atol=.1)
     
 
 def test_ward_lough_drawdown(ward_lough_test_data):
@@ -508,7 +508,7 @@ def test_ward_lough_drawdown(ward_lough_test_data):
     S1=1000
     S2=1 
     width=1
-    Q=9999
+    Q=125
     dist=100
     streambed_thick=10 
     streambed_K=1
@@ -524,6 +524,6 @@ def test_ward_lough_drawdown(ward_lough_test_data):
     _, s2_test['mod']  = _WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                                 streambed_K,aquitard_thick,aquitard_K,s2_test.index*100, x, y)   
     
-    assert np.allclose(s1_test['mod'],s1_test['s'], atol=.035)
-    assert np.allclose(s2_test['mod'],s2_test['s'], atol=.035)
+    assert np.allclose(s1_test['mod']*T2/Q,s1_test['s'], atol=.035)
+    assert np.allclose(s2_test['mod']*T2/Q,s2_test['s'], atol=.035)
     
