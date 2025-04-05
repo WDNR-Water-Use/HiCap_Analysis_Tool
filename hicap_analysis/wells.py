@@ -3,7 +3,6 @@ import pandas as pd
 from pandas.core import base
 import scipy.special as sps
 import scipy.integrate as integrate
-from scipy.integrate import quad
 from scipy.special import gammaln
 import sys
 
@@ -562,7 +561,7 @@ def _if1(T1, S1, K, lambd, x, y, p):
                           _kernel2(T1, S1, K, lambd, x, np.tan(phi), p)) * \
                           np.cos(np.tan(phi) * y) / np.cos(phi) ** 2
 
-    s1InvFour, _ = quad(G, 0, np.pi / 2, epsrel=1e-1, epsabs=1e-1, limit=10000)
+    s1InvFour, _ = integrate.quad(G, 0, np.pi / 2, epsrel=1e-1, epsabs=1e-1, limit=10000)
     return s1InvFour
 
 def _if2(T1, S1, K, lambd, x, y, p):
@@ -572,7 +571,7 @@ def _if2(T1, S1, K, lambd, x, y, p):
                         _kernel2(T1, S1, K, lambd, x, np.tan(phi), p)) * \
                         np.cos(np.tan(phi) * y) / np.cos(phi) ** 2
 
-    s2InvFour, errbnd = quad(H, 0, np.pi / 2, epsrel=1e-1, epsabs=1e-1, limit=10000)
+    s2InvFour, errbnd = integrate.quad(H, 0, np.pi / 2, epsrel=1e-1, epsabs=1e-1, limit=10000)
     return s2InvFour
 
 def _coeff_s1_1(T1, S1, K, lambd, theta, p):
