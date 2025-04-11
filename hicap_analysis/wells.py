@@ -47,13 +47,13 @@ def _theis(T,S,time,dist,Q, **kwargs):
     # calculate and return
     return (Q / (4. * np.pi * T)) * sps.exp1(u)
 
-def _hunt99ddwn(T,S,time,dist,Q,streambed, x, y, **kwargs):
+def _hunt99ddwn(T, S, time, l, Q, **kwargs):
     ''' Calculate drawdown in an aquifer with a partially penetrating stream and
         including streambed resistance (Hunt, 1999).  The solution becomes the Theis
         solution if streambed conductance is zero, and approaches an image-well solution
         from Theis or Glover and Balmer (1954) as streambed conductance gets very large.
         Note that the well is located at the location x,y = (dist, 0) and the stream
-        is aligned with y at x=0 
+        is aligned with y-axis at x=0 
     
     Parameters
     ----------
@@ -62,7 +62,7 @@ def _hunt99ddwn(T,S,time,dist,Q,streambed, x, y, **kwargs):
     S: float
         Storativity of aquifer (dimensionless)
     time: (float, optionally np.array or list): time at which to calculate results [d]
-    dist: distance between well and stream in [ft] (l in the paper)
+    l: distance between well and stream in [ft] 
     Q (float): pumping rate (+ is extraction) [ft**3/d]
     streambed (float): streambed conductance [ft/d] (lambda in the paper)
     x, y: either a pair of single x, y values to compute results or 
@@ -74,6 +74,13 @@ def _hunt99ddwn(T,S,time,dist,Q,streambed, x, y, **kwargs):
     drawdown, or meshgrid of drawdowns, or np.array with shape (ntimes, meshgridxx, meshgridyy)
 
     '''
+    if 'streambed' in kwargs.keys():
+        streambed = kwargs['streambed']
+    if 'x' in kwargs.keys():
+        x = kwargs['x']
+    if 'y' in kwargs.keys():
+        y = kwargs['y']
+        
     # turn lists into np.array so they get handled correctly,
     # check if time or space is an array
     timescalar = True
@@ -90,16 +97,16 @@ def _hunt99ddwn(T,S,time,dist,Q,streambed, x, y, **kwargs):
     # compute a single x, y point at a given time
     if timescalar and spacescalar:
         [strmintegral, err] = integrate.quad(_ddwn2, 0.0, np.inf,
-                                         args=(dist, x, y, T, streambed, time, S))
-        return (Q / (4. * np.pi * T)) * (_ddwn1(dist, x, y, T, streambed, time, S) - strmintegral)
+                                         args=(l, x, y, T, streambed, time, S))
+        return (Q / (4. * np.pi * T)) * (_ddwn1(l, x, y, T, streambed, time, S) - strmintegral)
     
     # compute a vector of times for a given point
     if not timescalar and spacescalar:
         drawdowns = []
         for tm in time:
             [strmintegral, err] = integrate.quad(_ddwn2, 0.0, np.inf,
-                                         args=(dist, x, y, T, streambed, tm, S))
-            drawdowns.append((Q / (4. * np.pi * T)) * (_ddwn1(dist, x, y, T, streambed, tm, S) - strmintegral))
+                                         args=(l, x, y, T, streambed, tm, S))
+            drawdowns.append((Q / (4. * np.pi * T)) * (_ddwn1(l, x, y, T, streambed, tm, S) - strmintegral))
         return drawdowns
     
     # if meshgrid is passed, return an np.array with dimensions
@@ -114,40 +121,41 @@ def _hunt99ddwn(T,S,time,dist,Q,streambed, x, y, **kwargs):
             for i in range(0, numrow):
                 for j in range(0, numcol):
                     [strmintegral, err] = integrate.quad(_ddwn2, 0.0, np.inf,
-                                         args=(dist, x[i,j], y[i,j], T, streambed, time[time_idx], S))
-                    drawdowns[time_idx, i, j] = (Q / (4. * np.pi * T)) * (_ddwn1(dist, x[i,j], y[i,j], T, streambed, time[time_idx], S) - strmintegral)
+                                         args=(l, x[i,j], y[i,j], T, streambed, time[time_idx], S))
+                    drawdowns[time_idx, i, j] = (Q / (4. * np.pi * T)) * (_ddwn1(l, x[i,j], y[i,j], T, streambed, time[time_idx], S) - strmintegral)
         return drawdowns
     
-def _ddwn1(dist, x, y, T, streambed, time, S):
+def _ddwn1(l, x, y, T, streambed, time, S):
     ''' calculates Theis drawdown function for a point (x,y) given
-        a well at the location (dist, 0) from a stream.  Used in 
+        a well at the location (l, 0) from a stream.  Used in 
         computing Hunt, 1999 estimate of drawdown.  Equation 30 from 
         the paper.  Variables described in _hunt99ddwn function.
     '''
-    if isinstance(dist, list):
-        dist = np.array(dist)
-    if isinstance(dist, pd.Series):
-        dist = dist.values
+    if isinstance(l, list):
+        l = np.array(l)
+    if isinstance(l, pd.Series):
+        l = l.values
     
     isarray = False
-    if isinstance(dist, np.ndarray):
+    if isinstance(l, np.ndarray):
         isarray = True
     
     # construct the well function argument
-    # is dist is zero, then function does not exist
-    # trap for dist==0 and set to small value
+    # if (l-x) is zero, then function does not exist
+    # trap for (l-x)==0 and set to small value
+    dist = l - x
     if isarray:
         dist = np.where(dist==0, 0.001, dist)
     else:
         if dist == 0.:
             dist = 0.001
 
-    u1 = ((dist - x)**2 + y**2)/(4. * T * time/S)
+    u1 = ((dist)**2 + y**2)/(4. * T * time/S)
     
     return sps.exp1(u1)
 
 
-def _ddwn2(theta, dist, x, y, T, streambed, time, S):
+def _ddwn2(theta, l, x, y, T, streambed, time, S):
     ''' calculates function that gets integrated in the Hunt (1999) drawdown
         equation (Equation 29 and 30 in the paper), theta is the constant
         of integration and the rest of the variables described in the
@@ -155,7 +163,7 @@ def _ddwn2(theta, dist, x, y, T, streambed, time, S):
     '''
     if streambed == 0.:
         return 0.
-    u2 = ((dist + np.abs(x) + 2*T*theta/streambed)**2 + y**2)/(4. * T * time/S)
+    u2 = ((l + np.abs(x) + 2*T*theta/streambed)**2 + y**2)/(4. * T * time/S)
     return np.exp(-theta) * sps.exp1(u2)
 
     
