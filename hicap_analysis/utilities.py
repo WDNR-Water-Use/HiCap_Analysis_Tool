@@ -1,6 +1,6 @@
 import calendar
 import pandas as pd
-from hicap_analysis.wells import GPM2CFD
+#from hicap_analysis.wells import GPM2CFD
 import numpy as np
 
 def Q2ts(depl_pump_time, depletion_years, Q_scalar):

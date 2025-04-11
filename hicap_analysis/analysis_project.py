@@ -1,5 +1,5 @@
-from hicap_analysis.wells import GPM2CFD, Well, WellResponse
-from hicap_analysis.utilities import Q2ts
+#from hicap_analysis.wells import GPM2CFD, Well, WellResponse
+#from hicap_analysis.utilities import Q2ts
 import numpy as np
 import pandas as pd
 import yaml, os, shutil

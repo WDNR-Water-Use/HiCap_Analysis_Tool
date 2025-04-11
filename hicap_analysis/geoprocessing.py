@@ -6,7 +6,7 @@ import shapely
 from pathlib import Path
 import sys
 sys.path.append('../')
-from .wells import Well
+#from .wells import Well
 
 # these were needed to pass the testing, reprojection was giving (Inf, Inf)
 import pyproj

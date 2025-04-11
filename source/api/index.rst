@@ -11,4 +11,4 @@ Classes
 Static functions
 ----------------
 .. toctree::
-    hicap_analysis:utilities
+    hicap_analysis.utilities
