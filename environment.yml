@@ -1,7 +1,7 @@
 name: hca
 channels:
 - conda-forge
-- defaults
+- nodefaults
 dependencies:
 - python=3.11
 - ipython
@@ -26,3 +26,8 @@ dependencies:
 - openpyxl
 - requests
 - pytest
+- sphinx
+- numpydoc
+- nbsphinx  # for rendering notebooks in sphinx-generated docs
+- sphinx-copybutton
+- sphinx_rtd_theme

@@ -8,9 +8,9 @@ import geopandas as gpd
 from pathlib import Path
 import pytest
 
-#homepath = Path(getcwd())
-#datapath = homepath / 'tests' / 'data'
-datapath = Path('hicap_analysis/tests/data')
+homepath = Path(getcwd())
+datapath = homepath / 'tests' / 'data'
+#datapath = Path('hicap_analysis/tests/data')
 from hicap_analysis.utilities import  create_timeseries_template
 create_timeseries_template(filename=datapath / 'test_ts.csv',
                             well_ids=[f'well{i}' for i in range(1,6)])
@@ -322,7 +322,9 @@ def test_run_yml_example():
 
 def test_hunt99_results():
     ''' Test of _hunt99() function in the 
-        well.py module.
+        well.py module.  Compares computedstream depletion
+        to results from Jenkins (1968) Table 1 and the
+        strmdepl08 appendix.
     '''
     from hicap_analysis import wells as wo
     dist = [1000, 5000, 10000]
@@ -452,6 +454,30 @@ def test_hunt_continuous():
     # read in the CSV file and check against STRMDEPL08 Appendix 1 output (OFR2008-1166)
     assert np.isclose(df.resp_testing.max(), agg_results.loc['well1: proposed', 'testriver:depl (cfs)'], atol=0.001)
     assert np.allclose(df.resp_testing.values, ap.wells['well1'].depletion['testriver'], atol=0.001)
+
+
+def test_hunt99ddwn():
+    ''' Test of _hunt99ddwn() function in the 
+        well.py module.
+    '''
+    from hicap_analysis import wells as wo
+    Q = 1 * 3600 * 24 # no normalization in the paper but use to convert from CFS to CFD
+    K = 0.001 # ft/sec
+    l = 200.
+    T = 1000.
+    S = 0.1
+    time = 28.
+
+    # test if stream conductance is zero
+    rlambda = 0
+    x = 50.
+    y = 0.
+
+    ddwn = wo._hunt99ddwn(T, S, time, l, Q, streambed=rlambda, x=x, y=y)
+    no_stream = wo._theis(T, S, time, (l-x), Q) 
+    assert(ddwn == no_stream)
+
+    
     
 def test_transient_dd():
     # read in the pumping timeseries and the depletion results included as a column
