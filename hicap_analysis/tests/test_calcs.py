@@ -1,5 +1,5 @@
-from hicap_analysis.wells import GPM2CFD
 from hicap_analysis.utilities import Q2ts
+import hicap_analysis
 from os import pardir, getcwd
 import sys
 import numpy as np
@@ -8,16 +8,15 @@ import geopandas as gpd
 from pathlib import Path
 import pytest
 
-homepath = Path(getcwd())
-datapath = homepath / 'tests' / 'data'
-#datapath = Path('hicap_analysis/tests/data')
+#homepath = Path(getcwd())
+#datapath = homepath / 'tests' / 'data'
+datapath = Path('hicap_analysis/tests/data')
 from hicap_analysis.utilities import  create_timeseries_template
 create_timeseries_template(filename=datapath / 'test_ts.csv',
                             well_ids=[f'well{i}' for i in range(1,6)])
 
 @pytest.fixture
 def theis_results():
-    from hicap_analysis import wells as wo
     excel_file = datapath / 'HighCap_Analysis_Worksheet_Example.xlsm'
     p = pd.read_excel(excel_file,
         sheet_name='Property_Drawdown_Analysis',
@@ -25,7 +24,7 @@ def theis_results():
         skiprows=7,
         index_col=0)
     # read the two Q values and convert to CFD
-    Q = [float(i)*wo.GPM2CFD for i in [p.loc['Pumping Rate Well #1 (gpm)'],
+    Q = [float(i)*hicap_analysis.GPM2CFD for i in [p.loc['Pumping Rate Well #1 (gpm)'],
             p.loc['Pumping Rate Well #2 (gpm)']]]
     S = float(p.loc['Storage Coefficient (unitless)'])
     T = float(p.loc['Transmissivity (ft2/day)']) 
@@ -53,7 +52,6 @@ def ward_lough_test_data():
 
 @pytest.fixture
 def walton_results():
-    from hicap_analysis import wells as wo
     excel_file = datapath / 'HighCap_Analysis_Worksheet_Example.xlsm'  
     walton_res = pd.read_excel(excel_file,
         sheet_name='Stream#1_Depletion', 
@@ -83,7 +81,6 @@ def walton_results():
 
 @pytest.fixture
 def project_spreadsheet_results():
-    from hicap_analysis import wells as wo
     excel_file = datapath / 'HighCap_Analysis_Worksheet_Example.xlsm'  
     # read in common parameters
     p = pd.read_excel(excel_file, sheet_name='Property_Drawdown_Analysis', 
@@ -132,7 +129,7 @@ def project_spreadsheet_results():
     return params
 
 def test_project_spreadsheet(project_spreadsheet_results):
-    from hicap_analysis.wells import Well, GPM2CFD
+    from hicap_analysis.wells import Well
     pars = project_spreadsheet_results
     # set up the Project with multiple wells and multiple streams and make calculations
     well1 = Well(T=pars['T'], S=pars['S'], 
@@ -171,12 +168,12 @@ def test_theis(theis_results):
     """
 
 
-    from hicap_analysis import wells as wo
+    #from hicap_analysis import wells as wo
     pars = theis_results['params']
     dist = theis_results['theis_res'].well1_r
     
     time = pars['time']
-    dd = [wo._theis(pars['T'], pars['S'], time, dist, currQ) for currQ in pars['Q']]
+    dd = [hicap_analysis.theis(pars['T'], pars['S'], time, dist, currQ) for currQ in pars['Q']]
     assert np.allclose(dd[0],theis_results['theis_res'].well1_dd, atol=0.5)
     assert np.allclose(dd[1],theis_results['theis_res'].well2_dd, atol=0.7)
 
@@ -189,7 +186,6 @@ def test_glover():
     """Test for the glover calculations
         against the Glover & Balmer (1954) paper
     """
-    from hicap_analysis import wells as wo
     dist = [1000, 5000, 10000]
     Q = 1 * 3600 * 24 # no normalization in the paper but use to convert from CFS to CFD
     time = 365 * 5 # paper evaluates at 5 years in days
@@ -197,7 +193,7 @@ def test_glover():
     D = 100 # thickness in feet
     T = K*D*24*60*60 # converting to ft/day
     S = 0.2
-    Qs = wo._glover(T,S,time, dist, Q)
+    Qs = hicap_analysis.glover(T,S,time, dist, Q)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
     
@@ -211,7 +207,7 @@ def test_sdf():
     dist = 5280./2.
     T = 5.0e4/7.48
     S = 0.5
-    sdf = wo._sdf(T,S,dist)
+    sdf = hicap_analysis.sdf(T,S,dist)
     assert np.allclose(sdf, 520, atol=1.5)
 
 def test_walton(walton_results):
@@ -220,21 +216,19 @@ def test_walton(walton_results):
     Args:
         walton_results ([type]): [description]
     """
-    from hicap_analysis import wells as wo
-
     res = walton_results['walton_res']
     pars = walton_results['params']
     
     dep={}
     rch={}
     for idx in [0,1]:
-        dep[idx] = wo._walton(pars['T_gpd_ft'][idx],
+        dep[idx] = hicap_analysis.walton(pars['T_gpd_ft'][idx],
                     pars['S'][idx],
                     res.t_well,
                     pars['dist'][idx],
                     pars['Q'][idx]
                     )
-        rch[idx] = wo._walton(pars['T_gpd_ft'][idx],
+        rch[idx] = hicap_analysis.walton(pars['T_gpd_ft'][idx],
                     pars['S'][idx],
                     res.t_image,
                     pars['dist'][idx],
@@ -260,7 +254,7 @@ def test_yaml_parsing(project_spreadsheet_results):
     
     # spot check some numbers
     assert ap.wells['new1'].T == 35
-    assert np.isclose(wo.GPM2CFD * 1000, ap.wells['new2'].Q.iloc[0])
+    assert np.isclose(hicap_analysis.GPM2CFD * 1000, ap.wells['new2'].Q.iloc[0])
     assert ap.wells['new2'].stream_apportionment['Upp Creek'] == 0.3
 
 
@@ -326,7 +320,6 @@ def test_hunt99_results():
         to results from Jenkins (1968) Table 1 and the
         strmdepl08 appendix.
     '''
-    from hicap_analysis import wells as wo
     dist = [1000, 5000, 10000]
     Q = 1 * 3600 * 24 # no normalization in the paper but use to convert from CFS to CFD
     time = 365 * 5 # paper evaluates at 5 years in days
@@ -336,7 +329,7 @@ def test_hunt99_results():
     S = 0.2
     rlambda = 10000.  #large lambda value should return Glover and Balmer solution
                     #see test_glover for these values.
-    Qs = wo._hunt99(T, S, time, dist, Q, streambed=rlambda)
+    Qs = hicap_analysis.hunt99(T, S, time, dist, Q, streambed=rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, [0.9365, 0.6906, 0.4259], atol=1e-3)
 
@@ -346,7 +339,7 @@ def test_hunt99_results():
     sdf = dist**2 * S/T
     time = [sdf*1.0, sdf*2.0, sdf*6.0]
     obs = [0.480, 0.617, 0.773]
-    Qs = wo._hunt99(T, S, time, dist, Q, streambed=rlambda)
+    Qs = hicap_analysis.hunt99(T, S, time, dist, Q, streambed=rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, obs, atol=5e-3)
 
@@ -360,7 +353,7 @@ def test_hunt99_results():
     time = [10., 20., 28.]
     rlambda = 20
     obs = np.array([.1055, .1942, .2378])/0.5570
-    Qs = wo._hunt99(T, S, time, dist, Q, streambed=rlambda)
+    Qs = hicap_analysis.hunt99(T, S, time, dist, Q, streambed=rlambda)
     assert all(np.isnan(Qs)== False)
     assert np.allclose(Qs, obs, atol=5e-3)
     
@@ -387,7 +380,6 @@ def SIR2009_5003_Table2_Batch_results():
     return check_df
 
 def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
-    from hicap_analysis import wells as wo
     from hicap_analysis.geoprocessing import Geoprocess
 
     geopro = Geoprocess(datapath / 'WWAP_110507.shp', 
@@ -423,7 +415,7 @@ def test_geoprocessing(SIR2009_5003_Table2_Batch_results):
     streambed = home.loc[11967, 'EST_Kv_W']/well_temp.loc[0, 'depth']
 
     # hunt99 returns CFS need to convert to GPM for table
-    nearest['analytical_removal'] = nearest['distance'].apply(lambda dist: wo._hunt99(T, S, time, dist, Q, streambed=streambed)* 448.83116885)
+    nearest['analytical_removal'] = nearest['distance'].apply(lambda dist: hicap_analysis.hunt99(T, S, time, dist, Q, streambed=streambed)* 448.83116885)
     nearest['valley_seg_removal'] = nearest['apportionment'] * nearest['analytical_removal']
     nearest['percent'] = nearest['apportionment'] * 100.
 
@@ -460,7 +452,6 @@ def test_hunt99ddwn():
     ''' Test of _hunt99ddwn() function in the 
         well.py module.
     '''
-    from hicap_analysis import wells as wo
     Q = 1 * 3600 * 24 # no normalization in the paper but use to convert from CFS to CFD
     K = 0.001 # ft/sec
     l = 200.
@@ -473,11 +464,10 @@ def test_hunt99ddwn():
     x = 50.
     y = 0.
 
-    ddwn = wo._hunt99ddwn(T, S, time, l, Q, streambed=rlambda, x=x, y=y)
-    no_stream = wo._theis(T, S, time, (l-x), Q) 
+    ddwn = hicap_analysis.hunt99ddwn(T, S, time, l, Q, streambed=rlambda, x=x, y=y)
+    no_stream = hicap_analysis.theis(T, S, time, (l-x), Q) 
     assert(ddwn == no_stream)
 
-    
     
 def test_transient_dd():
     # read in the pumping timeseries and the depletion results included as a column
@@ -498,7 +488,6 @@ def test_transient_dd():
 def test_ward_lough_depletion(ward_lough_test_data):
     # note: the parameters defined below are intended to result in the nondimensional
     # parameters corresponding with Fig. 6 in DOI: 10.1061/ (ASCE)HE.1943-5584.0000382.
-    from hicap_analysis.wells import _WardLoughDepletion
     import matplotlib.pyplot as plt
     T1=100
     T2=100
@@ -515,18 +504,17 @@ def test_ward_lough_depletion(ward_lough_test_data):
     y=100
     dQ1_test = ward_lough_test_data['dQ1_test']
     dQ2_test = ward_lough_test_data['dQ2_test']
-    dQ2_test['mod']  = _WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+    dQ2_test['mod']  = hicap_analysis.WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                             streambed_K,aquitard_thick,aquitard_K,dQ2_test.index*100, x, y)   
     T1=0.01
     aquitard_K=0.001
-    dQ1_test['mod'] = _WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+    dQ1_test['mod'] = hicap_analysis.WardLoughDepletion(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                             streambed_K,aquitard_thick,aquitard_K,dQ1_test.index*100, x, y)
     assert np.allclose(dQ1_test['mod']/Q,dQ1_test['dQ'], atol=.1)
     assert np.allclose(dQ2_test['mod']/Q,dQ2_test['dQ'], atol=.1)
     
 
 def test_ward_lough_drawdown(ward_lough_test_data):
-    from hicap_analysis.wells import _WardLoughDrawdown
     # note: the parameters defined below are intended to result in the nondimensional
     # parameters corresponding with Fig. 3 in DOI: 10.1061/ (ASCE)HE.1943-5584.0000382.
     T1=100
@@ -545,9 +533,9 @@ def test_ward_lough_drawdown(ward_lough_test_data):
     s1_test = ward_lough_test_data['s1_test']
     s2_test = ward_lough_test_data['s2_test']
     
-    s1_test['mod'], _  = _WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+    s1_test['mod'], _  = hicap_analysis.WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                                 streambed_K,aquitard_thick,aquitard_K,s1_test.index*100, x, y)
-    _, s2_test['mod']  = _WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
+    _, s2_test['mod']  = hicap_analysis.WardLoughDrawdown(T1,T2,S1,S2,width,Q,dist,streambed_thick,
                                 streambed_K,aquitard_thick,aquitard_K,s2_test.index*100, x, y)   
     
     assert np.allclose(s1_test['mod']*T2/Q,s1_test['s'], atol=.035)
