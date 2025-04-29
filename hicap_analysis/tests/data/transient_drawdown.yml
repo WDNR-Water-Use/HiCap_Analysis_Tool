@@ -1,0 +1,24 @@
+project_properties:
+  name: TestTransientDD
+  T: 1002.24
+  S: 0.1
+  default_dd_days: 90
+  default_depletion_years: 5
+  default_pumping_days: 90
+  pumping_timeseries_file: 'hicap_analysis/tests/data/transient_dd_ts.csv'
+
+dd_response1:
+  name: biglake
+  loc:
+    x: 90.0
+    y: 45.0
+
+well1:
+  name: 'well1'
+  status: pending
+  loc:
+    x: 90
+    y: 45.0013716
+
+  dd_response:
+    ['biglake']
