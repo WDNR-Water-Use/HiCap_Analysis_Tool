@@ -20,7 +20,7 @@ HiCap Analysis documentation
    More details on how to use the package <usage>
 
 .. toctree::
-  :maxdepth: 1
+  :maxdepth: 2
   :caption: Code reference
 
    Modules <api/index>
