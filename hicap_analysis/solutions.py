@@ -19,7 +19,7 @@ def theis(T,S,time,dist,Q, **kwargs):
         https://pubs.usgs.gov/publication/70198446
 
    Parameters
-   -----------
+   ----------
     T: float
         transmissivity [ft**2/d]
     S: float
@@ -32,12 +32,12 @@ def theis(T,S,time,dist,Q, **kwargs):
         pumping rate (+ is extraction) [ft**3/d]
     **kwargs: included to all drawdown methods for extra values reuired in some calls    
 
-    Returns:
-    --------
+    Returns
+    -------
     drawdown: float or array of floats 
         drawdown values at input parameter times/distances [ft]
 
-     Other Parameters
+    Other Parameters
     ----------------
     **kwargs: dict
         no keyword arguments are needed for the Theis (1935) drawdown solution
@@ -357,7 +357,7 @@ def sdf(T,S,dist,**kwargs):
         Investigations, Chapter D1, Book 4, https://pubs.usgs.gov/twri/twri4d1/.
 
     Parameters
-    ---------
+    ----------
     T: float
         transmissivity [ft**2/d]
     S: float
@@ -698,7 +698,7 @@ def _calc_deltaQ(Q):
         time series of pumping
 
     Returns
-    --------
+    -------
     deltaQ: pandas Series)
         times and changes in Q over time
     """
