@@ -4,4 +4,4 @@ Python Tool for HiCap Well Impacts
 
 Getting Started
 ---------------
-For more details, see the [hicap_analysis documentation](https://doi-usgs.github.io/hicap_analysis/)
+For more details, see the [hicap_analysis documentation](https://hwreeves-usgs.github.io/HiCap_Analysis_Tool/)
