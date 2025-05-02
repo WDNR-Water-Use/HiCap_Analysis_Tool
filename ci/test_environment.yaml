@@ -18,3 +18,8 @@ dependencies:
 - coverage
 - geopandas
 - pyproj
+- sphinx
+- numpydoc
+- nbsphinx  # for rendering notebooks in sphinx-generated docs
+- sphinx-copybutton
+- sphinx_rtd_theme

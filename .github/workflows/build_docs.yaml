@@ -63,7 +63,7 @@ jobs:
       shell: bash -l {0}
       run: |
         pip install -e .
-        python -m ipykernel install --user --name mfsetup_ci --display-name "mfsetup_ci"
+        python -m ipykernel install --user --name hicap_ci --display-name "hicap_ci"
     - name: Conda list
       shell: bash -l {0}
       run: micromamba list
