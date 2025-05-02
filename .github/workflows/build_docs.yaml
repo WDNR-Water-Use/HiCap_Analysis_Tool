@@ -55,9 +55,7 @@ jobs:
 
     - name: Build docs
       shell: bash -l {0}
-      run: |
-        set -e
-        make -C docs html
+      run: make html
 
     - name: Deploy 🚀
       uses: JamesIves/github-pages-deploy-action@v4.7.2
@@ -65,7 +63,7 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: docs/build/html
+        FOLDER: build/html
         CLEAN: false
         TARGET_FOLDER: ${{ github.ref }}
 
@@ -75,6 +73,6 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: docs/build/html
+        FOLDER: build/html
         CLEAN: false
         TARGET_FOLDER: latest
