@@ -36,18 +36,6 @@ jobs:
         init-shell: >-
           bash
 
-    - name: Conda info
-      shell: bash -l {0}
-      run: micromamba info
-    - name: Install hicap_analysis and ipykernel
-      shell: bash -l {0}
-      run: |
-        pip install -e .
-        python -m ipykernel install --user --name hicap_ci --display-name "hicap_ci"
-    - name: Conda list
-      shell: bash -l {0}
-      run: micromamba list
-
     - name: Build docs
       shell: bash -l {0}
       run: |
