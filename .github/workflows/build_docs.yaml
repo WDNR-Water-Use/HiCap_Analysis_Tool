@@ -1,0 +1,100 @@
+# edited from aleaf modflow-setup build_docs configuration file
+name: Publish Docs
+
+on:
+  push:
+    branches: [ develop ]
+  release:
+    types: [ created ]
+  workflow_dispatch:
+
+jobs:
+  docs:
+    name: Publish Docs
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v4
+      with:
+        persist-credentials: false
+
+    - name: Fetch all Git tags
+      run: git fetch --prune --unshallow --tags
+
+    - name: Setup Micromamba
+      uses: mamba-org/setup-micromamba@v1
+      with:
+        environment-file: ci/test_environment.yaml
+        cache-environment: false
+        cache-downloads: false
+        # persist on the same day.
+        # cache-environment-key: environment-${{ steps.date.outputs.date }}
+        # cache-downloads-key: downloads-${{ steps.date.outputs.date }}
+        create-args: >-
+          python=${{ matrix.python-version }}
+        init-shell: >-
+          bash
+
+    - name: Conda info
+      shell: bash -l {0}
+      run: micromamba info
+    - name: Add executables to path
+      shell: bash
+      run: |
+        if [[ ! -d "$HOME/.local/bin" ]]; then
+            mkdir -p "$HOME/.local/bin";
+        fi
+        # copy modflow bins to local dir to add to PATH later
+        if [ "$RUNNER_OS" == "Windows" ]; then
+            d="win"
+        elif [ "$RUNNER_OS" == "macOS" ]; then
+            d="mac"
+        elif [ "$RUNNER_OS" == "Linux" ]; then
+            d="linux"
+        else
+            d="unexpectedos"
+            exit 1
+        fi
+        cp -r bin/$d/. "$HOME/.local/bin/"
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        echo $GITHUB_PATH
+    - name: Install Modflow-setup and ipykernel
+      shell: bash -l {0}
+      run: |
+        pip install -e .
+        python -m ipykernel install --user --name mfsetup_ci --display-name "mfsetup_ci"
+    - name: Conda list
+      shell: bash -l {0}
+      run: micromamba list
+
+    - name: Run tests
+      shell: bash -l {0}
+      run: |
+        pytest -v --durations=20
+
+    - name: Build docs
+      shell: bash -l {0}
+      run: |
+        set -e
+        make -C docs html
+
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4.7.2
+      if: ${{ github.event_name == 'release' }}
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: docs/build/html
+        CLEAN: false
+        TARGET_FOLDER: ${{ github.ref }}
+
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4.7.2
+      if: ${{ github.event_name == 'push' }}
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: docs/build/html
+        CLEAN: false
+        TARGET_FOLDER: latest
