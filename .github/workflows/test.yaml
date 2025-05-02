@@ -37,7 +37,7 @@ jobs:
       uses: conda-incubator/setup-miniconda@v3
       with:
         auto-update-conda: true
-        activate-environment: mfsetup_ci
+        activate-environment: hicap_ci
         environment-file: ci/test_environment.yaml
         python-version: ${{ matrix.python-version }}
         #condarc-file: ci/example-condarc.yml

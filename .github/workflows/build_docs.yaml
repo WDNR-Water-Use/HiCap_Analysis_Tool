@@ -22,19 +22,36 @@ jobs:
     - name: Fetch all Git tags
       run: git fetch --prune --unshallow --tags
 
-    - name: Setup Micromamba
-      uses: mamba-org/setup-micromamba@v1
+    - name: Cache Miniconda
+      uses: actions/cache@v4
+      env:
+        # Increase this value to reset cache if environment.yml has changed
+        CACHE_NUMBER: 0
       with:
+        path: ~/conda_pkgs_dir
+        key: ${{ runner.os }}-${{ matrix.python-version }}-${{
+            matrix.run-type }}-${{ env.CACHE_NUMBER }}-${{
+            hashFiles('ci/test_environment.yaml') }}
+
+    - name: Setup conda environment
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        auto-update-conda: true
+        activate-environment: hicap_ci
         environment-file: ci/test_environment.yaml
-        cache-environment: false
-        cache-downloads: false
-        # persist on the same day.
-        # cache-environment-key: environment-${{ steps.date.outputs.date }}
-        # cache-downloads-key: downloads-${{ steps.date.outputs.date }}
-        create-args: >-
-          python=${{ matrix.python-version }}
-        init-shell: >-
-          bash
+        python-version: ${{ matrix.python-version }}
+        #condarc-file: ci/example-condarc.yml
+        auto-activate-base: false
+        use-only-tar-bz2: true # IMPORTANT: This needs to be set for caching to work properly!
+
+    - name: Conda info
+      shell: bash -l {0}
+      run: conda info
+
+
+    - name: Conda list
+      shell: bash -l {0}
+      run: conda list
 
     - name: Build docs
       shell: bash -l {0}

@@ -1,4 +1,4 @@
-name: highcap_ci
+name: hicap_ci
 channels:
 - conda-forge
 - defaults
