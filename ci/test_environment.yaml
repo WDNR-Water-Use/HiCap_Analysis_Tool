@@ -25,6 +25,9 @@ dependencies:
 - xlrd
 - openpyxl
 - requests
+- codecov
+- coverage
+- flake8
 - pytest
 - sphinx
 - numpydoc
