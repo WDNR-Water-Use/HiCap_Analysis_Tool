@@ -1,26 +1,26 @@
-name: Tests
+# edited from aleaf modflow-setup build_docs configuration file
+name: Publish Docs
 
 on:
-  schedule:
-    - cron: '0 9 * * 1' # run every Monday at 9 AM UTC (3 am PST)
   push:
-  pull_request:
+    branches: [ main ]
+  release:
+    types: [ created ]
+  workflow_dispatch:
 
 jobs:
-  build:
-    name: ${{ matrix.python-version }}, ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: ['3.11']  
-      
+  docs:
+    name: Publish Docs
+    runs-on: ubuntu-latest
+
     steps:
     - name: Checkout source
       uses: actions/checkout@v4
       with:
         persist-credentials: false
 
+    - name: Fetch all Git tags
+      run: git fetch --prune --unshallow --tags
 
     - name: Cache Miniconda
       uses: actions/cache@v4
@@ -52,15 +52,27 @@ jobs:
     - name: Conda list
       shell: bash -l {0}
       run: conda list
-    #- name: Lint with flake8
-    #  run: |
-    #    # stop the build if there are Python syntax errors or undefined names
-    #    flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-    #    # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-    #    flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Run tests 
+
+    - name: Build docs
       shell: bash -l {0}
-      run: |
-        coverage run -m pytest -v --durations=20
-        coverage report -m
-      
+      run: make html
+
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4.7.2
+      if: ${{ github.event_name == 'release' }}
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build/html
+        CLEAN: false
+        TARGET_FOLDER: ${{ github.ref }}
+
+    - name: Deploy 🚀
+      uses: JamesIves/github-pages-deploy-action@v4.7.2
+      if: ${{ github.event_name == 'push' }}
+      with:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        BRANCH: gh-pages
+        FOLDER: build/html
+        CLEAN: false
+        TARGET_FOLDER: latest
