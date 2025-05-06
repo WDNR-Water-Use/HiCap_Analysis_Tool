@@ -1,4 +1,4 @@
-CContributing
+Contributing
 ============
 
 Contributions are welcome from the community. Questions can be asked on the
