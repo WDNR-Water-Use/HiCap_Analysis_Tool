@@ -151,7 +151,7 @@ class Well():
         Q: pandas series
             Pumping rate changes and times
         depletion_years: int
-           [description]. Defaults to 4.
+            [description]. Defaults to 4.
         theis_dd_days: int
             [description]. Defaults to -9999.
         depl_pump_time: int 
